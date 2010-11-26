@@ -51,7 +51,7 @@
 <th>Should sell?</th>
 </tr>
 
-{% for position in portfolio.positions %}
+{% for position in portfolio.get_positions %}
 <tr>
 <td>{{position.symbol}}</td>
 <td>{{position.latest_quote.date}}</td>

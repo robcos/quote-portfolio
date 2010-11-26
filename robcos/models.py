@@ -3,6 +3,7 @@ from google.appengine.ext import db
 from datetime import date
 from datetime import datetime
 import ystockquote
+from google.appengine.api import memcache
 
 class RealtimeQuote(models.BaseModel):
   symbol = db.StringProperty(required=True)
@@ -11,12 +12,18 @@ class RealtimeQuote(models.BaseModel):
   
   @staticmethod
   def load(symbol):
+    data = memcache.get(symbol)
+    if data is not None:
+      return data
+    
     q = RealtimeQuote.yahoo(symbol)
-    return RealtimeQuote(
+    data = RealtimeQuote(
       symbol = q['symbol'],
       date = q['date'],
       price = float(q['price'])
     )
+    memcache.add(symbol, data, 60)
+    return data
 
   @staticmethod
   def yahoo(symbol):
@@ -88,7 +95,7 @@ class Portfolio(models.BaseModel):
     query = db.Query(Portfolio)
     for p in query:
       p.delete()
-  
+
   def __str__(self):
     return self.name
 
@@ -120,6 +127,12 @@ class Position(models.BaseModel):
     query.filter("enter_date =", enter_date)
     query.filter("portfolio =", portfolio)
     return query.get()
+  
+  def value(self):
+    return self.shares * self.latest_quote().price
+
+  def latest_quote(self):    
+    return RealtimeQuote.load(self.symbol)
     
   @staticmethod
   def delete_all():

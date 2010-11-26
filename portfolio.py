@@ -82,11 +82,6 @@ class PositionForm(ModelForm):
 
 def index(request):
   portfolios = Portfolio.all()
-  for portfolio in portfolios:
-    portfolio.positions = portfolio.get_positions()
-    for position in portfolio.positions:
-      position.latest_quote = RealtimeQuote.load(position.symbol)
-  
 
   if request.method == 'POST':
     form = PositionForm(request.POST)
