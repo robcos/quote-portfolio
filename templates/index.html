@@ -1,4 +1,35 @@
 <html>
+<head>
+<style>
+  .errorlist {
+    display:inline;
+    margin: 0;
+    padding: 0;
+  }
+  .errorlist li {
+    background-color: red;
+    color: white;
+    display: inline;
+    font-size: 1em;
+    margin: 0;
+    padding: 2px;;
+    text-align:left;
+  }
+
+  table {
+    margin: 2em;
+    border: 1px solid gray;
+  }
+  
+  table caption {
+    text-align:left;
+  }
+
+  th {
+    text-align:right;
+  }
+</style>
+</head>
 <body>
 {% for portfolio in portfolios %}
 <table border="1">
@@ -41,5 +72,44 @@
 
 </table>
 {% endfor %}
+
+<form action="" method="POST">
+<table border="0">
+<caption>Add a new position</caption>
+<tr class="fieldWrapper">
+  <th><label for="id_portfolio">Portfolio</label></th>
+  <td>{{ form.portfolio }} {{form.portfolio.errors}}</td>
+</tr>
+<tr class="fieldWrapper">
+  <th><label for="id_symbol">Symbol</label></th>
+  <td>{{ form.symbol }} {{form.symbol.errors}} {{form.non_field_errors}}</td>
+</tr>
+<tr class="fieldWrapper">
+  <th><label for="id_shares">Shares</label></th>
+  <td>{{ form.shares }} {{form.shares.errors}}</td>
+</tr>
+<tr class="fieldWrapper">
+  <th><label for="id_enter_price">Enter price</label></th>
+  <td>{{ form.enter_price }} {{form.enter_price.errors}}</td>
+</tr>
+<tr class="fieldWrapper">
+  <th><label for="id_currency">Currency</label></th>
+  <td>{{ form.currency }} {{form.currency.errors}}</td>
+</tr>
+<tr class="fieldWrapper">
+  <th><label for="id_currency_rate">Currency rate</label></th>
+  <td>{{ form.currency_rate }} {{form.currency_rate.errors}}</td>
+</tr>
+<tr class="fieldWrapper">
+  <th><label for="id_enter_date">Enter date</label></th>
+  <td>{{ form.enter_date }} {{form.enter_date.errors}}</td>
+</tr>
+<tr class="fieldWrapper">
+  <th><label for="id_enter_commission">Enter commission</label></th>
+  <td>{{ form.enter_commission }} {{form.enter_commission.errors}}</td>
+</tr>
+<tr><th></th>
+<td><input type="submit" value="save"></td>
+</form>
 </body>
 </html>

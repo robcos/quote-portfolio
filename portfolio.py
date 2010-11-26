@@ -32,6 +32,8 @@ from django import http
 from django import shortcuts
 from django.http import HttpResponseRedirect
 from django.http import HttpResponseNotFound
+from django.forms import ModelForm
+from django.forms import ValidationError
 
 # robcos
 from robcos.models import Portfolio
@@ -60,12 +62,32 @@ def fixture(request):
   return shortcuts.render_to_response('index.html', {
   })
 
+
+class PositionForm(ModelForm):
+  class Meta:
+    model = Position
+
+  def clean(self):
+    portfolio = self.cleaned_data.get('portfolio', '')
+    symbol = self.cleaned_data.get('symbol', '')
+    enter_date = self.cleaned_data.get('enter_date', None)
+
+    if Position.load(symbol=symbol, enter_date=enter_date, portfolio=portfolio):
+      raise ValidationError('There is already a position for %s on %s' % (symbol, enter_date))
+    return self.cleaned_data
+
 def index(request):
   portfolios = Portfolio.all()
-  #for portfolio in portfolios:
-    #portfolio.positions = portfolio.get_positions().fetch(10)
-  #  print portfolio.positions
+
+  if request.method == 'POST':
+    form = PositionForm(request.POST)
+    if form.is_valid():
+      form.save()
+      return HttpResponseRedirect('/index.html')
+  else:
+    form = PositionForm()
 
   return shortcuts.render_to_response('index.html', {
-    'portfolios': portfolios
+    'portfolios': portfolios,
+    'form': form,
   })
