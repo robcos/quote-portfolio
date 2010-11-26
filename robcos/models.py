@@ -1,6 +1,59 @@
 from appengine_django import models
 from google.appengine.ext import db
 from datetime import date
+from datetime import datetime
+import ystockquote
+
+class RealtimeQuote(models.BaseModel):
+  symbol = db.StringProperty(required=True)
+  date = db.DateProperty(required=True)
+  price = db.FloatProperty(required=True)
+  
+  @staticmethod
+  def load(symbol):
+    q = RealtimeQuote.yahoo(symbol)
+    return RealtimeQuote(
+      symbol = q['symbol'],
+      date = q['date'],
+      price = float(q['price'])
+    )
+
+  @staticmethod
+  def yahoo(symbol):
+    """
+       Downloads the latest quote for the given symbol
+    """
+ 
+    all = ystockquote.get_all(symbol)
+    
+    return {
+        'symbol': symbol,
+        'date': datetime.strptime(all['date'], '"%m/%d/%Y"').date(),
+        'price': all['price'], 
+        'high': all['high'], 
+        'low': all['low'], 
+        'open': all['open']
+    }
+ 
+class Quote(models.BaseModel):
+  symbol = db.StringProperty(required=True)
+  date = db.DateProperty(required=True)
+  close = db.FloatProperty(required=True)
+  
+  @staticmethod
+  def load(symbol, date):
+    query = db.Query(Quote)
+    query.filter('symbol = ', symbol)
+    query.filter('date = ', date)
+    return query.get()
+
+  @staticmethod
+  def delete_all():
+    query = db.Query(Quote)
+    for p in query:
+      p.delete()
+
+   
 
 class Portfolio(models.BaseModel):
   name = db.StringProperty(required=True)
@@ -11,6 +64,11 @@ class Portfolio(models.BaseModel):
     query = db.Query(Portfolio)
     query.filter('name = ', name)
     return query.get()
+
+  @staticmethod
+  def all():
+    query = db.Query(Portfolio)
+    return query.fetch(query.count())
   
   def save(self):
     p = Portfolio.load(self.name)
@@ -23,7 +81,7 @@ class Portfolio(models.BaseModel):
   def get_positions(self):
     query = db.Query(Position)
     query.filter("portfolio =", self)
-    return query
+    return query.fetch(query.count())
 
   @staticmethod
   def delete_all():

@@ -37,13 +37,13 @@
 <tr>
 <th>Symbol</th>
 <th>Date</th>
+<th>Price</th>
 <th>Enter Date</th>
 <th>Value</th>
 <th>Gain</th>
 <th>Shares</th>
 <th>RTR</th>
 <th>Enter Price</th>
-<th>Close Price</th>
 <th>Stop</th>
 <th>ATR EXP 20</th>
 <th>LL10 Stop</th>
@@ -51,17 +51,17 @@
 <th>Should sell?</th>
 </tr>
 
-{% for position in portfolio.get_positions %}
+{% for position in portfolio.positions %}
 <tr>
 <td>{{position.symbol}}</td>
-<td>{{position.date}}</td>
+<td>{{position.latest_quote.date}}</td>
+<td>{{position.latest_quote.price}}</td>
 <td>{{position.enter_date}}</td>
 <td>{{position.value}}</td>
 <td>{{position.gain}}</td>
 <td>{{position.shares}}</td>
 <td>{{position.rtr}}</td>
 <td>{{position.enter_price}}</td>
-<td>{{position.close_price}}</td>
 <td>{{position.stop}}</td>
 <td>{{position.atr_exp_20}}</td>
 <td>{{position.ll10_stop}}</td>

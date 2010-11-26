@@ -38,30 +38,34 @@ from django.forms import ValidationError
 # robcos
 from robcos.models import Portfolio
 from robcos.models import Position
+from robcos.models import Quote
+from robcos.models import RealtimeQuote
 
 # Python
 import logging
 import os
 import re
-import datetime
+from datetime import date
 
 def fixture(request):
-  Position.delete_all()
   Portfolio.delete_all()
+  Position.delete_all()
+  Quote.delete_all()
   avanza = Portfolio(name='Avanza', currency='SEK').save()
   Portfolio(name='XO', currency='GBP').save()
   Position(symbol='AAPL', 
         currency='SEK', 
         currency_rate=1.0, 
-        enter_date=datetime.date(2001, 1, 3),
+        enter_date=date.today(),
         enter_price=5000.0, 
         enter_commission=99.0, 
         shares=1000.0, 
         portfolio=avanza).save()
+  Quote(symbol='AAPL', 
+        close=1234.5,
+        date=date.today()).save()
 
-  return shortcuts.render_to_response('index.html', {
-  })
-
+  return HttpResponseRedirect('/index.html')
 
 class PositionForm(ModelForm):
   class Meta:
@@ -78,6 +82,11 @@ class PositionForm(ModelForm):
 
 def index(request):
   portfolios = Portfolio.all()
+  for portfolio in portfolios:
+    portfolio.positions = portfolio.get_positions()
+    for position in portfolio.positions:
+      position.latest_quote = RealtimeQuote.load(position.symbol)
+  
 
   if request.method == 'POST':
     form = PositionForm(request.POST)
