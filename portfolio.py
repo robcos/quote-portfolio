@@ -65,7 +65,7 @@ def fixture(request):
         close=1234.5,
         date=date.today()).save()
 
-  return HttpResponseRedirect('/index.html')
+  return HttpResponseRedirect('/')
 
 class PositionForm(ModelForm):
   class Meta:
@@ -87,7 +87,7 @@ def index(request):
     form = PositionForm(request.POST)
     if form.is_valid():
       form.save()
-      return HttpResponseRedirect('/index.html')
+      return HttpResponseRedirect('/')
   else:
     form = PositionForm()
 
