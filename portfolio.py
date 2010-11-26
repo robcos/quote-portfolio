@@ -75,7 +75,8 @@ class PositionForm(ModelForm):
     portfolio = self.cleaned_data.get('portfolio', '')
     symbol = self.cleaned_data.get('symbol', '')
     enter_date = self.cleaned_data.get('enter_date', None)
-
+    if self.instance:
+      return self.cleaned_data
     if Position.load(symbol=symbol, enter_date=enter_date, portfolio=portfolio):
       raise ValidationError('There is already a position for %s on %s' % (symbol, enter_date))
     return self.cleaned_data
@@ -90,5 +91,17 @@ def index(request):
       return HttpResponseRedirect('/')
   else:
     form = PositionForm()
+
+  return shortcuts.render_to_response('index.html', locals())
+
+def edit(request, key):
+  portfolios = Portfolio.all()
+  if request.method == 'POST':
+    form = PositionForm(request.POST, instance=db.get(key))
+    if form.is_valid():
+      form.save()
+      return HttpResponseRedirect('/')
+  else:
+    form = PositionForm(instance=db.get(key))
 
   return shortcuts.render_to_response('index.html', locals())

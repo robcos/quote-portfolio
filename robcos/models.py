@@ -11,7 +11,7 @@ def cached(f):
     key =  str((f, tuple(args), frozenset(kwargs.items())))
     if memcache.get(key) is None:
       value = f(*args, **kwargs)
-      memcache.add(key, value, 60) # Cache for 60 seconds
+      memcache.add(key, value, 5) # Cache for 5 seconds
     return memcache.get(key)
   return g
 
