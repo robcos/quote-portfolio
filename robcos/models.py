@@ -151,7 +151,7 @@ class Position(models.BaseModel):
     return self.shares * self.latest_quote().price
   
   def gain(self):
-    return self.shares * (self.latest_quote().price - self.enter_price - self.enter_commission)
+    return self.shares * (self.latest_quote().price - self.enter_price) - self.enter_commission
 
   def latest_quote(self):    
     return RealtimeQuote.load(self.symbol)
