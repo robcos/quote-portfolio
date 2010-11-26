@@ -6,11 +6,11 @@ git branch | grep "*"
 echo "##############################"
 echo 
 
+./clean.sh
 
 clean=$(git status | grep -c "working directory clean")
 [ "$clean" == "1" ] || {
   echo "Commit your changes first"
   exit
 }
-
 appcfg.py update . -e robcos@robcos.com
