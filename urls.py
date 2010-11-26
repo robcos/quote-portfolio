@@ -17,5 +17,7 @@ from django.conf.urls.defaults import *
 
 urlpatterns = patterns(
     '',
-    ('.*', 'portfolio.index'),
+    ('index.html', 'portfolio.index'),
+    ('fixture.html', 'portfolio.fixture'),
+    (r'^test', include('gaeunit.urls')),
     )

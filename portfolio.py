@@ -33,6 +33,9 @@ from django import shortcuts
 from django.http import HttpResponseRedirect
 from django.http import HttpResponseNotFound
 
+# robcos
+from robcos.models import Portfolio
+from robcos.models import Position
 
 # Python
 import logging
@@ -40,5 +43,29 @@ import os
 import re
 import datetime
 
+def fixture(request):
+  Position.delete_all()
+  Portfolio.delete_all()
+  avanza = Portfolio(name='Avanza', currency='SEK').save()
+  Portfolio(name='XO', currency='GBP').save()
+  Position(symbol='AAPL', 
+        currency='SEK', 
+        currency_rate=1.0, 
+        enter_date=datetime.date(2001, 1, 3),
+        enter_price=5000.0, 
+        enter_commission=99.0, 
+        shares=1000.0, 
+        portfolio=avanza).save()
+
+  return shortcuts.render_to_response('index.html', {
+  })
+
 def index(request):
-  return shortcuts.render_to_response('index.html', {})
+  portfolios = Portfolio.all()
+  #for portfolio in portfolios:
+    #portfolio.positions = portfolio.get_positions().fetch(10)
+  #  print portfolio.positions
+
+  return shortcuts.render_to_response('index.html', {
+    'portfolios': portfolios
+  })

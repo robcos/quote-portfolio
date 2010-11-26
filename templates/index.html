@@ -1,11 +1,45 @@
 <html>
 <body>
-<pre>
-Portfolio: Avanza
----------------------------------------------------------------------------------------------------------------------------------------------------------------
-Symbol      Enter Date  Date        Value       Gain        Shares      RTR         Enter Price Close       Stop        ATR EXP 20  LL10 Stop   ATR Stop    Unit2       Should sell?
----------------------------------------------------------------------------------------------------------------------------------------------------------------
-AAPL 
-</pre>
+{% for portfolio in portfolios %}
+<table border="1">
+<caption>Portfolio: {{portfolio.name}} ({{portfolio.currency}})</caption>
+<tr>
+<th>Symbol</th>
+<th>Date</th>
+<th>Enter Date</th>
+<th>Value</th>
+<th>Gain</th>
+<th>Shares</th>
+<th>RTR</th>
+<th>Enter Price</th>
+<th>Close Price</th>
+<th>Stop</th>
+<th>ATR EXP 20</th>
+<th>LL10 Stop</th>
+<th>Unit2</th>
+<th>Should sell?</th>
+</tr>
+
+{% for position in portfolio.get_positions %}
+<tr>
+<td>{{position.symbol}}</td>
+<td>{{position.date}}</td>
+<td>{{position.enter_date}}</td>
+<td>{{position.value}}</td>
+<td>{{position.gain}}</td>
+<td>{{position.shares}}</td>
+<td>{{position.rtr}}</td>
+<td>{{position.enter_price}}</td>
+<td>{{position.close_price}}</td>
+<td>{{position.stop}}</td>
+<td>{{position.atr_exp_20}}</td>
+<td>{{position.ll10_stop}}</td>
+<td>{{position.second_unit}}</td>
+<td>{{position.should_sell}}</td>
+</tr>
+{% endfor %}
+
+</table>
+{% endfor %}
 </body>
 </html>
