@@ -91,7 +91,4 @@ def index(request):
   else:
     form = PositionForm()
 
-  return shortcuts.render_to_response('index.html', {
-    'portfolios': portfolios,
-    'form': form,
-  })
+  return shortcuts.render_to_response('index.html', locals())

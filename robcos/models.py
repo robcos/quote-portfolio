@@ -4,6 +4,16 @@ from datetime import date
 from datetime import datetime
 import ystockquote
 from google.appengine.api import memcache
+import types
+
+def cached(f):
+  def g(*args, **kwargs):
+    key =  str((f, tuple(args), frozenset(kwargs.items())))
+    if memcache.get(key) is None:
+      value = f(*args, **kwargs)
+      memcache.add(key, value, 60) # Cache for 60 seconds
+    return memcache.get(key)
+  return g
 
 class RealtimeQuote(models.BaseModel):
   symbol = db.StringProperty(required=True)
@@ -11,18 +21,16 @@ class RealtimeQuote(models.BaseModel):
   price = db.FloatProperty(required=True)
   
   @staticmethod
+  @cached
   def load(symbol):
-    data = memcache.get(symbol)
-    if data is not None:
-      return data
-    
     q = RealtimeQuote.yahoo(symbol)
+    if not q:
+      return None
     data = RealtimeQuote(
       symbol = q['symbol'],
       date = q['date'],
       price = float(q['price'])
     )
-    memcache.add(symbol, data, 60)
     return data
 
   @staticmethod
@@ -32,10 +40,14 @@ class RealtimeQuote(models.BaseModel):
     """
  
     all = ystockquote.get_all(symbol)
-    
+    try:
+      date = datetime.strptime(all['date'], '"%m/%d/%Y"').date()
+    except Exception, e:
+      return None
+
     return {
         'symbol': symbol,
-        'date': datetime.strptime(all['date'], '"%m/%d/%Y"').date(),
+        'date': date,
         'price': all['price'], 
         'high': all['high'], 
         'low': all['low'], 
@@ -85,10 +97,17 @@ class Portfolio(models.BaseModel):
     else:
       raise Exception('Portfolio already exists')
 
+  @cached
   def get_positions(self):
     query = db.Query(Position)
     query.filter("portfolio =", self)
     return query.fetch(query.count())
+  
+  def value(self):
+    return reduce(lambda x,y: x + y.value(), [0] + self.get_positions())
+  
+  def gain(self):
+    return reduce(lambda x,y: x + y.gain(), [0] + self.get_positions())
 
   @staticmethod
   def delete_all():
@@ -130,6 +149,9 @@ class Position(models.BaseModel):
   
   def value(self):
     return self.shares * self.latest_quote().price
+  
+  def gain(self):
+    return self.shares * (self.latest_quote().price - self.enter_price - self.enter_commission)
 
   def latest_quote(self):    
     return RealtimeQuote.load(self.symbol)
