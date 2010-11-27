@@ -49,14 +49,14 @@ import re
 from datetime import date
 
 def fixture(request):
-  Portfolio.delete_all()
   Position.delete_all()
   Quote.delete_all()
+  Portfolio.delete_all()
   avanza = Portfolio(name='Avanza', currency='SEK').save()
   Portfolio(name='XO', currency='GBP').save()
   Position(symbol='AAPL', 
         currency='SEK', 
-        currency_rate=1.0, 
+        enter_currency_rate=1.0, 
         enter_date=date.today(),
         enter_price=5000.0, 
         enter_commission=99.0, 

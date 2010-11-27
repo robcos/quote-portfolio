@@ -127,7 +127,7 @@ class Portfolio(models.BaseModel):
 class Position(models.BaseModel):
   symbol = db.StringProperty(required=True)
   currency = db.StringProperty(required=True, default='SEK', choices=['SEK', 'USD', 'GBP'])
-  currency_rate = db.FloatProperty(required=True, default=1)
+  enter_currency_rate = db.FloatProperty(required=True, default=1)
   enter_date = db.DateProperty(required=True, default=date.today())
   exit_date = db.DateProperty(required=False)
   enter_price = db.FloatProperty(required=True)
@@ -163,7 +163,7 @@ class Position(models.BaseModel):
     return self.local_value() - self.cost()
   
   def cost(self):
-    return self.shares * self.enter_price * Currency.load(self.currency, self.portfolio.currency).rate + self.enter_commission
+    return self.shares * self.enter_price * self.enter_currency_rate + self.enter_commission
   
   def latest_quote(self):    
     return RealtimeQuote.load(self.symbol)
