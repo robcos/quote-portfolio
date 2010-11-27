@@ -113,6 +113,9 @@ class Portfolio(models.BaseModel):
   def cost(self):
     return reduce(lambda x,y: x + y.cost(), [0] + self.get_positions())
 
+  def loosing(self):
+    return self.gain() < 0
+
   @staticmethod
   def delete_all():
     query = db.Query(Portfolio)
@@ -162,8 +165,14 @@ class Position(models.BaseModel):
   def gain(self):
     return self.local_value() - self.cost()
   
+  def gainp(self):
+    return self.gain()/self.cost() * 100
+  
   def cost(self):
     return self.shares * self.enter_price * self.currency_rate + self.enter_commission
+
+  def loosing(self):
+    return self.gain() < 0
   
   def latest_quote(self):    
     return RealtimeQuote.load(self.symbol)

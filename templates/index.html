@@ -37,6 +37,10 @@
     text-align:right;
     white-space:nowrap;
   }
+
+  .negative {
+    color: red;
+  }
 </style>
 </style>
 </head>
@@ -53,6 +57,7 @@
 <th>Local value</th>
 <th>Cost</th>
 <th>Gain</th>
+<th>Gain %</th>
 <th>Shares</th>
 <th>RTR</th>
 <th>Enter Price</th>
@@ -72,7 +77,8 @@
 <td>{{ position.value|stringformat:'10.2f' }}</td>
 <td>{{ position.local_value|stringformat:'10.2f' }}</td>
 <td>{{ position.cost|stringformat:'10.2f' }}</td>
-<td>{{ position.gain|stringformat:'10.2f' }}</td>
+<td{% if position.loosing %} class="negative"{% endif %}>{{ position.gain|stringformat:'10.2f' }}</td>
+<td>{{position.gainp|stringformat:'2.1f' }}%</td>
 <td>{{position.shares }}</td>
 <td>{{position.rtr}}</td>
 <td>{{position.enter_price|stringformat:'10.2f' }}</td>
@@ -91,7 +97,10 @@
 <td></td>
 <td>{{ portfolio.local_value|stringformat:'10.2f' }}</td>
 <td>{{ portfolio.cost|stringformat:'10.2f' }}</td>
-<td>{{ portfolio.gain|stringformat:'10.2f' }}</td>
+<td{% if portfolio.loosing %} class="negative"{% endif %}>{{ portfolio.gain|stringformat:'10.2f' }}</td>
+<td></td>
+<td></td>
+<td></td>
 <td></td>
 <td></td>
 <td></td>
