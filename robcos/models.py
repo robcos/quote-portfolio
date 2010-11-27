@@ -127,7 +127,9 @@ class Portfolio(models.BaseModel):
 class Position(models.BaseModel):
   symbol = db.StringProperty(required=True)
   currency = db.StringProperty(required=True, default='SEK', choices=['SEK', 'USD', 'GBP'])
-  enter_currency_rate = db.FloatProperty(required=True, default=1)
+  currency_rate = db.FloatProperty(required=True, default=1)
+  # remove API does not work so I have to keep currency_rate
+  #enter_currency_rate = db.FloatProperty(required=True, default=1)
   enter_date = db.DateProperty(required=True, default=date.today())
   exit_date = db.DateProperty(required=False)
   enter_price = db.FloatProperty(required=True)

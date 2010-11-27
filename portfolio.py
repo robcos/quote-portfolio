@@ -56,7 +56,7 @@ def fixture(request):
   Portfolio(name='XO', currency='GBP').save()
   Position(symbol='AAPL', 
         currency='SEK', 
-        enter_currency_rate=1.0, 
+        currency_rate=1.0, 
         enter_date=date.today(),
         enter_price=5000.0, 
         enter_commission=99.0, 
