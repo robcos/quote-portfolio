@@ -46,6 +46,8 @@
 <th>Price</th>
 <th>Enter Date</th>
 <th>Value</th>
+<th>Local value</th>
+<th>Cost</th>
 <th>Gain</th>
 <th>Shares</th>
 <th>RTR</th>
@@ -64,6 +66,8 @@
 <td>{{position.latest_quote.price|stringformat:'10.2f' }}</td>
 <td>{{position.enter_date}}</td>
 <td>{{ position.value|stringformat:'10.2f' }}</td>
+<td>{{ position.local_value|stringformat:'10.2f' }}</td>
+<td>{{ position.cost|stringformat:'10.2f' }}</td>
 <td>{{ position.gain|stringformat:'10.2f' }}</td>
 <td>{{position.shares }}</td>
 <td>{{position.rtr}}</td>
@@ -80,10 +84,10 @@
 <td></td>
 <td></td>
 <td></td>
-<td>{{ portfolio.value|stringformat:'10.2f' }}</td>
+<td></td>
+<td>{{ portfolio.local_value|stringformat:'10.2f' }}</td>
+<td>{{ portfolio.cost|stringformat:'10.2f' }}</td>
 <td>{{ portfolio.gain|stringformat:'10.2f' }}</td>
-<td></td>
-<td></td>
 <td></td>
 <td></td>
 <td></td>
@@ -94,6 +98,21 @@
 
 </table>
 {% endfor %}
+<table border=1>
+<caption>Currencies</caption>
+<tr>
+<th>Symbol</th>
+<th>Rate</th>
+<th>Date</th>
+</tr>
+{% for currency in currencies %}
+<tr>
+<td>{{currency.symbol}}</td>
+<td>{{currency.rate}}</td>
+<td>{{currency.date}}</td>
+</tr>
+{% endfor %}
+</table>
 
 <form action="" method="POST">
 <table border="0">

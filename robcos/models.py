@@ -5,6 +5,7 @@ from datetime import datetime
 import ystockquote
 from google.appengine.api import memcache
 import types
+import urllib2
 
 def cached(f):
   def g(*args, **kwargs):
@@ -103,11 +104,16 @@ class Portfolio(models.BaseModel):
     query.filter("portfolio =", self)
     return query.fetch(query.count())
   
-  def value(self):
-    return reduce(lambda x,y: x + y.value(), [0] + self.get_positions())
+  def local_value(self):
+    return reduce(lambda x,y: x + y.local_value(), [0] + self.get_positions())
   
   def gain(self):
     return reduce(lambda x,y: x + y.gain(), [0] + self.get_positions())
+  
+  def cost(self):
+    return reduce(lambda x,y: x + y.cost(), [0] + self.get_positions())
+
+  @staticmethod
 
   @staticmethod
   def delete_all():
@@ -150,9 +156,15 @@ class Position(models.BaseModel):
   def value(self):
     return self.shares * self.latest_quote().price
   
+  def local_value(self):
+    return self.shares * self.latest_quote().price * Currency.load(self.currency, self.portfolio.currency).rate
+  
   def gain(self):
-    return self.shares * (self.latest_quote().price - self.enter_price) - self.enter_commission
-
+    return self.local_value() - self.cost()
+  
+  def cost(self):
+    return self.shares * self.enter_price * Currency.load(self.currency, self.portfolio.currency).rate + self.enter_commission
+  
   def latest_quote(self):    
     return RealtimeQuote.load(self.symbol)
     
@@ -161,3 +173,38 @@ class Position(models.BaseModel):
     query = db.Query(Position)
     for p in query:
       p.delete()
+
+class Currency(models.BaseModel):
+  symbol = db.StringProperty(required=True)
+  date = db.DateProperty(required=True)
+  rate = db.FloatProperty(required=True)
+  
+  @staticmethod
+  @cached
+  def load(_from, to):
+    if _from == to:
+      return Currency(symbol = _from + to + '=X',
+        date = date.today(),
+        rate = 1.0
+        )
+        
+    url ='http://finance.yahoo.com/d/quotes.csv?s=%s%s=X&t=2d&f=sd1l1' % (_from, to)
+    try:
+      result = urllib2.urlopen(url)
+      parts = result.read().replace('"', '').strip().split(',')
+      return Currency(symbol = parts[0],
+        date = datetime.strptime(parts[1], '%m/%d/%Y').date(),
+        rate = float(parts[2])
+        )
+        
+    except urllib2.URLError, e:
+      print e
+
+  @staticmethod
+  def all():
+    currencies = []
+    currencies.append(Currency.load('USD', 'SEK'))
+    currencies.append(Currency.load('USD', 'GBP'))
+    currencies.append(Currency.load('SEK', 'SEK'))
+    return currencies
+

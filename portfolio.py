@@ -36,6 +36,7 @@ from django.forms import ModelForm
 from django.forms import ValidationError
 
 # robcos
+from robcos.models import Currency
 from robcos.models import Portfolio
 from robcos.models import Position
 from robcos.models import Quote
@@ -83,6 +84,7 @@ class PositionForm(ModelForm):
 
 def index(request):
   portfolios = Portfolio.all()
+  currencies = Currency.all()
 
   if request.method == 'POST':
     form = PositionForm(request.POST)
