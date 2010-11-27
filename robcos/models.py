@@ -178,8 +178,8 @@ class Portfolio(models.BaseModel):
   def get_positions(self):
     query = db.Query(Position)
     query.filter("portfolio =", self)
-    query.order('-symbol')
-    query.order('-enter_date')
+    query.order('symbol')
+    query.order('enter_date')
     return query.fetch(query.count())
   
   def local_value(self):

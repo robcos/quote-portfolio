@@ -14,6 +14,12 @@ indexes:
   properties:
   - name: portfolio
   - name: symbol
+  - name: enter_date
+
+- kind: Position
+  properties:
+  - name: portfolio
+  - name: symbol
     direction: desc
 
 - kind: Position
