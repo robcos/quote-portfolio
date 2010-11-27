@@ -264,6 +264,14 @@ class Position(models.BaseModel):
     for p in query:
       p.delete()
 
+  @cached
+  def ll_10(self):
+    query = db.Query(Quote)
+    query.filter('symbol = ', self.symbol)
+    query.order('-date')
+    quotes = query.fetch(10)
+    return min(map(lambda x: x.low, quotes))
+
 class Currency(models.BaseModel):
   symbol = db.StringProperty(required=True)
   date = db.DateProperty(required=True)

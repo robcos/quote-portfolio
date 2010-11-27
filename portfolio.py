@@ -108,7 +108,10 @@ def edit(request, key):
 
   return shortcuts.render_to_response('index.html', locals())
 
-def quotes(request):
-  quotes = Quote.yahoo('AAPL')
+def quotes(request):  
+  quotes = []
+  for position in Position.all():
+    quotes.append(Quote.yahoo(position.symbol))
   count = len(quotes)
+  
   return shortcuts.render_to_response('quotes.html', locals())
