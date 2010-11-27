@@ -166,7 +166,10 @@ class Position(models.BaseModel):
     return self.local_value() - self.cost()
   
   def gainp(self):
-    return self.gain()/self.cost() * 100
+    if self.cost() > 0:
+      return self.gain()/self.cost() * 100
+    else:
+      return ""
   
   def cost(self):
     return self.shares * self.enter_price * self.currency_rate + self.enter_commission
