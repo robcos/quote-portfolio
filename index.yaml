@@ -15,3 +15,17 @@ indexes:
   - name: portfolio
   - name: symbol
     direction: desc
+
+- kind: Position
+  properties:
+  - name: portfolio
+  - name: symbol
+    direction: desc
+  - name: enter_date
+    direction: desc
+
+- kind: Quote
+  properties:
+  - name: symbol
+  - name: date
+    direction: desc

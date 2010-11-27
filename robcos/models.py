@@ -2,10 +2,19 @@ from appengine_django import models
 from google.appengine.ext import db
 from datetime import date
 from datetime import datetime
+from datetime import timedelta
 import ystockquote
 from google.appengine.api import memcache
 import types
 import urllib2
+
+class DuplicateException(Exception):
+  def __init__(self, value):
+    self.value = value
+
+  def __str__(self):
+    return repr(self.value)
+
 
 def cached(f):
   def g(*args, **kwargs):
@@ -42,13 +51,13 @@ class RealtimeQuote(models.BaseModel):
  
     all = ystockquote.get_all(symbol)
     try:
-      date = datetime.strptime(all['date'], '"%m/%d/%Y"').date()
+      _date = datetime.strptime(all['date'], '"%m/%d/%Y"').date()
     except Exception, e:
       return None
 
     return {
         'symbol': symbol,
-        'date': date,
+        'date': _date,
         'price': all['price'], 
         'high': all['high'], 
         'low': all['low'], 
@@ -59,6 +68,9 @@ class Quote(models.BaseModel):
   symbol = db.StringProperty(required=True)
   date = db.DateProperty(required=True)
   close = db.FloatProperty(required=True)
+  high = db.FloatProperty(required=True)
+  low = db.FloatProperty(required=True)
+  open = db.FloatProperty(required=True)
   
   @staticmethod
   def load(symbol, date):
@@ -73,7 +85,71 @@ class Quote(models.BaseModel):
     for p in query:
       p.delete()
 
-   
+  @staticmethod
+  def yahoo(symbol):
+    """
+    Loads the prices from the start date for the given symbol
+    Only new quotes are downloaded.
+    """
+    to = date.today().strftime("%Y%m%d")
+    query = db.Query(Quote)
+    query.order('-date')
+    query.filter('symbol = ', symbol)
+    latest_quote = query.get()
+    if latest_quote:
+      _from = latest_quote.date
+    else:
+      _from = date.today() - timedelta(days=30)
+  
+    if _from == date.today():
+      #print "Skipping %s" % symbol
+      return
+    #print "Downloading %s" % symbol
+    if _from is None: 
+      _from = start_date
+    else:
+      _from = _from.strftime("%Y%m%d")
+    prices = ystockquote.get_historical_prices(symbol, _from, to)
+    headers = prices[0]
+    try:
+      close = Quote.get_idx(headers, 'Close')
+      date_ = Quote.get_idx(headers, 'Date')
+      open = Quote.get_idx(headers, 'Open')
+      high = Quote.get_idx(headers, 'High')
+      low = Quote.get_idx(headers, 'Low')
+    except Exception, e:
+      raise Exception('Could not download %s" % e')
+    quotes = prices[1:]
+    return_value = []
+    for l in quotes:
+      try:
+        q = Quote(symbol=symbol, 
+          date = datetime.strptime(l[date_], '%Y-%m-%d').date(),
+          close=float(l[close]),
+          high=float(l[high]),
+          low=float(l[low]),
+          open=float(l[open])
+          ).save()
+        return_value.append(q)
+      except DuplicateException, e:
+        pass
+    return return_value
+
+  @staticmethod
+  def get_idx(headers, query):
+    for index, item in enumerate(headers):
+      if (item == query):
+        return index
+    raise "Eror ind downloading quote"
+
+  def save(self):
+    p = Quote.load(self.symbol, self.date)
+    if p is None:
+      self.put()
+      return self
+    else:
+      raise DuplicateException('Quote already exists')
+
 
 class Portfolio(models.BaseModel):
   name = db.StringProperty(required=True)
@@ -96,14 +172,14 @@ class Portfolio(models.BaseModel):
       self.put()
       return self
     else:
-      raise Exception('Portfolio already exists')
+      raise DuplicateException('Portfolio already exists')
 
   @cached
   def get_positions(self):
     query = db.Query(Position)
     query.filter("portfolio =", self)
     query.order('-symbol')
-    query.order('-date')
+    query.order('-enter_date')
     return query.fetch(query.count())
   
   def local_value(self):
@@ -148,7 +224,7 @@ class Position(models.BaseModel):
       self.put()
       return self
     else:
-      raise Exception('Position already exists')
+      raise DuplicateException('Position already exists')
 
   @staticmethod
   def load(symbol, enter_date, portfolio):

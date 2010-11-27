@@ -107,3 +107,8 @@ def edit(request, key):
     form = PositionForm(instance=db.get(key))
 
   return shortcuts.render_to_response('index.html', locals())
+
+def quotes(request):
+  quotes = Quote.yahoo('AAPL')
+  count = len(quotes)
+  return shortcuts.render_to_response('quotes.html', locals())

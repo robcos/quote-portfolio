@@ -18,6 +18,7 @@ from django.conf.urls.defaults import *
 urlpatterns = patterns(
     '',
     (r'^$', 'portfolio.index'),
+    (r'^quotes$', 'portfolio.quotes'),
     (r'^edit/(?P<key>[a-zA-Z0-9]*)$', 'portfolio.edit'),
     ('fixture.html', 'portfolio.fixture'),
     (r'^test', include('gaeunit.urls')),
