@@ -64,7 +64,11 @@ def fixture(request):
         portfolio=avanza).save()
   Quote(symbol='AAPL', 
         close=1234.5,
-        date=date.today()).save()
+        high=1234.5,
+        low=1234.5,
+        open=1234.5,
+        date=date.today())
+    #.save()
 
   return HttpResponseRedirect('/')
 

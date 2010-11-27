@@ -270,7 +270,10 @@ class Position(models.BaseModel):
     query.filter('symbol = ', self.symbol)
     query.order('-date')
     quotes = query.fetch(10)
-    return min(map(lambda x: x.low, quotes))
+    if len(quotes) > 0:
+      return min(map(lambda x: x.low, quotes))
+    else:
+      return None
 
 class Currency(models.BaseModel):
   symbol = db.StringProperty(required=True)
