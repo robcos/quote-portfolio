@@ -247,10 +247,10 @@ class Position(models.BaseModel):
     return query.get()
   
   def value(self):
-    return self.shares * self.latest_quote().price
+    return self.shares * self.realtime_quote().price
   
   def local_value(self):
-    return self.shares * self.latest_quote().price * Currency.load(self.currency, self.portfolio.currency).rate
+    return self.shares * self.realtime_quote().price * Currency.load(self.currency, self.portfolio.currency).rate
   
   def gain(self):
     return self.local_value() - self.cost()
@@ -267,7 +267,7 @@ class Position(models.BaseModel):
   def loosing(self):
     return self.gain() < 0
   
-  def latest_quote(self):    
+  def realtime_quote(self):    
     return RealtimeQuote.load(self.symbol)
   
   def atr_exp_20(self):
