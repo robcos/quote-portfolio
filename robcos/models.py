@@ -7,6 +7,7 @@ import ystockquote
 from google.appengine.api import memcache
 import types
 import urllib2
+import array
 
 class DuplicateException(Exception):
   def __init__(self, value):
@@ -135,6 +136,17 @@ class Quote(models.BaseModel):
         pass
     return return_value
 
+  def tr(self):
+    query = db.Query(Quote)
+    query.filter('symbol = ', self.symbol)
+    query.filter('date < ', self.date)
+    query.order('-date')
+    prev = query.get()
+    if prev == None:
+      return self.high - self.low
+    else:
+      return max(self.high, prev.close) - min(self.low, prev.close)
+
   @staticmethod
   def get_idx(headers, query):
     for index, item in enumerate(headers):
@@ -257,6 +269,31 @@ class Position(models.BaseModel):
   
   def latest_quote(self):    
     return RealtimeQuote.load(self.symbol)
+  
+  def atr_exp_20(self):
+    #quotes = self.latest_quote(2)[0].date
+    quotes = self.latest_quote(3)
+    quotes.reverse()
+    v = map(lambda x: x.tr(), quotes)
+    #print v
+    #print "saa"
+    #print reduce(lambda yesterday, today: (today * 19 + yesterday)/20, quotes)
+    #print reduce(lambda x,y: x+y, quotes)
+    #print "later"
+    #.tr()
+    #return self.latest_quote(1)[0].tr()
+
+  def atr_20(self):
+    trs = map(lambda x: x.tr(), self.latest_quote(20))
+    return sum(trs)/len(trs)
+  
+  #@cached  
+  def latest_quote(self, number):
+    query = db.Query(Quote)
+    query.filter('symbol = ', self.symbol)
+    query.order('-date')
+    return query.fetch(number)
+  
     
   @staticmethod
   def delete_all():

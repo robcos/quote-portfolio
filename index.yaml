@@ -34,4 +34,9 @@ indexes:
   properties:
   - name: symbol
   - name: date
+
+- kind: Quote
+  properties:
+  - name: symbol
+  - name: date
     direction: desc
