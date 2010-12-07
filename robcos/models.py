@@ -286,7 +286,10 @@ class Position(models.BaseModel):
 
   def atr_20(self):
     trs = map(lambda x: x.tr(), self.latest_quote(20))
-    return sum(trs)/len(trs)
+    if len(trs):
+      return sum(trs)/len(trs)
+    else:
+      return None
   
   #@cached  
   def latest_quote(self, number):
