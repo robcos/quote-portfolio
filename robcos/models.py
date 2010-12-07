@@ -224,6 +224,7 @@ class Position(models.BaseModel):
   enter_date = db.DateProperty(required=True, default=date.today())
   exit_date = db.DateProperty(required=False)
   enter_price = db.FloatProperty(required=True)
+  stop = db.FloatProperty(required=False, default=1.0)
   exit_price = db.FloatProperty(required=False)
   enter_commission = db.FloatProperty(required=True, default='99')
   exit_commission = db.FloatProperty(required=False)
