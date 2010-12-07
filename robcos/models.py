@@ -7,6 +7,7 @@ import ystockquote
 from google.appengine.api import memcache
 import types
 import urllib2
+import logging
 import array
 
 class DuplicateException(Exception):
@@ -22,7 +23,10 @@ def cached(f):
     key =  str((f, tuple(args), frozenset(kwargs.items())))
     if memcache.get(key) is None:
       value = f(*args, **kwargs)
-      memcache.add(key, value, 5) # Cache for 5 seconds
+      memcache.add(key, value, 50) # Cache for 5 seconds
+      logging.debug("no hit for %s" % key)
+    #else:
+    #  logging.info("hit for %s" % key)
     return memcache.get(key)
   return g
 
@@ -100,7 +104,7 @@ class Quote(models.BaseModel):
     if latest_quote:
       _from = latest_quote.date
     else:
-      _from = date.today() - timedelta(days=30)
+      _from = date.today() - timedelta(days=60)
   
     if _from == date.today():
       #print "Skipping %s" % symbol
@@ -284,26 +288,43 @@ class Position(models.BaseModel):
     #.tr()
     #return self.latest_quote(1)[0].tr()
 
+  @cached
   def atr_20(self):
-    trs = map(lambda x: x.tr(), self.latest_quote(20))
-    if len(trs):
-      return sum(trs)/len(trs)
-    else:
-      return None
+    return self.atr(self.latest_quote(20))
+ 
+  def calculated_stop(self):
+    return self.enter_price - 3 * self.atr_20_at_enter()
   
-  #@cached  
+  def below_stop(self):
+    return self.enter_price < self.calculated_stop()
+
+  @cached  
   def latest_quote(self, number):
     query = db.Query(Quote)
     query.filter('symbol = ', self.symbol)
     query.order('-date')
     return query.fetch(number)
-  
     
   @staticmethod
   def delete_all():
     query = db.Query(Position)
     for p in query:
       p.delete()
+
+  @cached
+  def atr_20_at_enter(self):
+    query = db.Query(Quote)
+    query.filter('symbol = ', self.symbol)
+    query.filter('date < ', self.enter_date)
+    query.order('-date')
+    return self.atr(query.fetch(20))
+
+  def atr(self, quotes):
+    trs = map(lambda x: x.tr(), quotes)
+    if len(trs):
+      return sum(trs)/len(trs)
+    else:
+      return None
 
   @cached
   def ll_10(self):
