@@ -98,7 +98,7 @@ def index(request):
   else:
     form = PositionForm()
 
-  return shortcuts.render_to_response('index2.html', locals())
+  return shortcuts.render_to_response('index.html', locals())
 
 def edit(request, key):
   portfolios = Portfolio.all()

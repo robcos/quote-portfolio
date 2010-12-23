@@ -7,6 +7,7 @@ import ystockquote
 from google.appengine.api import memcache
 import types
 import urllib2
+from google.appengine.api.urlfetch_errors import DownloadError
 import logging
 import array
 
@@ -65,9 +66,9 @@ class RealtimeQuote(models.BaseModel):
     """
        Downloads the latest quote for the given symbol
     """
- 
-    all = ystockquote.get_all(symbol)
+    all = None
     try:
+      all = ystockquote.get_all(symbol)
       _date = datetime.strptime(all['date'], '"%m/%d/%Y"').date()
     except Exception, e:
       return None
@@ -379,6 +380,10 @@ class Currency(models.BaseModel):
         
     except urllib2.URLError, e:
       print e
+    except DownloadError, e:
+      print e
+    return None
+
 
   @staticmethod
   def all():
