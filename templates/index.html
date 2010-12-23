@@ -70,32 +70,32 @@
 
 {% for position in portfolio.get_positions %}
 <tr>
-<td><a href="/edit/{{position.key}}">{{position.symbol}}</a></td>
-<td>{{position.realtime_quote.date}}</td>
-<td>{{position.enter_date}}</td>
-{# <td>{{ position.value|stringformat:'10.2f' }}</td> #}
-<td title="{{ position.value|stringformat:'10.2f' }} {{position.currency}}">{{ position.local_value|stringformat:'10.2f' }}</td>
-<td>{{ position.cost|stringformat:'10.2f' }}</td>
-<td{% if position.loosing %} class="negative"{% endif %}>{{ position.gain|stringformat:'10.2f' }}</td>
-<td>{{position.shares }}</td>
-<td>{{position.rtr}}</td>
-<td>{{position.enter_price|stringformat:'10.2f' }}</td>
-<td>{{position.gainp|stringformat:'2.1f%%' }}</td>
-<td>{{position.realtime_quote.price|stringformat:'10.2f' }}</td>
-<td{% if position.below_stop %} class="negative"{% endif %}>{{position.calculated_stop|stringformat:'10.2f' }}</td>
-<td>{{ position.atr_20|stringformat:'10.2f' }}</td>
-<td>{{ position.atr_20_at_enter|stringformat:'10.2f' }}</td>
-<td>{{ position.ll_10|stringformat:'10.2f' }}</td>
-<td>{{position.second_unit|stringformat:'10.2f' }}</td>
+<td><a href="/edit/{{xposition.key}}">{{position.symbol}}</a></td>
+<td>{{xposition.realtime_quote.date}}</td>
+<td>{{xposition.enter_date}}</td>
+{# <td>{{ xposition.value|stringformat:'10.2f' }}</td> #}
+<td title="{{ xposition.value|stringformat:'10.2f' }} {{xposition.currency}}">{{ xposition.local_value|stringformat:'10.2f' }}</td>
+<td>{{ xposition.cost|stringformat:'10.2f' }}</td>
+<td{% if position.loosing %} class="negative"{% endif %}>{{ xposition.gain|stringformat:'10.2f' }}</td>
+<td>{{xposition.shares }}</td>
+<td>{{xposition.rtr}}</td>
+<td>{{xposition.enter_price|stringformat:'10.2f' }}</td>
+<td>{{xposition.gainp|stringformat:'2.1f%%' }}</td>
+<td>{{xposition.realtime_quote.price|stringformat:'10.2f' }}</td>
+<td{% if position.below_stop %} class="negative"{% endif %}>{{xposition.calculated_stop|stringformat:'10.2f' }}</td>
+<td>{{ xposition.atr_20|stringformat:'10.2f' }}</td>
+<td>{{ xposition.atr_20_at_enter|stringformat:'10.2f' }}</td>
+<td{% if xposition.below_ll_10  %} class="negative"{% endif %}>{{xposition.ll_10|stringformat:'10.2f' }}</td>
+<td>{{ xposition.second_unit|stringformat:'10.2f' }}</td>
 </tr>
 {% endfor %}
 <tr>
 <td></td>
 <td></td>
 <td></td>
-<td>{{ portfolio.local_value|stringformat:'10.2f' }}</td>
-<td>{{ portfolio.cost|stringformat:'10.2f' }}</td>
-<td{% if portfolio.loosing %} class="negative"{% endif %}>{{ portfolio.gain|stringformat:'10.2f' }}</td>
+<td>{{ xportfolio.local_value|stringformat:'10.2f' }}</td>
+<td>{{ xportfolio.cost|stringformat:'10.2f' }}</td>
+<td{% if xportfolio.loosing %} class="negative"{% endif %}>{{ xportfolio.gain|stringformat:'10.2f' }}</td>
 <td></td>
 <td></td>
 <td></td>
