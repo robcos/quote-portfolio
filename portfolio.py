@@ -67,8 +67,7 @@ def fixture(request):
         high=1234.5,
         low=1234.5,
         open=1234.5,
-        date=date.today())
-    #.save()
+        date=date.today()).save()
 
   return HttpResponseRedirect('/')
 
