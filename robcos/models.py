@@ -17,13 +17,25 @@ class DuplicateException(Exception):
   def __str__(self):
     return repr(self.value)
 
+def long_cached(f):
+  def g(*args, **kwargs):
+    key =  str((f, tuple(args), frozenset(kwargs.items()))) + 'long'
+    if memcache.get(key) is None:
+      value = f(*args, **kwargs)
+      memcache.add(key, value, 5) # Cache for 1 hour
+      logging.debug("no hit for %s" % key)
+    #else:
+    #  logging.info("hit for %s" % key)
+    return memcache.get(key)
+  return g
+
 
 def cached(f):
   def g(*args, **kwargs):
     key =  str((f, tuple(args), frozenset(kwargs.items())))
     if memcache.get(key) is None:
       value = f(*args, **kwargs)
-      memcache.add(key, value, 50) # Cache for 5 seconds
+      memcache.add(key, value, 5) # Cache for 5 seconds
       logging.debug("no hit for %s" % key)
     #else:
     #  logging.info("hit for %s" % key)
@@ -123,7 +135,8 @@ class Quote(models.BaseModel):
       high = Quote.get_idx(headers, 'High')
       low = Quote.get_idx(headers, 'Low')
     except Exception, e:
-      raise Exception('Could not download %s" % e')
+      logging.warning('Could not download %s" % e')
+      return None
     quotes = prices[1:]
     return_value = []
     for l in quotes:
@@ -156,7 +169,7 @@ class Quote(models.BaseModel):
     for index, item in enumerate(headers):
       if (item == query):
         return index
-    raise "Eror ind downloading quote"
+    raise Exception('Could not get index for %s in %s', (query, headers))
 
   def save(self):
     p = Quote.load(self.symbol, self.date)
@@ -272,6 +285,7 @@ class Position(models.BaseModel):
   def loosing(self):
     return self.gain() < 0
   
+  @cached
   def realtime_quote(self):    
     return RealtimeQuote.load(self.symbol)
   
@@ -295,10 +309,13 @@ class Position(models.BaseModel):
   def calculated_stop(self):
     return self.enter_price - 3 * self.atr_20_at_enter()
   
-  def below_stop(self):
-    return self.enter_price < self.calculated_stop()
+  def below_ll_10(self):
+    return self.realtime_quote().price < self.ll_10()
 
-  @cached  
+  def below_stop(self):
+    return self.realtime_quote().price < self.calculated_stop()
+
+  @long_cached
   def latest_quote(self, number):
     query = db.Query(Quote)
     query.filter('symbol = ', self.symbol)
@@ -311,7 +328,7 @@ class Position(models.BaseModel):
     for p in query:
       p.delete()
 
-  @cached
+  @long_cached
   def atr_20_at_enter(self):
     query = db.Query(Quote)
     query.filter('symbol = ', self.symbol)
@@ -326,7 +343,7 @@ class Position(models.BaseModel):
     else:
       return None
 
-  @cached
+  @long_cached
   def ll_10(self):
     query = db.Query(Quote)
     query.filter('symbol = ', self.symbol)
