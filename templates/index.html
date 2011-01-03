@@ -1,5 +1,6 @@
 <html>
 <head>
+<title>My stocks</title>
 <style>
   body {
     font-family: monospace;
@@ -47,7 +48,7 @@
 <body>
 {% for portfolio in portfolios %}
 <table border="1" class="portfolio">
-<caption>Portfolio: {{portfolio.name}} ({{portfolio.currency}})</caption>
+<caption>Portfolio: {{portfolio.name}} ({{portfolio.value}} {{portfolio.currency}})</caption>
 <tr>
 <th>Symbol</th>
 <th>Date</th>
@@ -56,13 +57,14 @@
 <th>Local value</th>
 <th>Cost</th>
 <th>Gain</th>
+<th>Gain %</th>
 <th>Shares</th>
 <th>RTR</th>
 <th>Enter Price</th>
-<th>Gain %</th>
 <th>Price</th>
 <th>Stop</th>
 <th>Sugg stop</th>
+<th>Sugg pos</th>
 <th>ATR 20</th>
 <th>Enter ATR 20</th>
 <th>LL 10</th>
@@ -77,13 +79,14 @@
 <td title="{{ position.value|stringformat:'10.2f' }} {{position.currency}}">{{ position.local_value|stringformat:'10.2f' }}</td>
 <td>{{ position.cost|stringformat:'10.2f' }}</td>
 <td{% if position.loosing %} class="negative"{% endif %}>{{ position.gain|stringformat:'10.2f' }}</td>
+<td{% if position.loosing %} class="negative"{% endif %}>{{ position.gainp|stringformat:'2.1f%%' }}</td>
 <td>{{position.shares }}</td>
-<td>{{ position.rtr|stringformat:'.2f' }}</td>
+<td{% if position.below_stop %} class="negative"{% endif %}>{{position.rtr|stringformat:'.2f' }}</td>
 <td>{{position.enter_price|stringformat:'10.2f' }}</td>
-<td>{{position.gainp|stringformat:'2.1f%%' }}</td>
 <td>{{position.realtime_quote.price|stringformat:'10.2f' }}</td>
 <td{% if position.below_stop %} class="negative"{% endif %}>{{position.stop|stringformat:'10.2f' }}</td>
-<td>{{position.suggested_stop|stringformat:'10.2f' }}</td>
+<td title="enter price - 3 times the enter atr 20">{{position.suggested_stop|stringformat:'10.2f' }}</td>
+<td title="">{{position.suggested_shares|stringformat:'.0f' }}</td>
 <td>{{ position.atr_20|stringformat:'10.2f' }}</td>
 <td>{{ position.atr_20_at_enter|stringformat:'10.2f' }}</td>
 <td{% if position.below_ll_10  %} class="negative"{% endif %}>{{position.ll_10|stringformat:'10.2f' }}</td>
@@ -97,6 +100,8 @@
 <td>{{ portfolio.local_value|stringformat:'10.2f' }}</td>
 <td>{{ portfolio.cost|stringformat:'10.2f' }}</td>
 <td{% if portfolio.loosing %} class="negative"{% endif %}>{{ portfolio.gain|stringformat:'10.2f' }}</td>
+<td></td>
+<td></td>
 <td></td>
 <td></td>
 <td></td>

@@ -10,6 +10,7 @@ import urllib2
 from google.appengine.api.urlfetch_errors import DownloadError
 import logging
 import array
+import math
 
 class DuplicateException(Exception):
   def __init__(self, value):
@@ -182,6 +183,7 @@ class Quote(models.BaseModel):
 
 class Portfolio(models.BaseModel):
   name = db.StringProperty(required=True)
+  value = db.FloatProperty(required=True, default=0.0)
   currency = db.StringProperty(required=True, default='SEK', choices=['SEK', 'USD', 'GBP'])
 
   @staticmethod
@@ -274,12 +276,12 @@ class Position(models.BaseModel):
   
   def gainp(self):
     if self.cost() > 0:
-      return self.gain()/self.cost() * 100
+      return self.gain() / self.cost() * 100
     else:
-      return ""
+      return None
   
   def cost(self):
-    return self.shares * self.enter_price * self.currency_rate + self.enter_commission
+    return self.shares * self.enter_price * self.currency_rate + self.commission()
 
   def loosing(self):
     return self.gain() < 0
@@ -293,14 +295,26 @@ class Position(models.BaseModel):
   def suggested_stop(self):
     return self.enter_price - 3 * self.atr_20_at_enter()
   
+  def suggested_shares(self):
+    portfolio_value = self.portfolio.value
+    allowed_risk = portfolio_value / 100
+    allowed_risk = allowed_risk - self.commission()
+    risk_per_share = self.enter_price - self.stop
+    shares = 0
+    if risk_per_share:
+      shares = math.floor(allowed_risk / risk_per_share)
+    if shares > 0:
+      return shares
+    else:
+      return None
+  
   def below_ll_10(self):
-    return self.realtime_quote().price < self.ll_10()
+    return self.realtime_quote().price <= self.ll_10()
 
   def below_stop(self):
-    return self.realtime_quote().price < self.stop
+    return self.realtime_quote().price <= self.stop
 
   def commission(self):
-    return 1.0
     commission = 2 * self.enter_commission
     if self.exit_commission:
       commission = self.enter_commission + self.exit_commission
@@ -310,7 +324,10 @@ class Position(models.BaseModel):
     return self.shares * (self.enter_price - self.stop) * self.currency_rate + self.commission()
 
   def rtr(self):
-    return self.gain() / self.risk()
+    risk = self.risk()
+    if risk == 0:
+      return None
+    return self.gain() / risk
 
   @staticmethod
   def delete_all():
