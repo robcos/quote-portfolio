@@ -1,0 +1,9 @@
+cron:
+- description: Alert when the London Stock Exchange closes
+  url: /alerts
+  schedule: every day 18.00
+  timezone: Europe/London
+- description: Alert when the NYC stock exchange closes
+  url: /alerts
+  schedule: every day 16.00
+  timezone: America/New_York
