@@ -46,6 +46,9 @@
 </style>
 </head>
 <body>
+<a href="?show_closed=true">Show closed positions</a>
+<a href="?show_closed=false">Show only open positions</a>
+<a href="/quotes">Get quotes</a>
 {% for portfolio in portfolios %}
 <table border="1" class="portfolio">
 <caption>Portfolio: {{portfolio.name}}
@@ -174,8 +177,22 @@
   <th><label for="id_enter_commission">Enter commission</label></th>
   <td>{{ form.enter_commission }} {{form.enter_commission.errors}}</td>
 </tr>
+<tr><th>Position exit</th></tr>
+<tr class="fieldWrapper">
+  <th><label for="id_exit_date">Exit date</label></th>
+  <td>{{ form.exit_date }} {{form.exit_date.errors}}</td>
+</tr>
+<tr class="fieldWrapper">
+  <th><label for="id_exit_commission">Exit commission</label></th>
+  <td>{{ form.exit_commission }} {{form.exit_commission.errors}}</td>
+</tr>
+<tr class="fieldWrapper">
+  <th><label for="id_exit_price">Exit price</label></th>
+  <td>{{ form.exit_price }} {{form.exit_price.errors}}</td>
+</tr>
 <tr><th></th>
 <td><input type="submit" value="save"></td>
+</table>
 </form>
 </body>
 </html>

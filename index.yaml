@@ -12,6 +12,13 @@ indexes:
 
 - kind: Position
   properties:
+  - name: exit_date
+  - name: portfolio
+  - name: symbol
+  - name: enter_date
+
+- kind: Position
+  properties:
   - name: portfolio
   - name: symbol
   - name: enter_date

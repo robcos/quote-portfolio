@@ -86,8 +86,15 @@ class PositionForm(ModelForm):
       raise ValidationError('There is already a position for %s on %s' % (symbol, enter_date))
     return self.cleaned_data
 
-def index(request):
+def get_portfolios(request):
   portfolios = Portfolio.all()
+  show_closed_positions = request.GET.get('show_closed', False) == 'true'
+  for p in portfolios:
+    p.set_show_closed(show_closed_positions)
+  return portfolios
+
+def index(request):
+  portfolios = get_portfolios(request)
   currencies = Currency.all()
 
   if request.method == 'POST':
@@ -121,7 +128,7 @@ def alerts(request):
   return HttpResponseRedirect('/')
   
 def edit(request, key):
-  portfolios = Portfolio.all()
+  portfolios = get_portfolios(request)
   if request.method == 'POST':
     form = PositionForm(request.POST, instance=db.get(key))
     if form.is_valid():
@@ -148,9 +155,7 @@ def portfolio(request):
   return HttpResponseRedirect('/')
 
 def quotes(request):  
-  quotes = []
   for position in Position.all():
-    quotes.append(Quote.yahoo(position.symbol))
-  count = len(quotes)
+    Quote.yahoo(position.symbol)
   
-  return shortcuts.render_to_response('quotes.html', locals())
+  return HttpResponseRedirect('/')

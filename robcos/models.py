@@ -185,6 +185,7 @@ class Portfolio(models.BaseModel):
   name = db.StringProperty(required=True)
   value = db.FloatProperty(required=True, default=0.0)
   currency = db.StringProperty(required=True, default='SEK', choices=['SEK', 'USD', 'GBP'])
+  show_closed = True
 
   @staticmethod
   def load(name):
@@ -204,10 +205,16 @@ class Portfolio(models.BaseModel):
       return self
     else:
       raise DuplicateException('Portfolio already exists')
+  
+  def set_show_closed(self, value):
+    self.show_closed = value
 
   def get_positions(self):
     query = db.Query(Position)
     query.filter("portfolio =", self)
+    logging.info(self.show_closed)
+    if not self.show_closed:
+      query.filter("exit_date =", None)
     query.order('symbol')
     query.order('enter_date')
     return query.fetch(query.count())
