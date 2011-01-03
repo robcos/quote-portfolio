@@ -19,6 +19,7 @@ urlpatterns = patterns(
     '',
     (r'^$', 'portfolio.index'),
     (r'^quotes$', 'portfolio.quotes'),
+    (r'^alerts$', 'portfolio.alerts'),
     (r'^position$', 'portfolio.position'),
     (r'^edit/(?P<key>[a-zA-Z0-9-_]*)$', 'portfolio.edit'),
     ('fixture.html', 'portfolio.fixture'),

@@ -19,6 +19,7 @@
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from django.template import TemplateDoesNotExist
+from google.appengine.api import mail
 
 import os
 
@@ -99,6 +100,26 @@ def index(request):
 
   return shortcuts.render_to_response('index.html', locals())
 
+def alerts(request):
+  body = ''
+  for position in Position.all():
+    if position.below_stop():
+      body += '\n%s in portfolio %s below stop' % (position.symbol, position.portfolio.name)
+    if position.below_ll_10():
+      body += '\n%s in portfolio %s below ll10' % (position.symbol, position.portfolio.name)
+  if len(body) == 0:
+    return HttpResponseRedirect('/')
+
+  body = 'The following alerts have been triggered:\n' + body
+  body += '\n\nVisit http://quote-portfolio.appspot.com for details.'
+
+  mail.send_mail(sender="robcos@robcos.com",
+    to="robcos@robcos.com",
+    subject="Portfolio alert",
+    body=body)
+
+  return HttpResponseRedirect('/')
+  
 def edit(request, key):
   portfolios = Portfolio.all()
   if request.method == 'POST':
