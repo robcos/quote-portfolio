@@ -111,6 +111,12 @@ def edit(request, key):
 
   return shortcuts.render_to_response('index.html', locals())
 
+def position(request):
+  """ To import positions """
+  form = PositionForm(request.GET)
+  form.save()
+  return HttpResponseRedirect('/')
+
 def quotes(request):  
   quotes = []
   for position in Position.all():
