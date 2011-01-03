@@ -1,0 +1,257 @@
+[INFO     2011-01-03 11:27:23,413 bulkloader.py] Logging to bulkloader-log-20110103.112723
+[INFO     2011-01-03 11:27:23,414 bulkloader.py] Throttling transfers:
+[INFO     2011-01-03 11:27:23,414 bulkloader.py] Bandwidth: 250000 bytes/second
+[INFO     2011-01-03 11:27:23,414 bulkloader.py] HTTP connections: 8/second
+[INFO     2011-01-03 11:27:23,414 bulkloader.py] Entities inserted/fetched/modified: 20/second
+[INFO     2011-01-03 11:27:23,414 bulkloader.py] Batch Size: 10
+[INFO     2011-01-03 11:27:23,415 bulkloader.py] Opening database: bulkloader-progress-20110103.112723.sql3
+[INFO     2011-01-03 11:27:23,442 bulkloader.py] Opening database: bulkloader-results-20110103.112723.sql3
+[DEBUG    2011-01-03 11:27:23,451 adaptive_thread_pool.py] [WorkerThread-0] WorkerThread: started
+[DEBUG    2011-01-03 11:27:23,452 adaptive_thread_pool.py] [WorkerThread-1] WorkerThread: started
+[DEBUG    2011-01-03 11:27:23,452 adaptive_thread_pool.py] [WorkerThread-2] WorkerThread: started
+[DEBUG    2011-01-03 11:27:23,453 adaptive_thread_pool.py] [WorkerThread-3] WorkerThread: started
+[DEBUG    2011-01-03 11:27:23,453 adaptive_thread_pool.py] [WorkerThread-4] WorkerThread: started
+[DEBUG    2011-01-03 11:27:23,453 adaptive_thread_pool.py] [WorkerThread-5] WorkerThread: started
+[DEBUG    2011-01-03 11:27:23,454 adaptive_thread_pool.py] [WorkerThread-6] WorkerThread: started
+[DEBUG    2011-01-03 11:27:23,454 adaptive_thread_pool.py] [WorkerThread-7] WorkerThread: started
+[DEBUG    2011-01-03 11:27:23,454 adaptive_thread_pool.py] [WorkerThread-8] WorkerThread: started
+[DEBUG    2011-01-03 11:27:23,455 adaptive_thread_pool.py] [WorkerThread-9] WorkerThread: started
+[DEBUG    2011-01-03 11:27:23,455 bulkloader.py] Configuring remote_api. url_path = /_ah/remote_api, servername = quote-portfolio.appspot.com
+[DEBUG    2011-01-03 11:27:23,482 bulkloader.py] Bulkloader using app_id: quote-portfolio
+[INFO     2011-01-03 11:27:23,482 bulkloader.py] Connecting to quote-portfolio.appspot.com/_ah/remote_api
+[DEBUG    2011-01-03 11:27:50,281 bulkloader.py] [Thread-11] ExportProgressThread: started
+[DEBUG    2011-01-03 11:27:50,281 bulkloader.py] [Thread-12] DataSourceThread: started
+[INFO     2011-01-03 11:27:50,281 bulkloader.py] Downloading kinds: [u'Portfolio', u'Quote', u'Position']
+[DEBUG    2011-01-03 11:27:50,288 bulkloader.py] [Thread-12] DataSourceThread: exiting
+[DEBUG    2011-01-03 11:27:50,289 bulkloader.py] Waiting for worker threads to finish...
+[DEBUG    2011-01-03 11:27:50,290 adaptive_thread_pool.py] [WorkerThread-0] Got work item Portfolio-ASC[None to None]
+[DEBUG    2011-01-03 11:27:51,034 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.027
+[DEBUG    2011-01-03 11:27:51,034 bulkloader.py] Entities transferred total: 3
+[DEBUG    2011-01-03 11:27:51,067 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:27:51,068 bulkloader.py] [WorkerThread-0] Portfolio-ASC[None to None] Transferred 3 entities in 0.7 seconds
+[DEBUG    2011-01-03 11:27:51,069 adaptive_thread_pool.py] Increasing active thread count to 2
+[DEBUG    2011-01-03 11:27:51,069 adaptive_thread_pool.py] [WorkerThread-0] Got work item Quote-ASC[None to None]
+[DEBUG    2011-01-03 11:27:51,070 adaptive_thread_pool.py] [WorkerThread-9] Got work item Position-ASC[None to None]
+[DEBUG    2011-01-03 11:27:51,795 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:27:51,795 bulkloader.py] Entities transferred total: 13
+[DEBUG    2011-01-03 11:27:51,834 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:27:51,843 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.006
+[DEBUG    2011-01-03 11:27:51,844 bulkloader.py] Entities transferred total: 23
+[DEBUG    2011-01-03 11:27:51,877 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:27:51,963 bulkloader.py] [WorkerThread-0] Quote-ASC[None to None] Transferred 10 entities in 0.6 seconds
+[DEBUG    2011-01-03 11:27:51,963 adaptive_thread_pool.py] Increasing active thread count to 3
+[DEBUG    2011-01-03 11:27:51,965 adaptive_thread_pool.py] [WorkerThread-0] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 109003L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:27:51,994 bulkloader.py] [WorkerThread-9] Position-ASC[None to None] Transferred 10 entities in 0.6 seconds
+[DEBUG    2011-01-03 11:27:51,994 adaptive_thread_pool.py] Increasing active thread count to 4
+[DEBUG    2011-01-03 11:27:51,995 adaptive_thread_pool.py] [WorkerThread-9] Got work item Position-DESC(datastore_types.Key.from_path(u'Position', 118002L, _app=u'quote-portfolio') to None]
+[INFO     2011-01-03 11:27:52,618 bulkloader.py] Quote: No descending index on __key__, performing serial download
+[INFO     2011-01-03 11:27:52,667 bulkloader.py] Position: No descending index on __key__, performing serial download
+[DEBUG    2011-01-03 11:27:53,006 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:27:53,006 bulkloader.py] Entities transferred total: 33
+[DEBUG    2011-01-03 11:27:53,384 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:27:53,408 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.003
+[DEBUG    2011-01-03 11:27:53,409 bulkloader.py] Entities transferred total: 37
+[DEBUG    2011-01-03 11:27:53,438 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:27:53,442 bulkloader.py] [WorkerThread-9] Position-ASC(datastore_types.Key.from_path(u'Position', 118002L, _app=u'quote-portfolio') to None] Transferred 4 entities in 0.9 seconds
+[DEBUG    2011-01-03 11:27:53,442 adaptive_thread_pool.py] Increasing active thread count to 5
+[DEBUG    2011-01-03 11:27:53,465 bulkloader.py] [WorkerThread-0] Quote-ASC(datastore_types.Key.from_path(u'Quote', 109003L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.9 seconds
+[DEBUG    2011-01-03 11:27:53,466 adaptive_thread_pool.py] Increasing active thread count to 6
+[DEBUG    2011-01-03 11:27:53,466 adaptive_thread_pool.py] [WorkerThread-0] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 120003L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:27:53,844 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:27:53,844 bulkloader.py] Entities transferred total: 47
+[DEBUG    2011-01-03 11:27:53,846 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:27:53,849 bulkloader.py] [WorkerThread-0] Quote-ASC(datastore_types.Key.from_path(u'Quote', 120003L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.3 seconds
+[DEBUG    2011-01-03 11:27:53,849 adaptive_thread_pool.py] Increasing active thread count to 7
+[DEBUG    2011-01-03 11:27:53,850 adaptive_thread_pool.py] [WorkerThread-0] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 132003L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:27:54,186 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.007
+[DEBUG    2011-01-03 11:27:54,186 bulkloader.py] Entities transferred total: 57
+[DEBUG    2011-01-03 11:27:54,188 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:27:54,192 bulkloader.py] [WorkerThread-0] Quote-ASC(datastore_types.Key.from_path(u'Quote', 132003L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.3 seconds
+[DEBUG    2011-01-03 11:27:54,193 adaptive_thread_pool.py] Increasing active thread count to 8
+[DEBUG    2011-01-03 11:27:54,196 adaptive_thread_pool.py] [WorkerThread-0] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 139004L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:27:54,620 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:27:54,620 bulkloader.py] Entities transferred total: 67
+[DEBUG    2011-01-03 11:27:54,664 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:27:54,720 bulkloader.py] [WorkerThread-0] Quote-ASC(datastore_types.Key.from_path(u'Quote', 139004L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.4 seconds
+[DEBUG    2011-01-03 11:27:54,720 adaptive_thread_pool.py] Increasing active thread count to 9
+[DEBUG    2011-01-03 11:27:54,721 adaptive_thread_pool.py] [WorkerThread-0] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 145002L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:27:55,649 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:27:55,649 bulkloader.py] Entities transferred total: 77
+[DEBUG    2011-01-03 11:27:55,683 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:27:55,721 bulkloader.py] [WorkerThread-0] Quote-ASC(datastore_types.Key.from_path(u'Quote', 145002L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.9 seconds
+[DEBUG    2011-01-03 11:27:55,722 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 154005L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:27:55,732 adaptive_thread_pool.py] Increasing active thread count to 10
+[DEBUG    2011-01-03 11:27:56,408 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.005
+[DEBUG    2011-01-03 11:27:56,408 bulkloader.py] Entities transferred total: 87
+[DEBUG    2011-01-03 11:27:56,410 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:27:56,448 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 154005L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.7 seconds
+[DEBUG    2011-01-03 11:27:56,449 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 162004L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:27:56,827 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:27:56,827 bulkloader.py] Entities transferred total: 97
+[DEBUG    2011-01-03 11:27:56,853 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:27:56,863 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 162004L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.4 seconds
+[DEBUG    2011-01-03 11:27:56,864 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 173004L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:27:57,290 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:27:57,290 bulkloader.py] Entities transferred total: 107
+[DEBUG    2011-01-03 11:27:57,306 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:27:57,312 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 173004L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.4 seconds
+[DEBUG    2011-01-03 11:27:57,313 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 179004L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:27:57,815 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.076
+[DEBUG    2011-01-03 11:27:57,815 bulkloader.py] Entities transferred total: 117
+[DEBUG    2011-01-03 11:27:57,938 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:27:58,159 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 179004L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.4 seconds
+[DEBUG    2011-01-03 11:27:58,160 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 187002L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:27:58,833 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:27:58,833 bulkloader.py] Entities transferred total: 127
+[DEBUG    2011-01-03 11:27:58,858 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:27:58,866 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 187002L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.7 seconds
+[DEBUG    2011-01-03 11:27:58,867 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 191002L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:27:59,489 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:27:59,490 bulkloader.py] Entities transferred total: 137
+[DEBUG    2011-01-03 11:27:59,492 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:27:59,495 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 191002L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.6 seconds
+[DEBUG    2011-01-03 11:27:59,495 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 197001L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:27:59,820 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:27:59,820 bulkloader.py] Entities transferred total: 147
+[DEBUG    2011-01-03 11:27:59,822 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:27:59,825 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 197001L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.3 seconds
+[DEBUG    2011-01-03 11:27:59,826 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 201001L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:28:00,201 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.005
+[DEBUG    2011-01-03 11:28:00,201 bulkloader.py] Entities transferred total: 157
+[DEBUG    2011-01-03 11:28:00,203 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:28:00,205 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 201001L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.3 seconds
+[DEBUG    2011-01-03 11:28:00,206 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 204003L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:28:00,680 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:28:00,680 bulkloader.py] Entities transferred total: 167
+[DEBUG    2011-01-03 11:28:00,682 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:28:00,685 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 204003L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.4 seconds
+[DEBUG    2011-01-03 11:28:00,686 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 210002L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:28:01,667 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:28:01,667 bulkloader.py] Entities transferred total: 177
+[DEBUG    2011-01-03 11:28:01,669 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:28:01,672 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 210002L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.9 seconds
+[DEBUG    2011-01-03 11:28:01,672 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 215002L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:28:02,294 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:28:02,294 bulkloader.py] Entities transferred total: 187
+[DEBUG    2011-01-03 11:28:02,330 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:28:02,347 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 215002L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.6 seconds
+[DEBUG    2011-01-03 11:28:02,348 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 220001L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:28:03,228 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:28:03,228 bulkloader.py] Entities transferred total: 197
+[DEBUG    2011-01-03 11:28:03,231 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:28:03,234 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 220001L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.9 seconds
+[DEBUG    2011-01-03 11:28:03,234 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 227001L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:28:03,860 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:28:03,860 bulkloader.py] Entities transferred total: 207
+[DEBUG    2011-01-03 11:28:03,861 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:28:03,865 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 227001L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.6 seconds
+[DEBUG    2011-01-03 11:28:03,866 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 235002L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:28:04,385 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:28:04,386 bulkloader.py] Entities transferred total: 217
+[DEBUG    2011-01-03 11:28:04,388 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:28:04,391 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 235002L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.5 seconds
+[DEBUG    2011-01-03 11:28:04,391 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 245001L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:28:04,864 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:28:04,864 bulkloader.py] Entities transferred total: 227
+[DEBUG    2011-01-03 11:28:04,866 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:28:04,870 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 245001L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.5 seconds
+[DEBUG    2011-01-03 11:28:04,870 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 252001L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:28:05,392 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:28:05,393 bulkloader.py] Entities transferred total: 237
+[DEBUG    2011-01-03 11:28:05,394 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:28:05,398 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 252001L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.5 seconds
+[DEBUG    2011-01-03 11:28:05,399 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 262001L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:28:05,720 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:28:05,721 bulkloader.py] Entities transferred total: 247
+[DEBUG    2011-01-03 11:28:05,723 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:28:05,726 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 262001L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.3 seconds
+[DEBUG    2011-01-03 11:28:05,726 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 272001L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:28:06,197 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:28:06,197 bulkloader.py] Entities transferred total: 257
+[DEBUG    2011-01-03 11:28:06,198 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:28:06,201 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 272001L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.5 seconds
+[DEBUG    2011-01-03 11:28:06,202 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 280001L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:28:06,772 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:28:06,772 bulkloader.py] Entities transferred total: 267
+[DEBUG    2011-01-03 11:28:06,774 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:28:06,777 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 280001L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.5 seconds
+[DEBUG    2011-01-03 11:28:06,778 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 288001L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:28:07,268 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.005
+[DEBUG    2011-01-03 11:28:07,268 bulkloader.py] Entities transferred total: 277
+[DEBUG    2011-01-03 11:28:07,275 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:28:07,278 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 288001L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.4 seconds
+[DEBUG    2011-01-03 11:28:07,279 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 295001L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:28:07,801 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:28:07,801 bulkloader.py] Entities transferred total: 287
+[DEBUG    2011-01-03 11:28:07,803 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:28:07,806 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 295001L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.5 seconds
+[DEBUG    2011-01-03 11:28:07,807 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 300001L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:28:08,277 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:28:08,277 bulkloader.py] Entities transferred total: 297
+[DEBUG    2011-01-03 11:28:08,279 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:28:08,282 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 300001L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.5 seconds
+[DEBUG    2011-01-03 11:28:08,282 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 306001L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:28:09,104 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:28:09,104 bulkloader.py] Entities transferred total: 307
+[DEBUG    2011-01-03 11:28:09,106 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:28:09,109 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 306001L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.8 seconds
+[DEBUG    2011-01-03 11:28:09,110 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 311003L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:28:10,229 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:28:10,229 bulkloader.py] Entities transferred total: 317
+[DEBUG    2011-01-03 11:28:10,230 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:28:10,233 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 311003L, _app=u'quote-portfolio') to None] Transferred 10 entities in 1.1 seconds
+[DEBUG    2011-01-03 11:28:10,234 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 315002L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:28:11,156 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:28:11,156 bulkloader.py] Entities transferred total: 327
+[DEBUG    2011-01-03 11:28:11,158 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:28:11,161 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 315002L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.9 seconds
+[DEBUG    2011-01-03 11:28:11,162 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 322001L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:28:11,832 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:28:11,832 bulkloader.py] Entities transferred total: 337
+[DEBUG    2011-01-03 11:28:11,834 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:28:11,837 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 322001L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.6 seconds
+[DEBUG    2011-01-03 11:28:11,837 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 330001L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:28:12,257 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:28:12,258 bulkloader.py] Entities transferred total: 347
+[DEBUG    2011-01-03 11:28:12,259 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:28:12,262 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 330001L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.4 seconds
+[DEBUG    2011-01-03 11:28:12,263 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 337001L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:28:12,983 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.004
+[DEBUG    2011-01-03 11:28:12,983 bulkloader.py] Entities transferred total: 357
+[DEBUG    2011-01-03 11:28:13,068 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:28:13,108 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 337001L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.7 seconds
+[DEBUG    2011-01-03 11:28:13,108 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 346002L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:28:13,857 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.005
+[DEBUG    2011-01-03 11:28:13,857 bulkloader.py] Entities transferred total: 367
+[DEBUG    2011-01-03 11:28:13,887 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:28:13,930 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 346002L, _app=u'quote-portfolio') to None] Transferred 10 entities in 0.7 seconds
+[DEBUG    2011-01-03 11:28:13,931 adaptive_thread_pool.py] [WorkerThread-3] Got work item Quote-DESC(datastore_types.Key.from_path(u'Quote', 354001L, _app=u'quote-portfolio') to None]
+[DEBUG    2011-01-03 11:28:14,582 bulkloader.py] bulkloader-results-20110103.112723.sql3 insert: delta=0.003
+[DEBUG    2011-01-03 11:28:14,582 bulkloader.py] Entities transferred total: 373
+[DEBUG    2011-01-03 11:28:14,590 bulkloader.py] delete: delta=0.000
+[DEBUG    2011-01-03 11:28:14,605 bulkloader.py] [WorkerThread-3] Quote-ASC(datastore_types.Key.from_path(u'Quote', 354001L, _app=u'quote-portfolio') to None] Transferred 6 entities in 0.6 seconds
+[DEBUG    2011-01-03 11:28:14,612 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2011-01-03 11:28:14,613 adaptive_thread_pool.py] [WorkerThread-3] WorkerThread: exiting
+[DEBUG    2011-01-03 11:28:14,615 adaptive_thread_pool.py] [WorkerThread-8] WorkerThread: exiting
+[DEBUG    2011-01-03 11:28:14,619 adaptive_thread_pool.py] [WorkerThread-0] WorkerThread: exiting
+[DEBUG    2011-01-03 11:28:14,619 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2011-01-03 11:28:14,620 adaptive_thread_pool.py] [WorkerThread-6] WorkerThread: exiting
+[DEBUG    2011-01-03 11:28:14,625 adaptive_thread_pool.py] [WorkerThread-4] WorkerThread: exiting
+[DEBUG    2011-01-03 11:28:14,626 adaptive_thread_pool.py] [WorkerThread-7] WorkerThread: exiting
+[DEBUG    2011-01-03 11:28:14,634 adaptive_thread_pool.py] [WorkerThread-5] WorkerThread: exiting
+[DEBUG    2011-01-03 11:28:14,655 adaptive_thread_pool.py] [WorkerThread-2] WorkerThread: exiting
+[DEBUG    2011-01-03 11:28:14,662 adaptive_thread_pool.py] [WorkerThread-9] WorkerThread: exiting
+[DEBUG    2011-01-03 11:28:14,662 adaptive_thread_pool.py] [WorkerThread-1] WorkerThread: exiting
+[DEBUG    2011-01-03 11:28:14,662 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2011-01-03 11:28:14,663 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2011-01-03 11:28:14,663 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2011-01-03 11:28:14,663 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2011-01-03 11:28:14,663 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2011-01-03 11:28:14,663 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2011-01-03 11:28:14,663 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2011-01-03 11:28:14,663 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2011-01-03 11:28:14,664 bulkloader.py] Waiting for progress_thread to terminate...
+[DEBUG    2011-01-03 11:28:14,669 bulkloader.py] [Thread-11] ExportProgressThread: exiting
+[DEBUG    2011-01-03 11:28:14,671 bulkloader.py] ... done.
+[INFO     2011-01-03 11:28:14,672 bulkloader.py] Have 373 entities, 0 previously transferred
+[INFO     2011-01-03 11:28:14,673 bulkloader.py] 373 entities (97356 bytes) transferred in 51.3 seconds

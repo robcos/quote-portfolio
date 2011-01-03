@@ -1,0 +1,224 @@
+[INFO     2011-01-03 11:30:38,525 bulkloader.py] Logging to bulkloader-log-20110103.113038
+[INFO     2011-01-03 11:30:38,525 bulkloader.py] Throttling transfers:
+[INFO     2011-01-03 11:30:38,525 bulkloader.py] Bandwidth: 250000 bytes/second
+[INFO     2011-01-03 11:30:38,525 bulkloader.py] HTTP connections: 8/second
+[INFO     2011-01-03 11:30:38,526 bulkloader.py] Entities inserted/fetched/modified: 20/second
+[INFO     2011-01-03 11:30:38,526 bulkloader.py] Batch Size: 10
+[INFO     2011-01-03 11:30:38,526 bulkloader.py] Opening database: bulkloader-progress-20110103.113038.sql3
+[DEBUG    2011-01-03 11:30:38,531 bulkloader.py] [Thread-1] RestoreThread: started
+[DEBUG    2011-01-03 11:30:38,540 bulkloader.py] [Thread-1] RestoreThread: exiting
+[DEBUG    2011-01-03 11:30:38,798 bulkloader.py] [Thread-2] RestoreThread: started
+[DEBUG    2011-01-03 11:30:38,807 bulkloader.py] [Thread-2] RestoreThread: exiting
+[DEBUG    2011-01-03 11:30:38,808 adaptive_thread_pool.py] [WorkerThread-0] WorkerThread: started
+[DEBUG    2011-01-03 11:30:38,808 adaptive_thread_pool.py] [WorkerThread-1] WorkerThread: started
+[DEBUG    2011-01-03 11:30:38,808 adaptive_thread_pool.py] [WorkerThread-2] WorkerThread: started
+[DEBUG    2011-01-03 11:30:38,809 adaptive_thread_pool.py] [WorkerThread-3] WorkerThread: started
+[DEBUG    2011-01-03 11:30:38,809 adaptive_thread_pool.py] [WorkerThread-4] WorkerThread: started
+[DEBUG    2011-01-03 11:30:38,809 adaptive_thread_pool.py] [WorkerThread-5] WorkerThread: started
+[DEBUG    2011-01-03 11:30:38,810 adaptive_thread_pool.py] [WorkerThread-6] WorkerThread: started
+[DEBUG    2011-01-03 11:30:38,810 adaptive_thread_pool.py] [WorkerThread-7] WorkerThread: started
+[DEBUG    2011-01-03 11:30:38,810 adaptive_thread_pool.py] [WorkerThread-8] WorkerThread: started
+[DEBUG    2011-01-03 11:30:38,810 adaptive_thread_pool.py] [WorkerThread-9] WorkerThread: started
+[DEBUG    2011-01-03 11:30:38,811 bulkloader.py] Configuring remote_api. url_path = /_ah/remote_api, servername = localhost:8086
+[DEBUG    2011-01-03 11:30:41,684 bulkloader.py] Bulkloader using app_id: quote-portfolio
+[INFO     2011-01-03 11:30:41,684 bulkloader.py] Connecting to localhost:8086/_ah/remote_api
+[DEBUG    2011-01-03 11:30:41,815 bulkloader.py] [Thread-13] ProgressTrackerThread: started
+[DEBUG    2011-01-03 11:30:41,815 bulkloader.py] [Thread-14] DataSourceThread: started
+[INFO     2011-01-03 11:30:41,816 bulkloader.py] Starting import; maximum 10 entities per post
+[DEBUG    2011-01-03 11:30:41,835 adaptive_thread_pool.py] [WorkerThread-0] Got work item [1-10]
+[DEBUG    2011-01-03 11:30:41,938 bulkloader.py] [WorkerThread-0] [1-10] Transferred 10 entities in 0.1 seconds
+[DEBUG    2011-01-03 11:30:41,938 adaptive_thread_pool.py] Increasing active thread count to 2
+[DEBUG    2011-01-03 11:30:41,938 adaptive_thread_pool.py] [WorkerThread-0] Got work item [11-20]
+[DEBUG    2011-01-03 11:30:41,946 adaptive_thread_pool.py] [WorkerThread-5] Got work item [21-30]
+[DEBUG    2011-01-03 11:30:42,040 bulkloader.py] [WorkerThread-5] [21-30] Transferred 10 entities in 0.1 seconds
+[DEBUG    2011-01-03 11:30:42,040 adaptive_thread_pool.py] Increasing active thread count to 3
+[DEBUG    2011-01-03 11:30:42,040 adaptive_thread_pool.py] [WorkerThread-5] Got work item [31-40]
+[DEBUG    2011-01-03 11:30:42,040 adaptive_thread_pool.py] [WorkerThread-6] Got work item [41-50]
+[DEBUG    2011-01-03 11:30:42,126 bulkloader.py] [WorkerThread-0] [11-20] Transferred 10 entities in 0.2 seconds
+[DEBUG    2011-01-03 11:30:42,126 adaptive_thread_pool.py] Increasing active thread count to 4
+[DEBUG    2011-01-03 11:30:42,126 adaptive_thread_pool.py] [WorkerThread-8] Got work item [51-60]
+[DEBUG    2011-01-03 11:30:42,126 adaptive_thread_pool.py] [WorkerThread-9] Got work item [61-70]
+[DEBUG    2011-01-03 11:30:42,198 bulkloader.py] [WorkerThread-6] [41-50] Transferred 10 entities in 0.1 seconds
+[DEBUG    2011-01-03 11:30:42,207 adaptive_thread_pool.py] Increasing active thread count to 5
+[DEBUG    2011-01-03 11:30:42,207 adaptive_thread_pool.py] [WorkerThread-1] Got work item [71-80]
+[DEBUG    2011-01-03 11:30:42,249 adaptive_thread_pool.py] [WorkerThread-6] Got work item [81-90]
+[DEBUG    2011-01-03 11:30:42,274 bulkloader.py] [WorkerThread-5] [31-40] Transferred 10 entities in 0.2 seconds
+[DEBUG    2011-01-03 11:30:42,275 adaptive_thread_pool.py] Increasing active thread count to 6
+[DEBUG    2011-01-03 11:30:42,275 adaptive_thread_pool.py] [WorkerThread-3] Got work item [91-100]
+[DEBUG    2011-01-03 11:30:42,275 adaptive_thread_pool.py] [WorkerThread-4] Got work item [101-110]
+[DEBUG    2011-01-03 11:30:42,335 bulkloader.py] [WorkerThread-8] [51-60] Transferred 10 entities in 0.2 seconds
+[DEBUG    2011-01-03 11:30:42,335 adaptive_thread_pool.py] Increasing active thread count to 7
+[DEBUG    2011-01-03 11:30:42,335 adaptive_thread_pool.py] [WorkerThread-8] Got work item [111-120]
+[DEBUG    2011-01-03 11:30:42,335 adaptive_thread_pool.py] [WorkerThread-7] Got work item [121-130]
+[DEBUG    2011-01-03 11:30:42,402 bulkloader.py] [WorkerThread-9] [61-70] Transferred 10 entities in 0.3 seconds
+[DEBUG    2011-01-03 11:30:42,403 adaptive_thread_pool.py] Increasing active thread count to 8
+[DEBUG    2011-01-03 11:30:42,403 adaptive_thread_pool.py] [WorkerThread-9] Got work item [131-140]
+[DEBUG    2011-01-03 11:30:42,403 adaptive_thread_pool.py] [WorkerThread-2] Got work item [141-150]
+[DEBUG    2011-01-03 11:30:42,482 bulkloader.py] [WorkerThread-1] [71-80] Transferred 10 entities in 0.3 seconds
+[DEBUG    2011-01-03 11:30:42,482 adaptive_thread_pool.py] Increasing active thread count to 9
+[DEBUG    2011-01-03 11:30:42,487 adaptive_thread_pool.py] [WorkerThread-0] Got work item [151-160]
+[DEBUG    2011-01-03 11:30:42,487 adaptive_thread_pool.py] [WorkerThread-1] Got work item [161-170]
+[DEBUG    2011-01-03 11:30:42,543 bulkloader.py] [Thread-14] DataSourceThread: exiting
+[DEBUG    2011-01-03 11:30:42,557 bulkloader.py] [WorkerThread-3] [91-100] Transferred 10 entities in 0.3 seconds
+[DEBUG    2011-01-03 11:30:42,557 adaptive_thread_pool.py] Increasing active thread count to 10
+[DEBUG    2011-01-03 11:30:42,558 adaptive_thread_pool.py] [WorkerThread-3] Got work item [171-180]
+[DEBUG    2011-01-03 11:30:42,558 adaptive_thread_pool.py] [WorkerThread-5] Got work item [181-190]
+[DEBUG    2011-01-03 11:30:42,569 bulkloader.py] Waiting for worker threads to finish...
+[DEBUG    2011-01-03 11:30:42,627 bulkloader.py] [WorkerThread-4] [101-110] Transferred 10 entities in 0.3 seconds
+[DEBUG    2011-01-03 11:30:42,630 adaptive_thread_pool.py] [WorkerThread-4] Got work item [191-200]
+[DEBUG    2011-01-03 11:30:42,683 bulkloader.py] [WorkerThread-6] [81-90] Transferred 10 entities in 0.4 seconds
+[DEBUG    2011-01-03 11:30:42,684 adaptive_thread_pool.py] [WorkerThread-6] Got work item [201-210]
+[DEBUG    2011-01-03 11:30:42,745 bulkloader.py] [WorkerThread-8] [111-120] Transferred 10 entities in 0.4 seconds
+[DEBUG    2011-01-03 11:30:42,745 adaptive_thread_pool.py] [WorkerThread-8] Got work item [211-220]
+[DEBUG    2011-01-03 11:30:42,807 bulkloader.py] [WorkerThread-9] [131-140] Transferred 10 entities in 0.4 seconds
+[DEBUG    2011-01-03 11:30:42,815 adaptive_thread_pool.py] [WorkerThread-9] Got work item [221-230]
+[DEBUG    2011-01-03 11:30:42,866 bulkloader.py] [WorkerThread-0] [151-160] Transferred 10 entities in 0.4 seconds
+[DEBUG    2011-01-03 11:30:42,866 adaptive_thread_pool.py] [WorkerThread-0] Got work item [231-240]
+[DEBUG    2011-01-03 11:30:42,928 bulkloader.py] [WorkerThread-5] [181-190] Transferred 10 entities in 0.4 seconds
+[DEBUG    2011-01-03 11:30:42,929 adaptive_thread_pool.py] [WorkerThread-5] Got work item [241-250]
+[DEBUG    2011-01-03 11:30:42,987 bulkloader.py] [WorkerThread-4] [191-200] Transferred 10 entities in 0.3 seconds
+[DEBUG    2011-01-03 11:30:42,988 adaptive_thread_pool.py] [WorkerThread-4] Got work item [251-260]
+[DEBUG    2011-01-03 11:30:43,055 bulkloader.py] [WorkerThread-6] [201-210] Transferred 10 entities in 0.4 seconds
+[DEBUG    2011-01-03 11:30:43,056 adaptive_thread_pool.py] [WorkerThread-6] Got work item [261-270]
+[DEBUG    2011-01-03 11:30:43,108 bulkloader.py] [WorkerThread-8] [211-220] Transferred 10 entities in 0.3 seconds
+[DEBUG    2011-01-03 11:30:43,108 adaptive_thread_pool.py] [WorkerThread-8] Got work item [271-280]
+[DEBUG    2011-01-03 11:30:43,166 bulkloader.py] [WorkerThread-9] [221-230] Transferred 10 entities in 0.3 seconds
+[DEBUG    2011-01-03 11:30:43,167 adaptive_thread_pool.py] [WorkerThread-9] Got work item [281-290]
+[DEBUG    2011-01-03 11:30:43,238 bulkloader.py] [WorkerThread-0] [231-240] Transferred 10 entities in 0.3 seconds
+[DEBUG    2011-01-03 11:30:43,238 adaptive_thread_pool.py] [WorkerThread-0] Got work item [291-300]
+[DEBUG    2011-01-03 11:30:43,295 bulkloader.py] [WorkerThread-5] [241-250] Transferred 10 entities in 0.4 seconds
+[DEBUG    2011-01-03 11:30:43,295 adaptive_thread_pool.py] [WorkerThread-5] Got work item [301-310]
+[DEBUG    2011-01-03 11:30:43,353 bulkloader.py] [WorkerThread-4] [251-260] Transferred 10 entities in 0.3 seconds
+[DEBUG    2011-01-03 11:30:43,353 adaptive_thread_pool.py] [WorkerThread-4] Got work item [311-320]
+[DEBUG    2011-01-03 11:30:43,422 bulkloader.py] [WorkerThread-6] [261-270] Transferred 10 entities in 0.4 seconds
+[DEBUG    2011-01-03 11:30:43,422 adaptive_thread_pool.py] [WorkerThread-6] Got work item [321-330]
+[DEBUG    2011-01-03 11:30:43,478 bulkloader.py] [WorkerThread-8] [271-280] Transferred 10 entities in 0.3 seconds
+[DEBUG    2011-01-03 11:30:43,479 adaptive_thread_pool.py] [WorkerThread-8] Got work item [331-340]
+[ERROR    2011-01-03 11:30:43,493 bulkloader.py] Retrying on non-fatal URL error: [Errno 54] Connection reset by peer
+Traceback (most recent call last):
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/tools/bulkloader.py", line 691, in PerformWork
+    transfer_time = self._TransferItem(thread_pool)
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/tools/bulkloader.py", line 848, in _TransferItem
+    self.request_manager.PostEntities(self.content)
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/tools/bulkloader.py", line 1300, in PostEntities
+    datastore.Put(entities)
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/api/datastore.py", line 404, in Put
+    return _GetConnection().async_put(config, entities, extra_hook).get_result()
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/datastore/datastore_rpc.py", line 548, in get_result
+    self.check_success()
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/datastore/datastore_rpc.py", line 519, in check_success
+    rpc.check_success()
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/api/apiproxy_stub_map.py", line 501, in check_success
+    self.__rpc.CheckSuccess()
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/api/apiproxy_rpc.py", line 149, in _WaitImpl
+    self.request, self.response)
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 224, in MakeSyncCall
+    handler(request, response)
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 350, in _Dynamic_Put
+    'datastore_v3', 'Put', put_request, put_response)
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 156, in MakeSyncCall
+    self._MakeRealSyncCall(service, call, request, response)
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 168, in _MakeRealSyncCall
+    encoded_response = self._server.Send(self._path, encoded_request)
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/tools/appengine_rpc.py", line 341, in Send
+    f = self.opener.open(req)
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 391, in open
+    response = self._open(req, data)
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 409, in _open
+    '_open', req)
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 369, in _call_chain
+    result = func(*args)
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 1173, in http_open
+    return self.do_open(httplib.HTTPConnection, req)
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 1148, in do_open
+    raise URLError(err)
+URLError: <urlopen error [Errno 54] Connection reset by peer>
+[DEBUG    2011-01-03 11:30:43,528 adaptive_thread_pool.py] Decreasing the number of active threads to 9
+[DEBUG    2011-01-03 11:30:43,549 bulkloader.py] [WorkerThread-9] [281-290] Transferred 10 entities in 0.4 seconds
+[DEBUG    2011-01-03 11:30:43,550 adaptive_thread_pool.py] Increasing active thread count to 10
+[DEBUG    2011-01-03 11:30:43,550 adaptive_thread_pool.py] [WorkerThread-9] Got work item [171-180]
+[DEBUG    2011-01-03 11:30:43,551 adaptive_thread_pool.py] [WorkerThread-3] Got work item [341-350]
+[DEBUG    2011-01-03 11:30:43,628 bulkloader.py] [WorkerThread-0] [291-300] Transferred 10 entities in 0.4 seconds
+[DEBUG    2011-01-03 11:30:43,629 adaptive_thread_pool.py] [WorkerThread-0] Got work item [351-360]
+[DEBUG    2011-01-03 11:30:43,694 bulkloader.py] [WorkerThread-5] [301-310] Transferred 10 entities in 0.4 seconds
+[DEBUG    2011-01-03 11:30:43,695 adaptive_thread_pool.py] [WorkerThread-5] Got work item [361-370]
+[DEBUG    2011-01-03 11:30:43,757 bulkloader.py] [WorkerThread-2] [141-150] Transferred 10 entities in 1.3 seconds
+[DEBUG    2011-01-03 11:30:43,757 adaptive_thread_pool.py] [WorkerThread-2] Got work item [371-373]
+[DEBUG    2011-01-03 11:30:43,825 bulkloader.py] [WorkerThread-6] [321-330] Transferred 10 entities in 0.4 seconds
+[DEBUG    2011-01-03 11:30:43,877 bulkloader.py] [WorkerThread-9] [171-180] Transferred 10 entities in 0.3 seconds
+[DEBUG    2011-01-03 11:30:43,930 bulkloader.py] [WorkerThread-0] [351-360] Transferred 10 entities in 0.3 seconds
+[DEBUG    2011-01-03 11:30:43,988 bulkloader.py] [WorkerThread-5] [361-370] Transferred 10 entities in 0.3 seconds
+[DEBUG    2011-01-03 11:30:44,023 bulkloader.py] [WorkerThread-2] [371-373] Transferred 3 entities in 0.3 seconds
+[DEBUG    2011-01-03 11:30:44,356 bulkloader.py] [WorkerThread-7] [121-130] Transferred 10 entities in 2.0 seconds
+[ERROR    2011-01-03 11:30:44,393 bulkloader.py] Retrying on non-fatal URL error: [Errno 54] Connection reset by peer
+Traceback (most recent call last):
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/tools/bulkloader.py", line 691, in PerformWork
+    transfer_time = self._TransferItem(thread_pool)
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/tools/bulkloader.py", line 848, in _TransferItem
+    self.request_manager.PostEntities(self.content)
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/tools/bulkloader.py", line 1300, in PostEntities
+    datastore.Put(entities)
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/api/datastore.py", line 404, in Put
+    return _GetConnection().async_put(config, entities, extra_hook).get_result()
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/datastore/datastore_rpc.py", line 548, in get_result
+    self.check_success()
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/datastore/datastore_rpc.py", line 519, in check_success
+    rpc.check_success()
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/api/apiproxy_stub_map.py", line 501, in check_success
+    self.__rpc.CheckSuccess()
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/api/apiproxy_rpc.py", line 149, in _WaitImpl
+    self.request, self.response)
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 224, in MakeSyncCall
+    handler(request, response)
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 350, in _Dynamic_Put
+    'datastore_v3', 'Put', put_request, put_response)
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 156, in MakeSyncCall
+    self._MakeRealSyncCall(service, call, request, response)
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/ext/remote_api/remote_api_stub.py", line 168, in _MakeRealSyncCall
+    encoded_response = self._server.Send(self._path, encoded_request)
+  File "/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/tools/appengine_rpc.py", line 341, in Send
+    f = self.opener.open(req)
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 391, in open
+    response = self._open(req, data)
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 409, in _open
+    '_open', req)
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 369, in _call_chain
+    result = func(*args)
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 1173, in http_open
+    return self.do_open(httplib.HTTPConnection, req)
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/urllib2.py", line 1148, in do_open
+    raise URLError(err)
+URLError: <urlopen error [Errno 54] Connection reset by peer>
+[DEBUG    2011-01-03 11:30:44,398 adaptive_thread_pool.py] Decreasing the number of active threads to 9
+[DEBUG    2011-01-03 11:30:44,440 adaptive_thread_pool.py] [WorkerThread-6] Got work item [161-170]
+[DEBUG    2011-01-03 11:30:44,454 bulkloader.py] [WorkerThread-4] [311-320] Transferred 10 entities in 1.1 seconds
+[DEBUG    2011-01-03 11:30:44,454 adaptive_thread_pool.py] Increasing active thread count to 10
+[DEBUG    2011-01-03 11:30:44,536 bulkloader.py] [WorkerThread-6] [161-170] Transferred 10 entities in 0.1 seconds
+[DEBUG    2011-01-03 11:30:44,589 bulkloader.py] [WorkerThread-3] [341-350] Transferred 10 entities in 1.0 seconds
+[DEBUG    2011-01-03 11:30:44,649 bulkloader.py] [WorkerThread-8] [331-340] Transferred 10 entities in 1.2 seconds
+[DEBUG    2011-01-03 11:30:44,691 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2011-01-03 11:30:44,692 adaptive_thread_pool.py] [WorkerThread-9] WorkerThread: exiting
+[DEBUG    2011-01-03 11:30:44,700 adaptive_thread_pool.py] [WorkerThread-0] WorkerThread: exiting
+[DEBUG    2011-01-03 11:30:44,700 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2011-01-03 11:30:44,700 adaptive_thread_pool.py] [WorkerThread-6] WorkerThread: exiting
+[DEBUG    2011-01-03 11:30:44,703 adaptive_thread_pool.py] [WorkerThread-3] WorkerThread: exiting
+[DEBUG    2011-01-03 11:30:44,704 adaptive_thread_pool.py] [WorkerThread-5] WorkerThread: exiting
+[DEBUG    2011-01-03 11:30:44,713 adaptive_thread_pool.py] [WorkerThread-8] WorkerThread: exiting
+[DEBUG    2011-01-03 11:30:44,719 adaptive_thread_pool.py] [WorkerThread-1] WorkerThread: exiting
+[DEBUG    2011-01-03 11:30:44,719 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2011-01-03 11:30:44,720 adaptive_thread_pool.py] [WorkerThread-7] WorkerThread: exiting
+[DEBUG    2011-01-03 11:30:44,727 adaptive_thread_pool.py] [WorkerThread-4] WorkerThread: exiting
+[DEBUG    2011-01-03 11:30:44,741 adaptive_thread_pool.py] [WorkerThread-2] WorkerThread: exiting
+[DEBUG    2011-01-03 11:30:44,741 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2011-01-03 11:30:44,741 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2011-01-03 11:30:44,741 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2011-01-03 11:30:44,741 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2011-01-03 11:30:44,741 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2011-01-03 11:30:44,741 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2011-01-03 11:30:44,741 adaptive_thread_pool.py] Waiting for Anonymous_WorkerThread to exit
+[DEBUG    2011-01-03 11:30:44,743 bulkloader.py] Waiting for progress_thread to terminate...
+[DEBUG    2011-01-03 11:30:44,768 bulkloader.py] [Thread-13] ProgressTrackerThread: exiting
+[DEBUG    2011-01-03 11:30:44,774 bulkloader.py] ... done.
+[INFO     2011-01-03 11:30:44,774 bulkloader.py] 373 entites total, 0 previously transferred
+[INFO     2011-01-03 11:30:44,775 bulkloader.py] 373 entities (87632 bytes) transferred in 6.2 seconds
+[INFO     2011-01-03 11:30:44,775 bulkloader.py] All entities successfully transferred
