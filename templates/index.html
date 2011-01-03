@@ -48,7 +48,9 @@
 <body>
 {% for portfolio in portfolios %}
 <table border="1" class="portfolio">
-<caption>Portfolio: {{portfolio.name}} ({{portfolio.value}} {{portfolio.currency}})</caption>
+<caption>Portfolio: {{portfolio.name}}
+<form action="/portfolio" method="POST"><input name="key" type="hidden" value="{{portfolio.key}}"/><input name="value" value="{{portfolio.value}}" size="8"/>{{portfolio.currency}} <input type="Submit" value="Edit"/></form>
+</caption>
 <tr>
 <th>Symbol</th>
 <th>Date</th>
@@ -115,6 +117,7 @@
 </tr>
 
 </table>
+
 {% endfor %}
 <table border=1>
 <caption>Currencies</caption>

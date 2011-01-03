@@ -22,6 +22,7 @@ urlpatterns = patterns(
     (r'^alerts$', 'portfolio.alerts'),
     (r'^position$', 'portfolio.position'),
     (r'^edit/(?P<key>[a-zA-Z0-9-_]*)$', 'portfolio.edit'),
+    (r'^portfolio$', 'portfolio.portfolio'),
     ('fixture.html', 'portfolio.fixture'),
     (r'^test', include('gaeunit.urls')),
     )

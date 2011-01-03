@@ -138,6 +138,15 @@ def position(request):
   form.save()
   return HttpResponseRedirect('/')
 
+def portfolio(request):
+  if request.method == 'POST':
+    key = request.POST['key']
+    value = float(request.POST['value'])
+    portfolio = db.get(db.Key(key))
+    portfolio.value = value
+    portfolio.put()
+  return HttpResponseRedirect('/')
+
 def quotes(request):  
   quotes = []
   for position in Position.all():
