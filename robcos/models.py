@@ -24,7 +24,7 @@ def long_cached(f):
     if memcache.get(key) is None:
       value = f(*args, **kwargs)
       memcache.add(key, value, 3600) # Cache for 1 hour
-      logging.info("no hit for %s" % key)
+      logging.debug("no hit for %s" % key)
     else:
       logging.debug("hit for %s" % key)
     return memcache.get(key)
@@ -36,7 +36,7 @@ def cached(f):
     key =  str((f, tuple(args), frozenset(kwargs.items())))
     if memcache.get(key) is None:
       value = f(*args, **kwargs)
-      memcache.add(key, value, 55) # Cache for 5 seconds
+      memcache.add(key, value, 60) # Cache for 60 seconds
       logging.debug("no hit for %s" % key)
     else:
       logging.debug("hit for %s" % key)
@@ -286,26 +286,11 @@ class Position(models.BaseModel):
   def loosing(self):
     return self.gain() < 0
   
-  @cached
   def realtime_quote(self):    
     return RealtimeQuote.load(self.symbol)
   
-  def atr_exp_20(self):
-    #quotes = self.latest_quote(2)[0].date
-    quotes = self.latest_quote(3)
-    quotes.reverse()
-    v = map(lambda x: x.tr(), quotes)
-    #print v
-    #print "saa"
-    #print reduce(lambda yesterday, today: (today * 19 + yesterday)/20, quotes)
-    #print reduce(lambda x,y: x+y, quotes)
-    #print "later"
-    #.tr()
-    #return self.latest_quote(1)[0].tr()
-
-  @cached
   def atr_20(self):
-    return self.atr(self.latest_quote(20))
+    return Indicator.load(self.symbol, date.today()).atr_20
  
   def calculated_stop(self):
     return self.enter_price - 3 * self.atr_20_at_enter()
@@ -316,47 +301,67 @@ class Position(models.BaseModel):
   def below_stop(self):
     return self.realtime_quote().price < self.calculated_stop()
 
-  @long_cached
-  def latest_quote(self, number):
-    query = db.Query(Quote)
-    query.filter('symbol = ', self.symbol)
-    query.order('-date')
-    return query.fetch(number)
-    
   @staticmethod
   def delete_all():
     query = db.Query(Position)
     for p in query:
       p.delete()
 
-  @long_cached
   def atr_20_at_enter(self):
-    query = db.Query(Quote)
-    query.filter('symbol = ', self.symbol)
-    query.filter('date < ', self.enter_date)
-    query.order('-date')
-    atr = self.atr(query.fetch(20))
+    atr = Indicator.load(self.symbol, self.enter_date).atr_20
     if not atr:
-      logging.info('No atr_20_at_enter for %s', (self.symbol))
+      logging.warn('No atr_20_at_enter for %s', (self.symbol))
     return atr
 
-  def atr(self, quotes):
+  def ll_10(self):
+    return Indicator.load(self.symbol, date.today()).ll_10
+
+class Indicator(models.BaseModel):
+  symbol = db.StringProperty(required=True)
+  date = db.DateProperty(required=True)
+  ll_10 = db.FloatProperty(required=True)
+  atr_20 = db.FloatProperty(required=True)
+
+  @staticmethod
+  def load(symbol, date):
+    query = db.Query(Indicator)
+    query.filter('symbol = ', symbol)
+    query.filter('date = ', date)
+    indicator = query.get()
+    if indicator:
+      logging.debug("Found indicator for %s on %s " % (symbol, date))
+    else:
+      indicator = Indicator.build(symbol, date)
+    return indicator
+ 
+  @staticmethod 
+  def atr(quotes):
     trs = map(lambda x: x.tr(), quotes)
     if len(trs):
       return sum(trs)/len(trs)
     else:
       return None
 
-  @long_cached
-  def ll_10(self):
+  @staticmethod
+  def build(symbol, date):
+    logging.debug("Building indicator for %s on %s " % (symbol, date))
     query = db.Query(Quote)
-    query.filter('symbol = ', self.symbol)
+    query.filter('symbol = ', symbol)
     query.order('-date')
-    quotes = query.fetch(10)
+    quotes = query.fetch(20)
+    atr_20 = Indicator.atr(quotes)
+    ll_10 = None
     if len(quotes) > 0:
-      return min(map(lambda x: x.low, quotes))
-    else:
-      return None
+      last_10_quotes = quotes[:10]
+      ll_10 = min(map(lambda x: x.low, last_10_quotes))
+
+    indicator = Indicator(symbol = symbol,
+              date = date,
+              atr_20 = atr_20,
+              ll_10 = ll_10)
+    indicator.put()
+    return indicator
+
 
 class Currency(models.BaseModel):
   symbol = db.StringProperty(required=True)
@@ -364,16 +369,15 @@ class Currency(models.BaseModel):
   rate = db.FloatProperty(required=True)
   
   @staticmethod
-  @long_cached
   def load(_from, to):
-    logging.info("Loading currency from %s to %s " % (_from, to))
+    logging.debug("Loading currency from %s to %s " % (_from, to))
     query = db.Query(Currency)
     symbol = '%s%s=X' % (_from, to)
     query.filter('symbol = ', symbol)
     query.filter('date = ', date.today())
     currency = query.get()
     if currency:
-      logging.info("Found currency from %s to %s " % (_from, to))
+      logging.debug("Found currency from %s to %s " % (_from, to))
       return currency
 
     if _from == to:
