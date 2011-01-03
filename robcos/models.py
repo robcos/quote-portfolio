@@ -23,10 +23,10 @@ def long_cached(f):
     key =  str((f, tuple(args), frozenset(kwargs.items()))) + 'long'
     if memcache.get(key) is None:
       value = f(*args, **kwargs)
-      memcache.add(key, value, 5) # Cache for 1 hour
-      logging.debug("no hit for %s" % key)
-    #else:
-    #  logging.info("hit for %s" % key)
+      memcache.add(key, value, 3600) # Cache for 1 hour
+      logging.info("no hit for %s" % key)
+    else:
+      logging.debug("hit for %s" % key)
     return memcache.get(key)
   return g
 
@@ -36,10 +36,10 @@ def cached(f):
     key =  str((f, tuple(args), frozenset(kwargs.items())))
     if memcache.get(key) is None:
       value = f(*args, **kwargs)
-      memcache.add(key, value, 5) # Cache for 5 seconds
+      memcache.add(key, value, 55) # Cache for 5 seconds
       logging.debug("no hit for %s" % key)
-    #else:
-    #  logging.info("hit for %s" % key)
+    else:
+      logging.debug("hit for %s" % key)
     return memcache.get(key)
   return g
 
@@ -49,7 +49,7 @@ class RealtimeQuote(models.BaseModel):
   price = db.FloatProperty(required=True)
   
   @staticmethod
-  @cached
+  @long_cached
   def load(symbol):
     q = RealtimeQuote.yahoo(symbol)
     if not q:
@@ -335,7 +335,10 @@ class Position(models.BaseModel):
     query.filter('symbol = ', self.symbol)
     query.filter('date < ', self.enter_date)
     query.order('-date')
-    return self.atr(query.fetch(20))
+    atr = self.atr(query.fetch(20))
+    if not atr:
+      logging.info('No atr_20_at_enter for %s', (self.symbol))
+    return atr
 
   def atr(self, quotes):
     trs = map(lambda x: x.tr(), quotes)
@@ -361,8 +364,18 @@ class Currency(models.BaseModel):
   rate = db.FloatProperty(required=True)
   
   @staticmethod
-  @cached
+  @long_cached
   def load(_from, to):
+    logging.info("Loading currency from %s to %s " % (_from, to))
+    query = db.Query(Currency)
+    symbol = '%s%s=X' % (_from, to)
+    query.filter('symbol = ', symbol)
+    query.filter('date = ', date.today())
+    currency = query.get()
+    if currency:
+      logging.info("Found currency from %s to %s " % (_from, to))
+      return currency
+
     if _from == to:
       return Currency(symbol = _from + to + '=X',
         date = date.today(),
@@ -373,10 +386,12 @@ class Currency(models.BaseModel):
     try:
       result = urllib2.urlopen(url)
       parts = result.read().replace('"', '').strip().split(',')
-      return Currency(symbol = parts[0],
+      currency = Currency(symbol = parts[0],
         date = datetime.strptime(parts[1], '%m/%d/%Y').date(),
         rate = float(parts[2])
         )
+      currency.put()
+      return currency
         
     except urllib2.URLError, e:
       print e
