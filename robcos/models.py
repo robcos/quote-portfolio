@@ -30,13 +30,12 @@ def long_cached(f):
     return memcache.get(key)
   return g
 
-
 def cached(f):
   def g(*args, **kwargs):
     key =  str((f, tuple(args), frozenset(kwargs.items())))
     if memcache.get(key) is None:
       value = f(*args, **kwargs)
-      memcache.add(key, value, 60) # Cache for 60 seconds
+      memcache.add(key, value, 300) # Cache for X seconds
       logging.debug("no hit for %s" % key)
     else:
       logging.debug("hit for %s" % key)
@@ -204,7 +203,6 @@ class Portfolio(models.BaseModel):
     else:
       raise DuplicateException('Portfolio already exists')
 
-  @cached
   def get_positions(self):
     query = db.Query(Position)
     query.filter("portfolio =", self)
@@ -292,14 +290,27 @@ class Position(models.BaseModel):
   def atr_20(self):
     return Indicator.load(self.symbol, date.today()).atr_20
  
-  def calculated_stop(self):
+  def suggested_stop(self):
     return self.enter_price - 3 * self.atr_20_at_enter()
   
   def below_ll_10(self):
     return self.realtime_quote().price < self.ll_10()
 
   def below_stop(self):
-    return self.realtime_quote().price < self.calculated_stop()
+    return self.realtime_quote().price < self.stop
+
+  def commission(self):
+    return 1.0
+    commission = 2 * self.enter_commission
+    if self.exit_commission:
+      commission = self.enter_commission + self.exit_commission
+    return commission
+
+  def risk(self):
+    return self.shares * (self.enter_price - self.stop) * self.currency_rate + self.commission()
+
+  def rtr(self):
+    return self.gain() / self.risk()
 
   @staticmethod
   def delete_all():
@@ -347,6 +358,7 @@ class Indicator(models.BaseModel):
     logging.debug("Building indicator for %s on %s " % (symbol, date))
     query = db.Query(Quote)
     query.filter('symbol = ', symbol)
+    query.filter('date < ', date)
     query.order('-date')
     quotes = query.fetch(20)
     atr_20 = Indicator.atr(quotes)
@@ -354,7 +366,9 @@ class Indicator(models.BaseModel):
     if len(quotes) > 0:
       last_10_quotes = quotes[:10]
       ll_10 = min(map(lambda x: x.low, last_10_quotes))
-
+    else:
+      logging.debug("Could not build indicator for %s on %s " % (symbol, date))
+      return
     indicator = Indicator(symbol = symbol,
               date = date,
               atr_20 = atr_20,
