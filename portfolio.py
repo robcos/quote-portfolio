@@ -149,8 +149,10 @@ def cash(request):
   if request.method == 'POST':
     key = request.POST['key']
     cash = float(request.POST['cash'])
+    other = float(request.POST['other'])
     portfolio = db.get(db.Key(key))
     portfolio.cash = cash
+    portfolio.other = other
     portfolio.put()
   return HttpResponseRedirect('/')
 

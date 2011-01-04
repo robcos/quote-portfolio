@@ -184,6 +184,7 @@ class Quote(models.BaseModel):
 class Portfolio(models.BaseModel):
   name = db.StringProperty(required=True)
   cash = db.FloatProperty(required=True, default=0.0)
+  other = db.FloatProperty(required=True, default=0.0)
   currency = db.StringProperty(required=True, default='SEK', choices=['SEK', 'USD', 'GBP'])
   show_closed = True
 
@@ -219,7 +220,7 @@ class Portfolio(models.BaseModel):
     return query.fetch(query.count())
   
   def local_value(self):
-    return reduce(lambda x,y: x + y.local_value(), [0] + self.get_positions()) + self.cash
+    return reduce(lambda x,y: x + y.local_value(), [0] + self.get_positions()) + self.cash + self.other
   
   def gain(self):
     return reduce(lambda x,y: x + y.gain(), [0] + self.get_positions())

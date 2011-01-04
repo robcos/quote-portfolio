@@ -42,6 +42,9 @@
   .negative {
     color: red;
   }
+  .inline {
+    display:inline;
+  }
 </style>
 </style>
 </head>
@@ -52,7 +55,11 @@
 {% for portfolio in portfolios %}
 <table border="1" class="portfolio">
 <caption>Portfolio: {{portfolio.name}}
-<form action="/cash" method="POST">Cash <input name="key" type="hidden" value="{{portfolio.key}}"/><input name="cash" value="{{portfolio.cash}}" size="8"/>{{portfolio.currency}} <input type="submit" value="Update"/></form>
+<form class="inline" action="/cash" method="POST">
+<input name="key" type="hidden" value="{{portfolio.key}}"/>
+Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency}}
+- Other<input name="other" value="{{portfolio.other}}" size="6"/>{{portfolio.currency}}
+<input type="submit" value="Update"/></form>
 </caption>
 <tr>
 <th>Symbol</th>
