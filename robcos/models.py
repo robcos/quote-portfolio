@@ -117,7 +117,7 @@ class Quote(models.BaseModel):
     if latest_quote:
       _from = latest_quote.date
     else:
-      _from = date.today() - timedelta(days=60)
+      _from = date.today() - timedelta(days=120)
   
     if _from == date.today():
       #print "Skipping %s" % symbol
@@ -183,7 +183,7 @@ class Quote(models.BaseModel):
 
 class Portfolio(models.BaseModel):
   name = db.StringProperty(required=True)
-  value = db.FloatProperty(required=True, default=0.0)
+  cash = db.FloatProperty(required=True, default=0.0)
   currency = db.StringProperty(required=True, default='SEK', choices=['SEK', 'USD', 'GBP'])
   show_closed = True
 
@@ -212,7 +212,6 @@ class Portfolio(models.BaseModel):
   def get_positions(self):
     query = db.Query(Position)
     query.filter("portfolio =", self)
-    logging.info(self.show_closed)
     if not self.show_closed:
       query.filter("exit_date =", None)
     query.order('symbol')
@@ -220,7 +219,7 @@ class Portfolio(models.BaseModel):
     return query.fetch(query.count())
   
   def local_value(self):
-    return reduce(lambda x,y: x + y.local_value(), [0] + self.get_positions())
+    return reduce(lambda x,y: x + y.local_value(), [0] + self.get_positions()) + self.cash
   
   def gain(self):
     return reduce(lambda x,y: x + y.gain(), [0] + self.get_positions())
@@ -303,7 +302,7 @@ class Position(models.BaseModel):
     return self.enter_price - 3 * self.atr_20_at_enter()
   
   def suggested_shares(self):
-    portfolio_value = self.portfolio.value
+    portfolio_value = self.portfolio.local_value()
     allowed_risk = portfolio_value / 100
     allowed_risk = allowed_risk - self.commission()
     risk_per_share = self.enter_price - self.stop

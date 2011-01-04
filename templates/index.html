@@ -52,7 +52,7 @@
 {% for portfolio in portfolios %}
 <table border="1" class="portfolio">
 <caption>Portfolio: {{portfolio.name}}
-<form action="/portfolio" method="POST"><input name="key" type="hidden" value="{{portfolio.key}}"/><input name="value" value="{{portfolio.value}}" size="8"/>{{portfolio.currency}} <input type="Submit" value="Edit"/></form>
+<form action="/cash" method="POST">Cash <input name="key" type="hidden" value="{{portfolio.key}}"/><input name="cash" value="{{portfolio.cash}}" size="8"/>{{portfolio.currency}} <input type="submit" value="Update"/></form>
 </caption>
 <tr>
 <th>Symbol</th>
@@ -99,9 +99,7 @@
 </tr>
 {% endfor %}
 <tr>
-<td></td>
-<td></td>
-<td></td>
+<th colspan="3">Total</th>
 <td>{{ portfolio.local_value|stringformat:'10.2f' }}</td>
 <td>{{ portfolio.cost|stringformat:'10.2f' }}</td>
 <td{% if portfolio.loosing %} class="negative"{% endif %}>{{ portfolio.gain|stringformat:'10.2f' }}</td>

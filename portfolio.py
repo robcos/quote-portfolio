@@ -145,12 +145,12 @@ def position(request):
   form.save()
   return HttpResponseRedirect('/')
 
-def portfolio(request):
+def cash(request):
   if request.method == 'POST':
     key = request.POST['key']
-    value = float(request.POST['value'])
+    cash = float(request.POST['cash'])
     portfolio = db.get(db.Key(key))
-    portfolio.value = value
+    portfolio.cash = cash
     portfolio.put()
   return HttpResponseRedirect('/')
 
