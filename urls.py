@@ -18,7 +18,9 @@ from django.conf.urls.defaults import *
 urlpatterns = patterns(
     '',
     (r'^$', 'portfolio.index'),
-    (r'^quotes$', 'portfolio.quotes'),
+    (r'^download/quotes$', 'portfolio.quotes'),
+    (r'^download/historical_quotes$', 'portfolio.historical_quotes'),
+    (r'^download/currencies$', 'portfolio.currencies'),
     (r'^alerts$', 'portfolio.alerts'),
     (r'^position$', 'portfolio.position'),
     (r'^edit/(?P<key>[a-zA-Z0-9-_]*)$', 'portfolio.edit'),

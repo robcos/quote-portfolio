@@ -115,30 +115,27 @@ class Quote(models.BaseModel):
       p.delete()
 
   @staticmethod
-  def yahoo(symbol):
+  def yahoo(symbol, start_date=None, stop_date=None):
     """
     Loads the prices from the start date for the given symbol
     Only new quotes are downloaded.
     """
-    to = date.today().strftime("%Y%m%d")
-    query = db.Query(Quote)
-    query.order('-date')
-    query.filter('symbol = ', symbol)
-    latest_quote = query.get()
-    if latest_quote:
-      _from = latest_quote.date
-    else:
-      _from = date.today() - timedelta(days=120)
-  
-    if _from == date.today():
-      #print "Skipping %s" % symbol
-      return
-    #print "Downloading %s" % symbol
-    if _from is None: 
-      _from = start_date
-    else:
-      _from = _from.strftime("%Y%m%d")
-    prices = ystockquote.get_historical_prices(symbol, _from, to)
+    if not stop_date:
+      stop_date = date.today().strftime("%Y%m%d")
+    if not start_date:
+      query = db.Query(Quote)
+      query.order('-date')
+      query.filter('symbol = ', symbol)
+      latest_quote = query.get()
+      if latest_quote:
+        start_date = latest_quote.date
+      else:
+        start_date = date.today() - timedelta(days=120)
+      if start_date == date.today():
+        return
+
+    start_date = start_date.strftime("%Y%m%d")
+    prices = ystockquote.get_historical_prices(symbol, start_date, stop_date)
     headers = prices[0]
     try:
       close = Quote.get_idx(headers, 'Close')
@@ -147,7 +144,7 @@ class Quote(models.BaseModel):
       high = Quote.get_idx(headers, 'High')
       low = Quote.get_idx(headers, 'Low')
     except Exception, e:
-      logging.warning('Could not download %s" % e')
+      logging.warning('Could not download %s:%s', symbol, e)
       return None
     quotes = prices[1:]
     return_value = []
@@ -411,6 +408,11 @@ class Indicator(models.BaseModel):
     indicator.put()
     return indicator
 
+  @staticmethod
+  def delete_all():
+    query = db.Query(Indicator)
+    for p in query:
+      p.delete()
 
 class Currency(models.BaseModel):
   symbol = db.StringProperty(required=True)
@@ -418,24 +420,35 @@ class Currency(models.BaseModel):
   rate = db.FloatProperty(required=True)
   
   @staticmethod
+  def delete_all():
+    query = db.Query(Currency)
+    for p in query:
+      p.delete()
+
+  @staticmethod
+  def download_all():
+    Currency.download('USD', 'SEK').put()
+    Currency.download('USD', 'GBP').put()
+    Currency.download('SEK', 'SEK').put()
+
+  @staticmethod
   @cached
   def load(_from, to):
-    logging.info("Loading currency from %s to %s " % (_from, to))
     query = db.Query(Currency)
     symbol = '%s%s=X' % (_from, to)
     query.filter('symbol = ', symbol)
-    query.filter('date = ', date.today())
-    currency = query.get()
-    if currency:
-      logging.debug("Found currency from %s to %s " % (_from, to))
-      return currency
-
+    return query.get()
+ 
+  @staticmethod
+  def download(_from, to):
+    logging.info("Loading currency from %s to %s " % (_from, to))
     if _from == to:
       return Currency(symbol = _from + to + '=X',
         date = date.today(),
         rate = 1.0
         )
         
+    symbol = '%s%s=X' % (_from, to)
     url ='http://finance.yahoo.com/d/quotes.csv?s=%s%s=X&t=2d&f=sd1l1' % (_from, to)
     try:
       result = urllib2.urlopen(url)
@@ -444,21 +457,14 @@ class Currency(models.BaseModel):
         date = datetime.strptime(parts[1], '%m/%d/%Y').date(),
         rate = float(parts[2])
         )
-      currency.put()
       return currency
         
-    except urllib2.URLError, e:
-      print e
-    except DownloadError, e:
-      print e
+    except Exception, e:
+      logging.error('Could not download quote %s:%s', symbol, e)
     return None
 
-
   @staticmethod
+  @cached
   def all():
-    currencies = []
-    currencies.append(Currency.load('USD', 'SEK'))
-    currencies.append(Currency.load('USD', 'GBP'))
-    currencies.append(Currency.load('SEK', 'SEK'))
-    return currencies
+    return db.Query(Currency)
 

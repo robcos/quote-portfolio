@@ -8,5 +8,17 @@ cron:
   schedule: every day 16:00
   timezone: America/New_York
 - description: Download the latest quotes
-  url: /quotes?no-redirect=1
+  url: /download/quotes?no-redirect=1
   schedule: every 10 minutes
+- description: Download the latest quotes
+  url: /download/historical_quotes?no-redirect=1
+  schedule: every day 17:30
+  timezone: Europe/London
+- description: Download the latest quotes
+  url: /download/historical_quotes?no-redirect=1
+  schedule: every day 15:30
+  timezone: America/New_York
+- description: Download the latest quotes
+  url: /download/currencies?no-redirect=1
+  schedule: every day 07:00 
+  timezone: Europe/London

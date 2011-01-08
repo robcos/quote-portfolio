@@ -49,6 +49,7 @@ import logging
 import os
 import re
 from datetime import date
+from datetime import datetime
 
 def fixture(request):
   Position.delete_all()
@@ -161,13 +162,36 @@ def quotes(request):
   symbols = []
   for position in Position.all():
     symbols.append(position.symbol)
-    if request.GET.get('historical'):
-      Quote.yahoo(position.symbol)
+
   RealtimeQuote.delete_all()
   RealtimeQuote.download_all(symbols)
   
+  return redirect(request)
+
+def historical_quotes(request):  
+  symbols = []
+  for position in Position.all():
+    symbols.append(position.symbol)
+    start_date = request.GET.get('start_date')
+    stop_date = request.GET.get('stop_date')
+    if start_date:
+      Quote.yahoo(
+          position.symbol, 
+          start_date=datetime.strptime(start_date, '%Y-%m-%d').date(),
+          stop_date=datetime.strptime(stop_date, '%Y-%m-%d').date())
+    else:
+       Quote.yahoo(position.symbol)
+  
+  return redirect(request)
+
+def currencies(request):  
+  Currency.delete_all()
+  Currency.download_all()
+  
+  return redirect(request)
+
+def redirect(request):
   if request.GET.get('no-redirect'):
     return HttpResponse()
   else:
     return HttpResponseRedirect('/')
-
