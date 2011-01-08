@@ -2,3 +2,5 @@
 templates/version.txt
 templates/sitemap.xml.gz
 .DS_Store
+bulkloader*
+data
