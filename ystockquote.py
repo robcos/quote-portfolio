@@ -11,7 +11,7 @@
 
 
 import urllib
-
+import logging
 
 """
 This is the "ystockquote" module.
@@ -27,6 +27,7 @@ sample usage:
 
 def __request(symbol, stat):
     url = 'http://finance.yahoo.com/d/quotes.csv?s=%s&f=%s' % (symbol, stat)
+    logging.info('Retrieving quote from %s', url)
     return urllib.urlopen(url).read().strip()
 
 
@@ -36,7 +37,16 @@ def get_all(symbol):
     
     Returns a dictionary.
     """
-    values = __request(symbol, 'l1c1va2xj1b4j4dyekjm3m4rr5p5p6s7ohgd1').split(',')
+    rows = __request(symbol, 'l1c1va2xj1b4j4dyekjm3m4rr5p5p6s7ohgd1').split('\r\n')
+    quotes = []
+    for row in rows:
+      quotes.append(parse(row.split(',')))
+    if len(quotes) == 1:
+      return quotes[0]
+    else:
+      return quotes
+      
+def parse(values):
     data = {}
     data['price'] = values[0]
     data['change'] = values[1]
