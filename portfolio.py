@@ -31,6 +31,7 @@ from google.appengine.ext.db import djangoforms
 import django
 from django import http
 from django import shortcuts
+from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.http import HttpResponseNotFound
 from django.forms import ModelForm
@@ -157,7 +158,16 @@ def cash(request):
   return HttpResponseRedirect('/')
 
 def quotes(request):  
+  symbols = []
   for position in Position.all():
-    Quote.yahoo(position.symbol)
+    symbols.append(position.symbol)
+    if request.GET.get('historical'):
+      Quote.yahoo(position.symbol)
+  RealtimeQuote.delete_all()
+  RealtimeQuote.download_all(symbols)
   
-  return HttpResponseRedirect('/')
+  if request.GET.get('no-redirect'):
+    return HttpResponse()
+  else:
+    return HttpResponseRedirect('/')
+

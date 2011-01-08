@@ -11,6 +11,7 @@ from google.appengine.api.urlfetch_errors import DownloadError
 import logging
 import array
 import math
+import traceback
 
 class DuplicateException(Exception):
   def __init__(self, value):
@@ -49,11 +50,23 @@ class RealtimeQuote(models.BaseModel):
   price = db.FloatProperty(required=True)
   
   @staticmethod
-  @long_cached
   def load(symbol):
-    q = RealtimeQuote.yahoo(symbol)
-    if not q:
-      return None
+    query = db.Query(RealtimeQuote)
+    query.filter('symbol = ', symbol)
+    quote = query.get()
+    if not quote:
+      logging.info("no quote for %s", symbol)
+    return quote
+
+  @staticmethod
+  def download_all(symbols):
+    symbols = '+'.join(symbols)
+    yahoos = RealtimeQuote.yahoo(symbols)
+    for yahoo in yahoos:
+      RealtimeQuote.from_yahoo(yahoo).put()
+
+  @staticmethod
+  def from_yahoo(q):
     data = RealtimeQuote(
       symbol = q['symbol'],
       date = q['date'],
@@ -62,25 +75,23 @@ class RealtimeQuote(models.BaseModel):
     return data
 
   @staticmethod
-  def yahoo(symbol):
+  def delete_all():
+    query = db.Query(RealtimeQuote)
+    for p in query:
+      p.delete()
+
+
+  @staticmethod
+  def yahoo(symbols):
     """
-       Downloads the latest quote for the given symbol
+       Downloads the latest quote for the given symbols
     """
     all = None
     try:
-      all = ystockquote.get_all(symbol)
-      _date = datetime.strptime(all['date'], '"%m/%d/%Y"').date()
+      return ystockquote.get_all(symbols)
     except Exception, e:
+      logging.error('Could not download quote %s:%s', symbols, e)
       return None
-
-    return {
-        'symbol': symbol,
-        'date': _date,
-        'price': all['price'], 
-        'high': all['high'], 
-        'low': all['low'], 
-        'open': all['open']
-    }
  
 class Quote(models.BaseModel):
   symbol = db.StringProperty(required=True)
@@ -407,8 +418,9 @@ class Currency(models.BaseModel):
   rate = db.FloatProperty(required=True)
   
   @staticmethod
+  @cached
   def load(_from, to):
-    logging.debug("Loading currency from %s to %s " % (_from, to))
+    logging.info("Loading currency from %s to %s " % (_from, to))
     query = db.Query(Currency)
     symbol = '%s%s=X' % (_from, to)
     query.filter('symbol = ', symbol)

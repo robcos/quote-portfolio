@@ -12,6 +12,7 @@
 
 import urllib
 import logging
+from datetime import datetime
 
 """
 This is the "ystockquote" module.
@@ -37,14 +38,11 @@ def get_all(symbol):
     
     Returns a dictionary.
     """
-    rows = __request(symbol, 'l1c1va2xj1b4j4dyekjm3m4rr5p5p6s7ohgd1').split('\r\n')
+    rows = __request(symbol, 'l1c1va2xj1b4j4dyekjm3m4rr5p5p6s7ohgd1s').split('\r\n')
     quotes = []
     for row in rows:
       quotes.append(parse(row.split(',')))
-    if len(quotes) == 1:
-      return quotes[0]
-    else:
-      return quotes
+    return quotes
       
 def parse(values):
     data = {}
@@ -71,7 +69,8 @@ def parse(values):
     data['open'] = values[20]
     data['high'] = values[21]
     data['low'] = values[22]
-    data['date'] = values[23]
+    data['date'] = datetime.strptime(values[23], '"%m/%d/%Y"').date()
+    data['symbol'] = values[24].strip('"')
     return data
     
     

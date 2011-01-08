@@ -51,7 +51,7 @@
 <body>
 <a href="?show_closed=true">Show closed positions</a>
 <a href="?show_closed=false">Show only open positions</a>
-<a href="/quotes">Get quotes</a>
+<a href="/quotes?historical=true">Get quotes</a>
 {% for portfolio in portfolios %}
 <table border="1" class="portfolio">
 <caption>Portfolio: {{portfolio.name}}

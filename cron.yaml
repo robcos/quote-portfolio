@@ -7,3 +7,6 @@ cron:
   url: /alerts
   schedule: every day 16:00
   timezone: America/New_York
+- description: Download the latest quotes
+  url: /quotes?no-redirect=1
+  schedule: every 10 minutes
