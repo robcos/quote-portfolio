@@ -429,7 +429,15 @@ class Currency(models.BaseModel):
   def download_all():
     Currency.download('USD', 'SEK').put()
     Currency.download('USD', 'GBP').put()
+    Currency.download('USD', 'USD').put()
+
+    Currency.download('SEK', 'USD').put()
+    Currency.download('SEK', 'GBP').put()
     Currency.download('SEK', 'SEK').put()
+
+    Currency.download('GBP', 'USD').put()
+    Currency.download('GBP', 'SEK').put()
+    Currency.download('GBP', 'GBP').put()
 
   @staticmethod
   @cached
