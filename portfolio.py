@@ -152,9 +152,11 @@ def cash(request):
     key = request.POST['key']
     cash = float(request.POST['cash'])
     other = float(request.POST['other'])
+    nominal_value = float(request.POST['nominal_value'])
     portfolio = db.get(db.Key(key))
     portfolio.cash = cash
     portfolio.other = other
+    portfolio.nominal_value = nominal_value
     portfolio.put()
   return HttpResponseRedirect('/')
 

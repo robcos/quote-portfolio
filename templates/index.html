@@ -56,11 +56,12 @@
 <a href="/download/currencies">Get currencies</a>
 {% for portfolio in portfolios %}
 <table border="1" class="portfolio">
-<caption>Portfolio: {{portfolio.name}}
+<caption>Portfolio: {{portfolio.name}} - R={{portfolio.risk_unit}}
 <form class="inline" action="/cash" method="POST">
 <input name="key" type="hidden" value="{{portfolio.key}}"/>
 Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency}}
 - Other<input name="other" value="{{portfolio.other}}" size="6"/>{{portfolio.currency}}
+- Nominal Value<input name="nominal_value" value="{{portfolio.nominal_value}}" size="6"/>{{portfolio.currency}}
 <input type="submit" value="Update"/></form>
 </caption>
 <tr>
@@ -72,8 +73,9 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 <th>Cost</th>
 <th>Gain</th>
 <th>Gain %</th>
-<th>Shares</th>
+<th>Risk</th>
 <th>RTR</th>
+<th>Shares</th>
 <th>Enter Price</th>
 <th>Price</th>
 <th>Stop</th>
@@ -94,8 +96,9 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 <td>{{ position.cost|stringformat:'10.2f' }}</td>
 <td{% if position.loosing %} class="negative"{% endif %}>{{ position.gain|stringformat:'10.2f' }}</td>
 <td{% if position.loosing %} class="negative"{% endif %}>{{ position.gainp|stringformat:'2.1f%%' }}</td>
-<td>{{position.shares }}</td>
+<td{% if position.too_risky %} class="negative"{% endif %}>{{ position.risk|stringformat:'10.2f' }}</td>
 <td{% if position.below_stop %} class="negative"{% endif %}>{{position.rtr|stringformat:'.2f' }}</td>
+<td>{{position.shares }}</td>
 <td>{{position.enter_price|stringformat:'10.2f' }}</td>
 <td>{{position.realtime_quote.price|stringformat:'10.2f' }}</td>
 <td{% if position.below_stop %} class="negative"{% endif %}>{{position.stop|stringformat:'10.2f' }}</td>

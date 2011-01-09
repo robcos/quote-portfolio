@@ -193,6 +193,7 @@ class Portfolio(models.BaseModel):
   name = db.StringProperty(required=True)
   cash = db.FloatProperty(required=True, default=0.0)
   other = db.FloatProperty(required=True, default=0.0)
+  nominal_value = db.FloatProperty(required=True, default=0.0)
   currency = db.StringProperty(required=True, default='SEK', choices=['SEK', 'USD', 'GBP'])
   show_closed = True
 
@@ -217,6 +218,9 @@ class Portfolio(models.BaseModel):
   
   def set_show_closed(self, value):
     self.show_closed = value
+  
+  def risk_unit(self):
+    return self.nominal_value / 100
 
   def get_positions(self):
     query = db.Query(Position)
@@ -311,9 +315,7 @@ class Position(models.BaseModel):
     return self.enter_price - 3 * self.atr_20_at_enter()
   
   def suggested_shares(self):
-    portfolio_value = self.portfolio.local_value()
-    allowed_risk = portfolio_value / 100
-    allowed_risk = allowed_risk - self.commission()
+    allowed_risk = self.portfolio.risk_unit() - self.commission()
     risk_per_share = self.enter_price - self.stop
     shares = 0
     if risk_per_share:
@@ -338,8 +340,11 @@ class Position(models.BaseModel):
   def risk(self):
     return self.shares * (self.enter_price - self.stop) * self.currency_rate + self.commission()
 
+  def too_risky(self):
+    return self.risk() >= self.portfolio.risk_unit()
+
   def rtr(self):
-    risk = self.risk()
+    risk = self.portfolio.risk_unit()
     if risk == 0:
       return None
     return self.gain() / risk
