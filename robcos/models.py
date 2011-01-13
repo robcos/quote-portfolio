@@ -316,7 +316,7 @@ class Position(models.BaseModel):
   
   def suggested_shares(self):
     allowed_risk = self.portfolio.risk_unit() - self.commission()
-    risk_per_share = self.enter_price - self.stop
+    risk_per_share = self.enter_price - self.suggested_stop()
     shares = 0
     if risk_per_share:
       shares = math.floor(allowed_risk / risk_per_share)
