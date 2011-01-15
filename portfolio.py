@@ -43,6 +43,7 @@ from robcos.models import Portfolio
 from robcos.models import Position
 from robcos.models import Quote
 from robcos.models import RealtimeQuote
+import robcos.transaction as transaction
 
 # Python
 import logging
@@ -71,6 +72,13 @@ def fixture(request):
         low=1234.5,
         open=1234.5,
         date=date.today()).save()
+
+  transaction.ATransaction(
+      symbol='AAPL',
+      is_long=True,
+      fees=1.0,
+      taxes=0.0).put()
+
 
   return HttpResponseRedirect('/')
 
@@ -189,7 +197,7 @@ def historical_quotes(request):
 def currencies(request):  
   Currency.delete_all()
   Currency.download_all()
-  
+
   return redirect(request)
 
 def redirect(request):
