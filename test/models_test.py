@@ -54,8 +54,8 @@ class TestPosition(unittest.TestCase):
         enter_commission=99.0, 
         shares=1000.0, 
         portfolio=p).save()
-    self.assertEquals('AAPL', p.get_positions().get().symbol)
-    self.assertEquals(1, p.get_positions().count())
+    self.assertEquals('AAPL', p.get_positions()[0].symbol)
+    self.assertEquals(1, len(p.get_positions()))
  
   def test_creation_duplicates(self):
     p = Portfolio(name='Avanza', currency='SEK').save()
