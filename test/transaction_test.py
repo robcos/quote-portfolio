@@ -5,8 +5,11 @@ import logging
 from robcos.transaction import APortfolio
 from robcos.transaction import APosition
 from robcos.transaction import ATransaction
+from robcos.transaction import ATransaction
+from robcos.models import RealtimeQuote
 
 from mock import Mock
+from mock import patch
 
 from google.appengine.ext import db
 
@@ -16,7 +19,6 @@ class TestTransaction(unittest.TestCase):
 
   def setUp(self):
     self.t = ATransaction(
-        symbol='AAPL',
         is_long=True,
         fees=self.FEES,
         taxes=self.TAXES)
@@ -54,7 +56,9 @@ class TestPosition(unittest.TestCase):
     portfolio = APortfolio(name='Avanza')
     portfolio.put()
     self.p = APosition(
+        symbol='AAPL',
         portfolio=portfolio)
+    self.p.put()
 
     self.lt = ATransaction(
         symbol='AAPL',
@@ -72,6 +76,14 @@ class TestPosition(unittest.TestCase):
     self.assertEquals(0, db.Query(ATransaction).count())
     self.p.AddAndStoreTransaction(self.lt)
     self.assertEquals(1, db.Query(ATransaction).count())
+
+  def test_LoadTransaction(self):
+    self.assertFalse(self.p.transactions_)
+    self.p.AddAndStoreTransaction(self.lt)
+
+    # Reload
+    self.p.LoadTransactions()
+    self.assertEquals(self.lt, self.p.GetTransactions()[0])
 
   def test_GetOutstandingShares(self):
     self.lt.Add(100, 1.0)
@@ -118,7 +130,7 @@ class TestPosition(unittest.TestCase):
 
     # Selling 100, average cost should not change.
     self.p.AddAndStoreTransaction(self.st)
-    self.st.Add(100, 1.0)
+    self.st.Add(50, 1.0).Add(50, 1.0)
     self.assertEquals(1.015, self.p.GetShareAverageCost())
 
   def test_GetStop(self):
@@ -153,17 +165,33 @@ class TestPosition(unittest.TestCase):
 
 class TestPortfolio(unittest.TestCase):
 
-  def setUp(self):
-    pass
-  
-  def test_GetAllPositions(self):
+  @patch('robcos.models.RealtimeQuote.load')
+  def test_GetAllPositions(self, load):
     portfolio = APortfolio(name='Avanza')
     portfolio.put()
-    p1 = APosition(portfolio=portfolio)
-    p2 = APosition(portfolio=portfolio)
+    p1 = APosition(
+        portfolio=portfolio, 
+        symbol='AAPL')
+
+    p2 = APosition(
+        portfolio=portfolio, 
+        symbol='GOOG')
     p1.put()
     p2.put()
+
+    p1.LoadTransactions = Mock()
+    p2.LoadTransactions = Mock()
+
+    def side_effect(*args, **kwargs):
+      return 'quote for %s' % args[0]
+    load.side_effect = side_effect
 
     positions = portfolio.GetAllPositions()
     self.assertEquals(p1, positions[0])
     self.assertEquals(p2, positions[1])
+
+    self.assertEquals('quote for AAPL', positions[0].realtime_quote)
+    self.assertEquals('quote for GOOG', positions[1].realtime_quote)
+
+    p1.LoadTransactions.assertCalled()
+    p2.LoadTransactions.assertCalled()

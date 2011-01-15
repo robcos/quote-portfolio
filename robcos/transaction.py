@@ -14,62 +14,41 @@ from google.appengine.api import memcache
 from google.appengine.api.urlfetch_errors import DownloadError
 from google.appengine.ext import db
 
-class ATransaction(models.BaseModel):
-  symbol = db.StringProperty(required=True)
-  date = db.DateProperty(auto_now_add=True)
+from robcos.models import RealtimeQuote
 
-  is_long = db.BooleanProperty(required=True)
-  """True is this transaction has bought shares, False otherwise."""
+class BaseModel(models.BaseModel):
 
-  quantity_list_ = db.ListProperty(int, required=True)
-  """An ordered list of share quantities touched by this transaction."""
+  @classmethod
+  def DeleteAll(cls):
+    """Deletes all the entities"""
 
-  price_list_ = db.ListProperty(float, required=True)
-  """An ordered list of share prices touched by this transaction."""
+    query = db.Query(cls)
+    for p in query:
+      p.delete()
 
-  fees = db.FloatProperty(required=True)
-  taxes = db.FloatProperty(required=True)
-  stop = db.FloatProperty(required=True, default=0.0)
-  """The value at which the stocks of this transaction should be sold"""
 
-  def Add(self, quantity, price):
-    self.quantity_list_.append(quantity)
-    self.price_list_.append(price)
-
-  def GetQuantity(self):
-    """Returns the total number of shares handled by this transaction."""
-    return sum(self.quantity_list_)
-
-  def GetAverageCost(self):
-    """Returns the average cost of the shares handled by this transaction."""
-
-    if not self.quantity_list_:
-      raise Exception('Must add some shares first')
-
-    return self.GetCost() / self.GetQuantity()
-    pass
-
-  def GetCost(self):
-    """The cost of this transaction, including fees and taxes."""
-    
-    if not self.quantity_list_:
-      raise Exception('Must add some shares first')
-    share_cost = sum(map(lambda x,y: x*y, self.quantity_list_, self.price_list_))
-    return self.fees + self.taxes + share_cost
-
-class APortfolio(models.BaseModel):
+class APortfolio(BaseModel):
   name = db.StringProperty(required=True)
 
   def GetOpenPositions(self):
     pass
 
   def GetAllPositions(self):
-    return db.Query(APosition).filter("portfolio =", self)
+    query = db.Query(APosition).filter("portfolio =", self)
+    positions = []
+    for position in query:
+      position.realtime_quote = RealtimeQuote.load(position.symbol)
+      position.LoadTransactions()
+      positions.append(position)
+    return positions
+    
 
-class APosition(models.BaseModel):
+class APosition(BaseModel):
+  symbol = db.StringProperty(required=True)
   portfolio = db.ReferenceProperty(APortfolio, required=True)
   opened_on = db.DateProperty(required=True, auto_now_add=True)
   transactions_ = []
+  realtime_quote = None
 
   def __init__(self, *args, **kwargs):
     super(APosition, self).__init__(**kwargs)
@@ -78,7 +57,11 @@ class APosition(models.BaseModel):
   def AddAndStoreTransaction(self, transaction):
     """Add a transaction to this position. The transaction is persisted."""
     self.transactions_.append(transaction)
+    transaction.position = self
     transaction.put()
+ 
+  def LoadTransactions(self):
+    self.transactions_ = db.Query(ATransaction).filter('position = ', self).fetch(limit=500)
   
   def GetOutstandingShares(self):
     """The number of shares currently owned."""
@@ -101,7 +84,8 @@ class APosition(models.BaseModel):
     This includes the share cost, fees and taxes of all buying transactions.
           
     """
-
+    for p in self.transactions_:
+      print p
     return reduce(lambda x, y: x + y.GetCost() if y.is_long else x,
         [0] + self.transactions_)
 
@@ -151,3 +135,50 @@ class APosition(models.BaseModel):
   def IsOpen(self):
     """True if there is at least an unsold stock."""
     pass
+
+
+class ATransaction(BaseModel):
+  date = db.DateProperty(auto_now_add=True)
+  position = db.ReferenceProperty(APosition, required=False)
+
+  is_long = db.BooleanProperty(required=True)
+  """True is this transaction has bought shares, False otherwise."""
+
+  quantity_list_ = db.ListProperty(int, required=True)
+  """An ordered list of share quantities touched by this transaction."""
+
+  price_list_ = db.ListProperty(float, required=True)
+  """An ordered list of share prices touched by this transaction."""
+
+  fees = db.FloatProperty(required=True)
+  taxes = db.FloatProperty(required=True)
+  stop = db.FloatProperty(required=True, default=0.0)
+  """The value at which the stocks of this transaction should be sold"""
+
+  def Add(self, quantity, price):
+    self.quantity_list_.append(quantity)
+    self.price_list_.append(price)
+    return self
+
+  def GetQuantity(self):
+    """Returns the total number of shares handled by this transaction."""
+    return sum(self.quantity_list_)
+
+  def GetAverageCost(self):
+    """Returns the average cost of the shares handled by this transaction."""
+
+    if not self.quantity_list_:
+      raise Exception('Must add some shares first')
+
+    return self.GetCost() / self.GetQuantity()
+    pass
+
+  def GetCost(self):
+    """The cost of this transaction, including fees and taxes."""
+    
+    if not self.quantity_list_:
+      raise Exception('Must add some shares first')
+    share_cost = sum(map(lambda x,y: x*y, self.quantity_list_, self.price_list_))
+    return self.fees + self.taxes + share_cost
+
+

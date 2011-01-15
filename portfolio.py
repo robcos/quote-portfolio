@@ -39,11 +39,12 @@ from django.forms import ValidationError
 
 # robcos
 from robcos.models import Currency
-from robcos.models import Portfolio
+from robcos.transaction import APortfolio
+from robcos.transaction import APosition
+from robcos.transaction import ATransaction
 from robcos.models import Position
 from robcos.models import Quote
 from robcos.models import RealtimeQuote
-import robcos.transaction as transaction
 
 # Python
 import logging
@@ -53,19 +54,15 @@ from datetime import date
 from datetime import datetime
 
 def fixture(request):
-  Position.delete_all()
   Quote.delete_all()
-  Portfolio.delete_all()
-  avanza = Portfolio(name='Avanza', currency='SEK').save()
-  Portfolio(name='XO', currency='GBP').save()
-  Position(symbol='AAPL', 
-        currency='SEK', 
-        currency_rate=1.0, 
-        enter_date=date.today(),
-        enter_price=5000.0, 
-        enter_commission=99.0, 
-        shares=1000.0, 
-        portfolio=avanza).save()
+  APosition.DeleteAll()
+  APortfolio.DeleteAll()
+  ATransaction.DeleteAll()
+  RealtimeQuote(symbol='AAPL', 
+        price=1234.5,
+        date=date.today()).save()
+
+
   Quote(symbol='AAPL', 
         close=1234.5,
         high=1234.5,
@@ -73,12 +70,25 @@ def fixture(request):
         open=1234.5,
         date=date.today()).save()
 
-  transaction.ATransaction(
-      symbol='AAPL',
-      is_long=True,
-      fees=1.0,
-      taxes=0.0).put()
+  avanza = APortfolio(name='Avanza', currency='SEK').save()
 
+  position = APosition(
+    symbol='BOL.ST',
+    portfolio=avanza)
+
+  position.put()
+    
+  position.AddAndStoreTransaction(ATransaction(
+      is_long=True,
+      fees=99.0,
+      stop=50.0,
+      taxes=0.0).Add(250, 97.50))
+
+  position.AddAndStoreTransaction(ATransaction(
+      is_long=True,
+      fees=99.0,
+      stop=50.0,
+      taxes=0.0).Add(250, 132.80))
 
   return HttpResponseRedirect('/')
 
@@ -97,15 +107,15 @@ class PositionForm(ModelForm):
     return self.cleaned_data
 
 def get_portfolios(request):
-  portfolios = Portfolio.all()
-  show_closed_positions = request.GET.get('show_closed', False) == 'true'
-  for p in portfolios:
-    p.set_show_closed(show_closed_positions)
+  portfolios = APortfolio.all()
+  #show_closed_positions = request.GET.get('show_closed', False) == 'true'
+  #for p in portfolios:
+  #  p.set_show_closed(show_closed_positions)
   return portfolios
 
 def index(request):
   portfolios = get_portfolios(request)
-  currencies = Currency.all()
+  #currencies = Currency.all()
 
   if request.method == 'POST':
     form = PositionForm(request.POST)
