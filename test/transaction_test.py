@@ -1,5 +1,4 @@
 import unittest
-import datetime
 import logging
 
 from robcos.transaction import APortfolio
@@ -10,6 +9,7 @@ from robcos.models import RealtimeQuote
 
 from mock import Mock
 from mock import patch
+from datetime import date
 
 from google.appengine.ext import db
 
@@ -162,6 +162,45 @@ class TestPosition(unittest.TestCase):
     self.st.Add(100, 1.0)
     self.assertEquals(1.015, self.p.GetShareAverageCost())
     self.assertEquals(100 * (1.015-0.80) , self.p.GetRisk())
+
+  def test_GetValue(self):
+    self.assertRaises(Exception, self.p.GetValue)
+
+    self.p.realtime_quote = RealtimeQuote(
+      date=date.today(),
+      symbol='AAPL',
+      price=2.0)
+
+    # Buying 200
+    self.p.AddAndStoreTransaction(self.lt)
+    self.lt.Add(200, 1.0)
+    self.assertEquals(400, self.p.GetValue())
+
+    # Selling 100
+    self.p.AddAndStoreTransaction(self.st)
+    self.st.Add(100, 1.0)
+    self.assertEquals(200, self.p.GetValue())
+
+  def test_GetGain(self):
+    self.assertRaises(Exception, self.p.GetGain)
+
+    #self.lt.fees = 0.0
+    #self.lt.taxes = 0.0
+
+    self.p.realtime_quote = RealtimeQuote(
+      date=date.today(),
+      symbol='AAPL',
+      price=2.0)
+
+    # Buying 200
+    self.p.AddAndStoreTransaction(self.lt)
+    self.lt.Add(200, 1.0)
+    self.assertEquals(200.0 - 2.0 - 1.0, round(self.p.GetGain()))
+
+    # Selling 100
+    self.p.AddAndStoreTransaction(self.st)
+    self.st.Add(100, 1.0)
+    self.assertEquals(100.0 - 1.0 - 0.5, round(self.p.GetGain(), 2))
 
 class TestPortfolio(unittest.TestCase):
 

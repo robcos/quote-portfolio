@@ -125,12 +125,22 @@ class APosition(BaseModel):
     """
     pass
 
+  def GetValue(self):
+    """How much is the position worth if I sold it at the current price.
+
+    No exit fees are taken into account
+
+    """
+    return self.GetOutstandingShares() * self.realtime_quote.price
+
+
   def GetGain(self):
     """How much I win if I sell all invested shares at the current price.
       
     All the fees are deducted from the value.
     """
-    pass
+    return self.GetOutstandingShares() * (
+       self.realtime_quote.price - self.GetShareAverageCost())
 
   def IsOpen(self):
     """True if there is at least an unsold stock."""

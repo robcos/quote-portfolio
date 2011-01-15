@@ -52,18 +52,19 @@ import os
 import re
 from datetime import date
 from datetime import datetime
+from mock import Mock
 
 def fixture(request):
   Quote.delete_all()
   APosition.DeleteAll()
   APortfolio.DeleteAll()
   ATransaction.DeleteAll()
-  RealtimeQuote(symbol='AAPL', 
-        price=1234.5,
+  RealtimeQuote(symbol='BOL.ST', 
+        price=139.50,
         date=date.today()).save()
 
 
-  Quote(symbol='AAPL', 
+  Quote(symbol='BOL.ST', 
         close=1234.5,
         high=1234.5,
         low=1234.5,
