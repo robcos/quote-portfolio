@@ -57,21 +57,22 @@ class ATransaction(models.BaseModel):
     share_cost = sum(map(lambda x,y: x*y, self.quantity_list_, self.price_list_))
     return self.fees + self.taxes + share_cost
 
-class Portfolio():
+class APortfolio(models.BaseModel):
+  name = db.StringProperty(required=True)
 
   def GetOpenPositions(self):
     pass
 
   def GetAllPositions(self):
-    pass
+    return db.Query(APosition).filter("portfolio =", self)
 
 class APosition(models.BaseModel):
-  
-  #closed = db.BooleanProperty(required=True, default=False)
+  portfolio = db.ReferenceProperty(APortfolio, required=True)
   opened_on = db.DateProperty(required=True, auto_now_add=True)
   transactions_ = []
 
-  def __init__(self):
+  def __init__(self, *args, **kwargs):
+    super(APosition, self).__init__(**kwargs)
     self.transactions_ = []
 
   def AddAndStoreTransaction(self, transaction):

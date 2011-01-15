@@ -2,8 +2,9 @@ import unittest
 import datetime
 import logging
 
-from robcos.transaction import ATransaction
+from robcos.transaction import APortfolio
 from robcos.transaction import APosition
+from robcos.transaction import ATransaction
 
 from mock import Mock
 
@@ -50,8 +51,10 @@ class TestTransaction(unittest.TestCase):
 class TestPosition(unittest.TestCase):
 
   def setUp(self):
+    portfolio = APortfolio(name='Avanza')
+    portfolio.put()
     self.p = APosition(
-        )
+        portfolio=portfolio)
 
     self.lt = ATransaction(
         symbol='AAPL',
@@ -147,3 +150,20 @@ class TestPosition(unittest.TestCase):
     self.st.Add(100, 1.0)
     self.assertEquals(1.015, self.p.GetShareAverageCost())
     self.assertEquals(100 * (1.015-0.80) , self.p.GetRisk())
+
+class TestPortfolio(unittest.TestCase):
+
+  def setUp(self):
+    pass
+  
+  def test_GetAllPositions(self):
+    portfolio = APortfolio(name='Avanza')
+    portfolio.put()
+    p1 = APosition(portfolio=portfolio)
+    p2 = APosition(portfolio=portfolio)
+    p1.put()
+    p2.put()
+
+    positions = portfolio.GetAllPositions()
+    self.assertEquals(p1, positions[0])
+    self.assertEquals(p2, positions[1])
