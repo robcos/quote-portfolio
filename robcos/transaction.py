@@ -14,10 +14,8 @@ from google.appengine.api import memcache
 from google.appengine.api.urlfetch_errors import DownloadError
 from google.appengine.ext import db
 
-class Transaction(models.BaseModel):
+class ATransaction(models.BaseModel):
   symbol = db.StringProperty(required=True)
-  date = db.DateProperty(required=True)
-
   date = db.DateProperty(auto_now_add=True)
 
   is_long = db.BooleanProperty(required=True)
@@ -31,6 +29,8 @@ class Transaction(models.BaseModel):
 
   fees = db.FloatProperty(required=True)
   taxes = db.FloatProperty(required=True)
+  stop = db.FloatProperty(required=True, default=0.0)
+  """The value at which the stocks of this transaction should be sold"""
 
   def Add(self, quantity, price):
     self.quantity_list_.append(quantity)
@@ -44,7 +44,7 @@ class Transaction(models.BaseModel):
     """Returns the average cost of the shares handled by this transaction."""
 
     if not self.quantity_list_:
-      raise Exception('Must hadd some shares first')
+      raise Exception('Must add some shares first')
 
     return self.GetCost() / self.GetQuantity()
     pass
@@ -65,22 +65,72 @@ class Portfolio():
   def GetAllPositions(self):
     pass
 
-class Position():
+class APosition(models.BaseModel):
   
-  closed = False
-  opened_on = None
+  #closed = db.BooleanProperty(required=True, default=False)
+  opened_on = db.DateProperty(required=True, auto_now_add=True)
+  transactions_ = []
+
+  def __init__(self):
+    self.transactions_ = []
+
+  def AddAndStoreTransaction(self, transaction):
+    """Add a transaction to this position. The transaction is persisted."""
+    self.transactions_.append(transaction)
+    transaction.put()
+  
+  def GetOutstandingShares(self):
+    """The number of shares currently owned."""
+    return sum(map(
+        lambda x: x.GetQuantity() if x.is_long else -x.GetQuantity(),
+        self.transactions_))
 
   def GetTransactions(self):
     """Returns all the transactions associated to this position"""
-    pass
+    return self.transactions_
+  
+  def GetBuyingTransactions(self):
+    """Returns all the buying transactions associated to this position"""
 
-  def IsOpen(self):
-    """True if there is at least an unsold stock."""
-    pass
+    return filter(lambda x: x.is_long, self.transactions_)
+
+  def GetTotalBuyingCost(self):
+    """Sum of all costs substained to reach this position.
+      
+    This includes the share cost, fees and taxes of all buying transactions.
+          
+    """
+
+    return reduce(lambda x, y: x + y.GetCost() if y.is_long else x,
+        [0] + self.transactions_)
+
+  def GetShareAverageCost(self):
+    """The average cost of a single share.
+
+    This is the equivalent cost you would have sustained if you had bought
+    all the shares at the same price with zero fees or taxes.
+    """
+
+    transactions = self.GetBuyingTransactions()
+    return (reduce(lambda x, y: x + y.GetAverageCost(), [0] + transactions) /
+        len(transactions))
 
   def GetStop(self):
     """The maximum stop of all open positions."""
-    pass
+    
+    return reduce(lambda x, y: max(x, y.stop),
+         [0] + self.GetBuyingTransactions())
+
+  def GetRisk(self):
+    """How much I loose if I sell all invested shares at the stop price.
+
+    Takes into account enter fees and taxes.
+    """
+    self.GetOutstandingShares() * (
+        self.GetShareAverageCost() - self.GetStop())
+
+    return self.GetOutstandingShares() * (
+        self.GetShareAverageCost() - self.GetStop())
 
   def GetNetValue(self):
     """How much is the position worth if I sold it at the current price.
@@ -90,10 +140,6 @@ class Position():
     """
     pass
 
-  def GetRisk(self):
-    """How much I loose if I sell all invested shares at the stop price."""
-    pass
-
   def GetGain(self):
     """How much I win if I sell all invested shares at the current price.
       
@@ -101,22 +147,6 @@ class Position():
     """
     pass
 
-  def GetShareAverageCost(self):
-    """The average cost of a single share."""
-    pass
-
-  def GetTotalCost(self):
-    """Sum of all costs.
-      
-    This includes the share cost, fees and taxes of all transactions.
-          
-    """
-    pass
-
-  def GetCurrentCost(self):
-    """Sum of all costs."""
-    pass
-
-  def GetOutstandingShares(self):
-    """The number of shares currently owned."""
+  def IsOpen(self):
+    """True if there is at least an unsold stock."""
     pass
