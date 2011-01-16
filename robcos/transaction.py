@@ -32,6 +32,9 @@ class APortfolio(BaseModel):
   nominal_value = db.FloatProperty(required=True, default=0.0)
   """The nominal value of portfolio used to calculate position sizes."""
 
+  def __str__(self):
+    return self.name
+
   def GetOpenPositions(self):
     pass
 
@@ -94,8 +97,6 @@ class APosition(BaseModel):
     This includes the share cost, fees and taxes of all buying transactions.
           
     """
-    for p in self.transactions_:
-      print p
     return reduce(lambda x, y: x + y.GetCost() if y.is_long else x,
         [0] + self.transactions_)
 
@@ -167,6 +168,68 @@ class APosition(BaseModel):
     
     return self.portfolio.GetRiskUnit() / self.GetGain()
 
+
+class APositionForm(BaseModel):
+  position = db.ReferenceProperty(APosition, required=False)
+  portfolio = db.ReferenceProperty(APortfolio, required=True)
+  symbol = db.StringProperty(required=True)
+  quantity_list = db.StringProperty(required=True)
+  price_list = db.StringProperty(required=True)
+  enter_date = db.DateProperty(required=True, default=date.today())
+  enter_commission = db.FloatProperty(required=True, default='99')
+  
+  def GetPriceList(self):
+    """Converts the price_list property into a list.
+
+    Returns: A list of floats.
+    """
+    return map(lambda x: float(x), self.price_list.split(','))
+
+  def GetQuantityList(self):
+    """Converts the price_list property into a list.
+
+    Returns: A list of ints.
+    """
+    return map(lambda x: int(x), self.quantity_list.split(','))
+
+  def Save(self):
+    """Saves this form into a position and its transactions.
+
+      Returns: The key of the saved position.
+    """
+
+    position = APosition(
+        key=self.position.key() if self.position else None,
+        symbol=self.symbol,
+        portfolio=self.portfolio)
+
+    position.put()
+    self.position = position
+
+    transaction = ATransaction(
+        is_long=True,
+        fees=self.enter_commission,
+        position=self.position,
+        taxes=0.0)
+
+    for price, quantity in zip(self.GetPriceList(), self.GetQuantityList()):
+      transaction.Add(quantity, price)   
+      
+    transaction.put()
+    return position
+
+  @staticmethod
+  def Get(key):
+    position = db.get(key)
+    transaction = db.Query(ATransaction).filter('position =', position).get()
+    return APositionForm(
+        position=position,
+        portfolio=position.portfolio,
+        enter_commission=transaction.fees,
+        price_list=','.join(map(lambda x: str(x), transaction.price_list_)),
+        quantity_list=','.join(map(lambda x: str(x), transaction.quantity_list_)),
+        symbol=position.symbol
+    )
 
 class ATransaction(BaseModel):
   date = db.DateProperty(auto_now_add=True)

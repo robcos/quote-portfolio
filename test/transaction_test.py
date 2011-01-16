@@ -3,6 +3,7 @@ import logging
 
 from robcos.transaction import APortfolio
 from robcos.transaction import APosition
+from robcos.transaction import APositionForm
 from robcos.transaction import ATransaction
 from robcos.transaction import ATransaction
 from robcos.models import RealtimeQuote
@@ -251,3 +252,69 @@ class TestPortfolio(unittest.TestCase):
       nominal_value=100.0)
     
     self.assertEquals(1.0, portfolio.GetRiskUnit())
+
+class TestPositionForm(unittest.TestCase):
+
+    def test_GetLists(self):
+      portfolio = APortfolio(name='Avanza')
+      portfolio.put()
+
+      form = APositionForm(
+        portfolio=portfolio,
+        symbol='AAPL',
+        enter_commission=99.0,
+        quantity_list='100,50',
+        price_list='1.0,2.0',
+      )
+
+      self.assertEquals([1.0, 2.0], form.GetPriceList())
+      self.assertEquals([100, 50], form.GetQuantityList())
+
+    def test_Save(self):
+      portfolio = APortfolio(name='Avanza')
+      portfolio.put()
+
+      form = APositionForm(
+        portfolio=portfolio,
+        symbol='AAPL',
+        enter_commission=99.0,
+        quantity_list='100,50',
+        price_list='1.0,2.0',
+      )
+
+      self.assertTrue(form.Save())
+
+      position = db.Query(APosition).get()
+      self.assertEquals(position.symbol, form.symbol)
+      transaction = db.Query(ATransaction).get()
+      self.assertEquals(transaction.position, position)
+      self.assertEquals(transaction.quantity_list_, [100, 50])
+      self.assertEquals(transaction.price_list_, [1.0, 2.0])
+      self.assertEquals(transaction.fees, 99.0)
+      self.assertEquals(transaction.date, form.enter_date)
+      
+      self.assertTrue(form.Save())
+      self.assertEquals(1, db.Query(APosition).count())
+
+    def test_Get(self):
+      portfolio = APortfolio(name='Avanza')
+      portfolio.put()
+
+      form = APositionForm(
+        portfolio=portfolio,
+        symbol='AAPL',
+        enter_commission=99.0,
+        quantity_list='100,50',
+        price_list='1.0,2.0',
+      )
+
+      key = form.Save().key()
+
+      loaded_form = APositionForm.Get(key)
+      self.assertEquals(loaded_form.portfolio, form.portfolio)
+      self.assertEquals(loaded_form.symbol, form.symbol)
+      self.assertEquals(loaded_form.enter_commission, form.enter_commission)
+      self.assertEquals(loaded_form.quantity_list, form.quantity_list)
+      self.assertEquals(loaded_form.price_list, form.price_list)
+      
+      

@@ -41,6 +41,7 @@ from django.forms import ValidationError
 from robcos.models import Currency
 from robcos.transaction import APortfolio
 from robcos.transaction import APosition
+from robcos.transaction import APositionForm
 from robcos.transaction import ATransaction
 from robcos.models import Position
 from robcos.models import Quote
@@ -93,19 +94,17 @@ def fixture(request):
 
   return HttpResponseRedirect('/')
 
-class PositionForm(ModelForm):
+class Form(ModelForm):
   class Meta:
-    model = Position
+    model = APositionForm
 
-  def clean(self):
-    portfolio = self.cleaned_data.get('portfolio', '')
-    symbol = self.cleaned_data.get('symbol', '')
-    enter_date = self.cleaned_data.get('enter_date', None)
-    if self.instance:
-      return self.cleaned_data
-    if Position.load(symbol=symbol, enter_date=enter_date, portfolio=portfolio):
-      raise ValidationError('There is already a position for %s on %s' % (symbol, enter_date))
-    return self.cleaned_data
+  def clean_price_list(self):
+    price_list_len = len(self.cleaned_data.get('price_list', '').split(','))
+    quantity_list_len = len(self.cleaned_data.get('quantity_list', '').split(','))
+    if price_list_len != quantity_list_len:
+      raise ValidationError('You have entered %s prices and %s quantities' % (price_list_len, quantity_list_len))
+    return self.cleaned_data['price_list']
+
 
 def get_portfolios(request):
   portfolios = APortfolio.all()
@@ -119,12 +118,13 @@ def index(request):
   #currencies = Currency.all()
 
   if request.method == 'POST':
-    form = PositionForm(request.POST)
+    form = Form(request.POST)
     if form.is_valid():
-      form.save()
+      model = form.save(commit=False)
+      model.Save()
       return HttpResponseRedirect('/')
   else:
-    form = PositionForm()
+    form = Form()
 
   return shortcuts.render_to_response('index.html', locals())
 
@@ -151,18 +151,19 @@ def alerts(request):
 def edit(request, key):
   portfolios = get_portfolios(request)
   if request.method == 'POST':
-    form = PositionForm(request.POST, instance=db.get(key))
+    form = Form(request.POST, instance=APositionForm.Get(key))
     if form.is_valid():
-      form.save()
+      model = form.save(commit=False)
+      model.Save()
       return HttpResponseRedirect('/')
   else:
-    form = PositionForm(instance=db.get(key))
+    form = Form(instance=APositionForm.Get(key))
 
   return shortcuts.render_to_response('index.html', locals())
 
 def position(request):
   """ To import positions """
-  form = PositionForm(request.GET)
+  form = Form(request.GET)
   form.save()
   return HttpResponseRedirect('/')
 
