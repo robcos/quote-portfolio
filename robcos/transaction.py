@@ -133,7 +133,6 @@ class APosition(BaseModel):
     """
     return self.GetOutstandingShares() * self.realtime_quote.price
 
-
   def GetGain(self):
     """How much I win if I sell all invested shares at the current price.
       
@@ -141,6 +140,14 @@ class APosition(BaseModel):
     """
     return self.GetOutstandingShares() * (
        self.realtime_quote.price - self.GetShareAverageCost())
+
+
+  def GetGainPercentage(self):
+    """How much I win if I sell all invested shares at the current price.
+      
+    All the fees are deducted from the value.
+    """
+    return self.GetGain() / self.GetTotalBuyingCost() * 100
 
   def IsOpen(self):
     """True if there is at least an unsold stock."""

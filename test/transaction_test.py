@@ -184,9 +184,6 @@ class TestPosition(unittest.TestCase):
   def test_GetGain(self):
     self.assertRaises(Exception, self.p.GetGain)
 
-    #self.lt.fees = 0.0
-    #self.lt.taxes = 0.0
-
     self.p.realtime_quote = RealtimeQuote(
       date=date.today(),
       symbol='AAPL',
@@ -201,6 +198,12 @@ class TestPosition(unittest.TestCase):
     self.p.AddAndStoreTransaction(self.st)
     self.st.Add(100, 1.0)
     self.assertEquals(100.0 - 1.0 - 0.5, round(self.p.GetGain(), 2))
+
+  def test_GetGainPercentage(self):
+    self.p.GetGain = Mock(return_value=10.0)
+    self.p.GetTotalBuyingCost = Mock(return_value=100.0)
+    
+    self.assertEquals(10, self.p.GetGainPercentage())
 
 class TestPortfolio(unittest.TestCase):
 
