@@ -205,6 +205,13 @@ class TestPosition(unittest.TestCase):
     
     self.assertEquals(10, self.p.GetGainPercentage())
 
+  def test_GetRtr(self):
+    self.p.GetGain = Mock(return_value=10.0)
+    self.p.portfolio.GetRiskUnit = Mock(return_value=10.0)
+    
+    self.assertEquals(1, self.p.GetRtr())
+
+
 class TestPortfolio(unittest.TestCase):
 
   @patch('robcos.models.RealtimeQuote.load')
@@ -237,3 +244,10 @@ class TestPortfolio(unittest.TestCase):
 
     p1.LoadTransactions.assertCalled()
     p2.LoadTransactions.assertCalled()
+
+  def test_GetRiskUnit(self):
+    portfolio = APortfolio(
+      name='Avanza',
+      nominal_value=100.0)
+    
+    self.assertEquals(1.0, portfolio.GetRiskUnit())

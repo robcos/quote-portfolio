@@ -29,6 +29,8 @@ class BaseModel(models.BaseModel):
 
 class APortfolio(BaseModel):
   name = db.StringProperty(required=True)
+  nominal_value = db.FloatProperty(required=True, default=0.0)
+  """The nominal value of portfolio used to calculate position sizes."""
 
   def GetOpenPositions(self):
     pass
@@ -41,6 +43,14 @@ class APortfolio(BaseModel):
       position.LoadTransactions()
       positions.append(position)
     return positions
+
+  def GetRiskUnit(self):
+    """Returns the risk unit for this portfolio.
+
+    Each transaction should not risk more than this value.
+    """
+
+    return self.nominal_value / 100
     
 
 class APosition(BaseModel):
@@ -128,9 +138,10 @@ class APosition(BaseModel):
   def GetValue(self):
     """How much is the position worth if I sold it at the current price.
 
-    No exit fees are taken into account
+    No exit fees are taken into account.
 
     """
+  
     return self.GetOutstandingShares() * self.realtime_quote.price
 
   def GetGain(self):
@@ -138,6 +149,7 @@ class APosition(BaseModel):
       
     All the fees are deducted from the value.
     """
+  
     return self.GetOutstandingShares() * (
        self.realtime_quote.price - self.GetShareAverageCost())
 
@@ -147,11 +159,13 @@ class APosition(BaseModel):
       
     All the fees are deducted from the value.
     """
+  
     return self.GetGain() / self.GetTotalBuyingCost() * 100
 
-  def IsOpen(self):
-    """True if there is at least an unsold stock."""
-    pass
+  def GetRtr(self):
+    """Returns the ration between the risk unit and the gain.""" 
+    
+    return self.portfolio.GetRiskUnit() / self.GetGain()
 
 
 class ATransaction(BaseModel):

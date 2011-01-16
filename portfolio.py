@@ -71,7 +71,7 @@ def fixture(request):
         open=1234.5,
         date=date.today()).save()
 
-  avanza = APortfolio(name='Avanza', currency='SEK').save()
+  avanza = APortfolio(name='Avanza', currency='SEK', nominal_value=550000.0).save()
 
   position = APosition(
     symbol='BOL.ST',

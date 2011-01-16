@@ -97,7 +97,7 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 <td{% if position.loosing %} class="negative"{% endif %}>{{ position.GetGain|stringformat:'10.2f' }}</td>
 <td{% if position.loosing %} class="negative"{% endif %}>{{ position.GetGainPercentage|stringformat:'2.2f%%' }}</td>
 <td{% if position.too_risky %} class="negative"{% endif %}>{{ position.GetRisk|stringformat:'10.2f' }}</td>
-<td{% if position.below_stop %} class="negative"{% endif %}>{{position.rtr|stringformat:'.2f' }}</td>
+<td{% if position.below_stop %} class="negative"{% endif %}>{{position.GetRtr|stringformat:'.2f' }}</td>
 <td>{{position.GetOutstandingShares }}</td>
 <td>{{position.GetShareAverageCost|stringformat:'10.2f' }}</td>
 <td>{{position.realtime_quote.price|stringformat:'10.2f' }}</td>
