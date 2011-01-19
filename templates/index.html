@@ -89,7 +89,7 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 
 {% for position in portfolio.GetAllPositions %}
 <tr>
-<td><a href="/edit/{{position.key}}">{{position.symbol}}</a></td>
+<td><a href="/position/{{position.key}}">{{position.symbol}}</a></td>
 <td>{{position.realtime_quote.date}}</td>
 {# <td>{{position.enter_date}}</td> #}
 <td title="{{ position.value|stringformat:'10.2f' }} {{position.currency}}">{{ position.GetValue|stringformat:'10.2f' }}</td>
@@ -147,7 +147,7 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 </tr>
 {% endfor %}
 </table>
-
+{% comment %}
 <form action="" method="POST">
 <table border="0">
 <caption>Add a new position</caption>
@@ -201,6 +201,26 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
   <td>{{ form.exit_price }} {{form.exit_price.errors}}</td>
 </tr>
 <tr><th></th>
+<td><input type="submit" value="save"></td>
+</table>
+</form>
+{% endcomment %}
+
+<form action="/position/{{form.instance.key}}" method="POST">
+<table border="0">
+<caption>Add a new position</caption>
+<tr class="fieldWrapper">
+  <th><label for="id_portfolio">Portfolio</label></th>
+  <td>{{ form.portfolio }} {{form.portfolio.errors}}</td>
+</tr>
+<tr class="fieldWrapper">
+  <th><label for="id_symbol">Symbol</label></th>
+  <td>{{ form.symbol }} {{form.symbol.errors}} {{form.non_field_errors}}</td>
+</tr>
+<tr class="fieldWrapper">
+  <th><label for="id_closed">Closed</label></th>
+  <td>{{ form.closed }} {{form.closed.errors}}</td>
+</tr>
 <td><input type="submit" value="save"></td>
 </table>
 </form>

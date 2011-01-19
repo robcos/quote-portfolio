@@ -120,7 +120,7 @@ class TestPosition(unittest.TestCase):
     self.assertEquals(1, self.p.GetTotalBuyingCost())
 
   def test_GetShareAverageCost(self):
-    self.assertRaises(Exception, self.p.GetShareAverageCost)
+    self.assertEquals(None, self.p.GetShareAverageCost())
 
     # Buying 200 in two tranches
     self.p.AddAndStoreTransaction(self.lt)

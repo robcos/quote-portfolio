@@ -60,6 +60,7 @@ class APosition(BaseModel):
   symbol = db.StringProperty(required=True)
   portfolio = db.ReferenceProperty(APortfolio, required=True)
   opened_on = db.DateProperty(required=True, auto_now_add=True)
+  closed = db.BooleanProperty(required=True, default=False)
   transactions_ = []
   realtime_quote = None
 
@@ -105,9 +106,14 @@ class APosition(BaseModel):
 
     This is the equivalent cost you would have sustained if you had bought
     all the shares at the same price with zero fees or taxes.
+
+    Returns: None if not transactions have been added yet.
     """
 
     transactions = self.GetBuyingTransactions()
+    if not transactions:
+      return None
+
     return (reduce(lambda x, y: x + y.GetAverageCost(), [0] + transactions) /
         len(transactions))
 

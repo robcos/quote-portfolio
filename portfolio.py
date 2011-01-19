@@ -53,7 +53,6 @@ import os
 import re
 from datetime import date
 from datetime import datetime
-from mock import Mock
 
 def fixture(request):
   Quote.delete_all()
@@ -104,6 +103,17 @@ class Form(ModelForm):
     if price_list_len != quantity_list_len:
       raise ValidationError('You have entered %s prices and %s quantities' % (price_list_len, quantity_list_len))
     return self.cleaned_data['price_list']
+
+class PositionForm(ModelForm):
+  class Meta:
+    model = APosition
+
+  #def clean_price_list(self):
+  #  price_list_len = len(self.cleaned_data.get('price_list', '').split(','))
+  # quantity_list_len = len(self.cleaned_data.get('quantity_list', '').split(','))
+  #  if price_list_len != quantity_list_len:
+  #    raise ValidationError('You have entered %s prices and %s quantities' % (price_list_len, quantity_list_len))
+  #  return self.cleaned_data['price_list']
 
 
 def get_portfolios(request):
@@ -161,11 +171,33 @@ def edit(request, key):
 
   return shortcuts.render_to_response('index.html', locals())
 
-def position(request):
-  """ To import positions """
-  form = Form(request.GET)
-  form.save()
-  return HttpResponseRedirect('/')
+
+def update_position(request, key):
+  """ To store positions """
+  portfolios = get_portfolios(request)
+  if request.method == 'POST':
+    form = PositionForm(request.POST, instance=db.get(db.Key(key)))
+    if form.is_valid():
+      model = form.save()
+      return HttpResponseRedirect('/')
+  else:
+    form = PositionForm(instance=db.get(db.Key(key)))
+  
+  return shortcuts.render_to_response('index.html', locals())
+
+def create_position(request):
+  """ To store positions """
+  portfolios = get_portfolios(request)
+  if request.method == 'POST':
+    form = PositionForm(request.POST)
+    if form.is_valid():
+      model = form.save()
+      return HttpResponseRedirect('/')
+  else:
+    form = Form()
+  
+  return shortcuts.render_to_response('index.html', locals())
+
 
 def cash(request):
   if request.method == 'POST':
