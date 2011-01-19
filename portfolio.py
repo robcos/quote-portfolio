@@ -112,6 +112,8 @@ def index(request):
 def alerts(request):
   body = ''
   for position in Position.all():
+    if position.exit_date is not None or not position.shares:
+      continue
     if position.below_stop():
       body += '\n%s in portfolio %s below stop' % (position.symbol, position.portfolio.name)
     if position.below_ll_10():
