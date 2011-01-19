@@ -264,6 +264,7 @@ class Position(models.BaseModel):
   stop = db.FloatProperty(required=False, default=1.0)
   exit_price = db.FloatProperty(required=False)
   enter_commission = db.FloatProperty(required=True, default='99')
+  enter_taxes = db.FloatProperty(required=True, default=0.0)
   exit_commission = db.FloatProperty(required=False)
   shares = db.FloatProperty(required=True)
   portfolio = db.ReferenceProperty(Portfolio, required=True)
@@ -300,7 +301,7 @@ class Position(models.BaseModel):
       return None
   
   def cost(self):
-    return self.shares * self.enter_price * self.currency_rate + self.commission()
+    return self.shares * self.enter_price * self.currency_rate + self.fees()
 
   def loosing(self):
     return self.gain() < 0
@@ -315,7 +316,7 @@ class Position(models.BaseModel):
     return self.enter_price - 3 * self.atr_20_at_enter()
   
   def suggested_shares(self):
-    allowed_risk = self.portfolio.risk_unit() - self.commission()
+    allowed_risk = self.portfolio.risk_unit() - self.fees()
     risk_per_share = self.enter_price - self.suggested_stop()
     shares = 0
     if risk_per_share:
@@ -331,14 +332,14 @@ class Position(models.BaseModel):
   def below_stop(self):
     return self.realtime_quote().price <= self.stop
 
-  def commission(self):
+  def fees(self):
     commission = 2 * self.enter_commission
     if self.exit_commission:
       commission = self.enter_commission + self.exit_commission
-    return commission
+    return commission + self.enter_taxes
 
   def risk(self):
-    return self.shares * (self.enter_price - self.stop) * self.currency_rate + self.commission()
+    return self.shares * (self.enter_price - self.stop) * self.currency_rate + self.fees()
 
   def too_risky(self):
     return self.risk() >= self.portfolio.risk_unit()

@@ -84,8 +84,8 @@ class PositionForm(ModelForm):
     enter_date = self.cleaned_data.get('enter_date', None)
     if self.instance:
       return self.cleaned_data
-    if Position.load(symbol=symbol, enter_date=enter_date, portfolio=portfolio):
-      raise ValidationError('There is already a position for %s on %s' % (symbol, enter_date))
+    #if Position.load(symbol=symbol, enter_date=enter_date, portfolio=portfolio):
+    #  raise ValidationError('There is already a position for %s on %s' % (symbol, enter_date))
     return self.cleaned_data
 
 def get_portfolios(request):
