@@ -47,8 +47,6 @@ from robcos.models import Position
 from robcos.models import Quote
 from robcos.models import RealtimeQuote
 
-import common
-
 # Python
 import logging
 import os
@@ -118,8 +116,15 @@ class PositionForm(ModelForm):
   #  return self.cleaned_data['price_list']
 
 
+def get_portfolios(request):
+  portfolios = APortfolio.all()
+  #show_closed_positions = request.GET.get('show_closed', False) == 'true'
+  #for p in portfolios:
+  #  p.set_show_closed(show_closed_positions)
+  return portfolios
+
 def index(request):
-  portfolios = common.get_portfolios(request)
+  portfolios = get_portfolios(request)
   #currencies = Currency.all()
 
   if request.method == 'POST':
@@ -154,7 +159,7 @@ def alerts(request):
   return HttpResponseRedirect('/')
   
 def edit(request, key):
-  portfolios = common.get_portfolios(request)
+  portfolios = get_portfolios(request)
   if request.method == 'POST':
     form = Form(request.POST, instance=APositionForm.Get(key))
     if form.is_valid():
@@ -164,6 +169,33 @@ def edit(request, key):
   else:
     form = Form(instance=APositionForm.Get(key))
 
+  return shortcuts.render_to_response('index.html', locals())
+
+
+def update_position(request, key):
+  """ To store positions """
+  portfolios = get_portfolios(request)
+  if request.method == 'POST':
+    form = PositionForm(request.POST, instance=db.get(db.Key(key)))
+    if form.is_valid():
+      model = form.save()
+      return HttpResponseRedirect('/')
+  else:
+    form = PositionForm(instance=db.get(db.Key(key)))
+  
+  return shortcuts.render_to_response('index.html', locals())
+
+def create_position(request):
+  """ To store positions """
+  portfolios = get_portfolios(request)
+  if request.method == 'POST':
+    form = PositionForm(request.POST)
+    if form.is_valid():
+      model = form.save()
+      return HttpResponseRedirect('/')
+  else:
+    form = Form()
+  
   return shortcuts.render_to_response('index.html', locals())
 
 

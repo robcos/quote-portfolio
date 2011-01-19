@@ -60,7 +60,7 @@ class APosition(BaseModel):
   symbol = db.StringProperty(required=True)
   portfolio = db.ReferenceProperty(APortfolio, required=True)
   opened_on = db.DateProperty(required=True, auto_now_add=True)
-  closed = db.BooleanProperty(required=True, default=False)
+  closed = db.BooleanProperty(required=False, default=False)
   transactions_ = []
   realtime_quote = None
 
