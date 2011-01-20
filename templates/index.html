@@ -1,6 +1,19 @@
 <html>
 <head>
 <title>My stocks</title>
+<script src="/js/jquery-1.4.4.min.js"></script> 
+
+<script>
+  function deleteRow(key, row) {
+    $.ajax({
+      url: '/position/'+key,
+      type: 'DELETE',
+      success: function(result) {
+          $(row).closest('tr').fadeOut();
+      }
+    });
+  }
+</script>
 <style>
   body {
     font-family: monospace;
@@ -65,6 +78,7 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 <input type="submit" value="Update"/></form>
 </caption>
 <tr>
+<th></th>
 <th>Symbol</th>
 <th>Date</th>
 {# <th>Enter Date</th> #}
@@ -89,6 +103,7 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 
 {% for position in portfolio.GetAllPositions %}
 <tr>
+<td><a href="#" onclick="return deleteRow('{{position.key}}', this)">D</a></td>
 <td><a href="/position/{{position.key}}">{{position.symbol}}</a></td>
 <td>{{position.realtime_quote.date}}</td>
 {# <td>{{position.enter_date}}</td> #}

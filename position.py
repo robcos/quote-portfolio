@@ -63,11 +63,15 @@ class PositionForm(ModelForm):
 def update(request, key):
   """ To store positions """
   portfolios = common.get_portfolios(request)
+  print request.method
   if request.method == 'POST':
     form = PositionForm(request.POST, instance=db.get(db.Key(key)))
     if form.is_valid():
       model = form.save()
       return HttpResponseRedirect('/')
+  if request.method == 'DELETE':
+    db.get(db.Key(key)).delete()
+    return HttpResponseRedirect('/')
   else:
     form = PositionForm(instance=db.get(db.Key(key)))
   
@@ -83,5 +87,5 @@ def create(request):
       return HttpResponseRedirect('/')
   else:
     form = Form()
-  
+
   return shortcuts.render_to_response('index.html', locals())
