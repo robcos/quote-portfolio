@@ -97,6 +97,7 @@ def fixture(request):
 class Form(ModelForm):
   class Meta:
     model = APosition
+
 def index(request):
   portfolios = common.get_portfolios(request)
   #currencies = Currency.all()
