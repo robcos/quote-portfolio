@@ -26,7 +26,7 @@ class TestTransaction(unittest.TestCase):
     position.put()
 
     self.t = ATransaction(
-        is_long=True,
+        is_buying=True,
         fees=self.FEES,
         date=date.today(),
         position=position,
@@ -71,7 +71,7 @@ class TestPosition(unittest.TestCase):
 
     self.lt = ATransaction(
         symbol='AAPL',
-        is_long=True,
+        is_buying=True,
         fees=1.0,
         date=date.today(),
         position=self.p,
@@ -79,7 +79,7 @@ class TestPosition(unittest.TestCase):
 
     self.st = ATransaction(
         symbol='AAPL',
-        is_long=False,
+        is_buying=False,
         fees=1.0,
         date=date.today(),
         position=self.p,

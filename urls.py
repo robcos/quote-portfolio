@@ -14,6 +14,8 @@
 
 
 from django.conf.urls.defaults import *
+# Tests don't run without this import (?)
+from mock import Mock
 
 urlpatterns = patterns(
     '',

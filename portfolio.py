@@ -81,13 +81,13 @@ def fixture(request):
   position.put()
     
   position.AddAndStoreTransaction(ATransaction(
-      is_long=True,
+      is_buying=True,
       fees=99.0,
       stop=50.0,
       taxes=0.0).Add(250, 97.50))
 
   position.AddAndStoreTransaction(ATransaction(
-      is_long=True,
+      is_buying=True,
       fees=99.0,
       stop=50.0,
       taxes=0.0).Add(250, 132.80))

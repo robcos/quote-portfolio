@@ -83,7 +83,7 @@ class APosition(BaseModel):
   def GetOutstandingShares(self):
     """The number of shares currently owned."""
     return sum(map(
-        lambda x: x.GetQuantity() if x.is_long else -x.GetQuantity(),
+        lambda x: x.GetQuantity() if x.is_buying else -x.GetQuantity(),
         self.transactions_))
 
   def GetTransactions(self):
@@ -93,7 +93,7 @@ class APosition(BaseModel):
   def GetBuyingTransactions(self):
     """Returns all the buying transactions associated to this position"""
 
-    return filter(lambda x: x.is_long, self.transactions_)
+    return filter(lambda x: x.is_buying, self.transactions_)
 
   def GetTotalBuyingCost(self):
     """Sum of all costs substained to reach this position.
@@ -101,7 +101,7 @@ class APosition(BaseModel):
     This includes the share cost, fees and taxes of all buying transactions.
           
     """
-    return reduce(lambda x, y: x + y.GetCost() if y.is_long else x,
+    return reduce(lambda x, y: x + y.GetCost() if y.is_buying else x,
         [0] + self.transactions_)
 
   def GetShareAverageCost(self):
@@ -182,7 +182,7 @@ class ATransaction(BaseModel):
   date = db.DateProperty(required=True)
   position = db.ReferenceProperty(APosition, required=True)
 
-  is_long = db.BooleanProperty(required=False, default=True)
+  is_buying = db.BooleanProperty(required=False, default=True)
   """True is this transaction has bought shares, False otherwise."""
 
   quantity_list = db.ListProperty(int, required=True)
