@@ -41,7 +41,6 @@ from django.forms import ValidationError
 from robcos.models import Currency
 from robcos.transaction import APortfolio
 from robcos.transaction import APosition
-from robcos.transaction import APositionForm
 from robcos.transaction import ATransaction
 from robcos.models import Position
 from robcos.models import Quote
