@@ -41,7 +41,6 @@ from django.forms import ValidationError
 from robcos.models import Currency
 from robcos.transaction import APortfolio
 from robcos.transaction import APosition
-from robcos.transaction import APositionForm
 from robcos.transaction import ATransaction
 from robcos.models import Position
 from robcos.models import Quote
@@ -97,27 +96,7 @@ def fixture(request):
 
 class Form(ModelForm):
   class Meta:
-    model = APositionForm
-
-  def clean_price_list(self):
-    price_list_len = len(self.cleaned_data.get('price_list', '').split(','))
-    quantity_list_len = len(self.cleaned_data.get('quantity_list', '').split(','))
-    if price_list_len != quantity_list_len:
-      raise ValidationError('You have entered %s prices and %s quantities' % (price_list_len, quantity_list_len))
-    return self.cleaned_data['price_list']
-
-class PositionForm(ModelForm):
-  class Meta:
     model = APosition
-
-  #def clean_price_list(self):
-  #  price_list_len = len(self.cleaned_data.get('price_list', '').split(','))
-  # quantity_list_len = len(self.cleaned_data.get('quantity_list', '').split(','))
-  #  if price_list_len != quantity_list_len:
-  #    raise ValidationError('You have entered %s prices and %s quantities' % (price_list_len, quantity_list_len))
-  #  return self.cleaned_data['price_list']
-
-
 def index(request):
   portfolios = common.get_portfolios(request)
   #currencies = Currency.all()
@@ -153,20 +132,6 @@ def alerts(request):
 
   return HttpResponseRedirect('/')
   
-def edit(request, key):
-  portfolios = common.get_portfolios(request)
-  if request.method == 'POST':
-    form = Form(request.POST, instance=APositionForm.Get(key))
-    if form.is_valid():
-      model = form.save(commit=False)
-      model.Save()
-      return HttpResponseRedirect('/')
-  else:
-    form = Form(instance=APositionForm.Get(key))
-
-  return shortcuts.render_to_response('index.html', locals())
-
-
 def cash(request):
   if request.method == 'POST':
     key = request.POST['key']

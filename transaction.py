@@ -57,24 +57,27 @@ from django import forms
 
 class CSField(forms.Field):
   
+  def __init__(self, type=int):
+    forms.Field.__init__(self)
+    self.type = type
+
   def clean(self, value):
     if value:
       try:
-        return map(lambda x: int(x), value.split(','))
+        return map(lambda x: self.type(x), value.split(','))
       except ValueError:
         raise forms.ValidationError('Could not parse %s' % value)
     return []
 
 class Form(ModelForm):
-  quantity_list = CSField()
-  price_list = CSField()
+  quantity_list = CSField(type=int)
+  price_list = CSField(type=float)
 
   class Meta:
     model = ATransaction
 
 def update(request, key):
   """ To store transactions """
-  print "UPDATE"
   portfolios = common.get_portfolios(request)
   if request.method == 'POST':
     form = Form(request.POST, instance=db.get(db.Key(key)))

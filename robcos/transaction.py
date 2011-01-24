@@ -67,6 +67,9 @@ class APosition(BaseModel):
   def __init__(self, *args, **kwargs):
     super(APosition, self).__init__(**kwargs)
     self.transactions_ = []
+  
+  def __str__(self):
+    return '%s:%s' % (self.portfolio.name, self.symbol) 
 
   def AddAndStoreTransaction(self, transaction):
     """Add a transaction to this position. The transaction is persisted."""
@@ -175,79 +178,17 @@ class APosition(BaseModel):
     return self.portfolio.GetRiskUnit() / self.GetGain()
 
 
-class APositionForm(BaseModel):
-  position = db.ReferenceProperty(APosition, required=False)
-  portfolio = db.ReferenceProperty(APortfolio, required=True)
-  symbol = db.StringProperty(required=True)
-  quantity_list = db.StringProperty(required=True)
-  price_list = db.StringProperty(required=True)
-  enter_date = db.DateProperty(required=True, default=date.today())
-  enter_commission = db.FloatProperty(required=True, default='99')
-  
-  def GetPriceList(self):
-    """Converts the price_list property into a list.
-
-    Returns: A list of floats.
-    """
-    return map(lambda x: float(x), self.price_list.split(','))
-
-  def GetQuantityList(self):
-    """Converts the price_list property into a list.
-
-    Returns: A list of ints.
-    """
-    return map(lambda x: int(x), self.quantity_list.split(','))
-
-  def Save(self):
-    """Saves this form into a position and its transactions.
-
-      Returns: The key of the saved position.
-    """
-
-    position = APosition(
-        key=self.position.key() if self.position else None,
-        symbol=self.symbol,
-        portfolio=self.portfolio)
-
-    position.put()
-    self.position = position
-
-    transaction = ATransaction(
-        is_long=True,
-        fees=self.enter_commission,
-        position=self.position,
-        taxes=0.0)
-
-    for price, quantity in zip(self.GetPriceList(), self.GetQuantityList()):
-      transaction.Add(quantity, price)   
-      
-    transaction.put()
-    return position
-
-  @staticmethod
-  def Get(key):
-    position = db.get(key)
-    transaction = db.Query(ATransaction).filter('position =', position).get()
-    return APositionForm(
-        position=position,
-        portfolio=position.portfolio,
-        enter_commission=transaction.fees,
-        price_list=','.join(map(lambda x: str(x), transaction.price_list_)),
-        quantity_list=','.join(map(lambda x: str(x), transaction.quantity_list_)),
-        symbol=position.symbol
-    )
-
 class ATransaction(BaseModel):
-  date = db.DateProperty(auto_now_add=True)
-  position = db.ReferenceProperty(APosition, required=False)
+  date = db.DateProperty(required=True)
+  position = db.ReferenceProperty(APosition, required=True)
 
-  is_long = db.BooleanProperty(required=True)
+  is_long = db.BooleanProperty(required=False, default=True)
   """True is this transaction has bought shares, False otherwise."""
 
-  quantity_list_ = db.ListProperty(int, required=True)
+  quantity_list = db.ListProperty(int, required=True)
   """An ordered list of share quantities touched by this transaction."""
 
-  price_list_ = db.ListProperty(float, required=True)
+  price_list = db.ListProperty(float, required=True)
   """An ordered list of share prices touched by this transaction."""
 
   fees = db.FloatProperty(required=True)
@@ -256,18 +197,18 @@ class ATransaction(BaseModel):
   """The value at which the stocks of this transaction should be sold"""
 
   def Add(self, quantity, price):
-    self.quantity_list_.append(quantity)
-    self.price_list_.append(price)
+    self.quantity_list.append(quantity)
+    self.price_list.append(price)
     return self
 
   def GetQuantity(self):
     """Returns the total number of shares handled by this transaction."""
-    return sum(self.quantity_list_)
+    return sum(self.quantity_list)
 
   def GetAverageCost(self):
     """Returns the average cost of the shares handled by this transaction."""
 
-    if not self.quantity_list_:
+    if not self.quantity_list:
       raise Exception('Must add some shares first')
 
     return self.GetCost() / self.GetQuantity()
@@ -276,9 +217,9 @@ class ATransaction(BaseModel):
   def GetCost(self):
     """The cost of this transaction, including fees and taxes."""
     
-    if not self.quantity_list_:
+    if not self.quantity_list:
       raise Exception('Must add some shares first')
-    share_cost = sum(map(lambda x,y: x*y, self.quantity_list_, self.price_list_))
+    share_cost = sum(map(lambda x,y: x*y, self.quantity_list, self.price_list))
     return self.fees + self.taxes + share_cost
 
 

@@ -62,7 +62,6 @@ class PositionForm(ModelForm):
 def update(request, key):
   """ To store positions """
   portfolios = common.get_portfolios(request)
-  print request.method
   if request.method == 'POST':
     form = PositionForm(request.POST, instance=db.get(db.Key(key)))
     if form.is_valid():

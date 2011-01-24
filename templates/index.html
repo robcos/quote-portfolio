@@ -162,17 +162,17 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 </tr>
 {% endfor %}
 </table>
-{% comment %}
-<form action="" method="POST">
+<form action="/transaction/{{form.instance.key}}" method="POST">
 <table border="0">
-<caption>Add a new position</caption>
+<caption>Add a new transaction</caption>
+  <td>{{form.non_field_errors}}</td>
 <tr class="fieldWrapper">
-  <th><label for="id_portfolio">Portfolio</label></th>
-  <td>{{ form.portfolio }} {{form.portfolio.errors}}</td>
+  <th><label for="id_position">Position</label></th>
+  <td>{{ form.position }} {{form.position.errors}}</td>
 </tr>
 <tr class="fieldWrapper">
-  <th><label for="id_symbol">Symbol</label></th>
-  <td>{{ form.symbol }} {{form.symbol.errors}} {{form.non_field_errors}}</td>
+  <th><label for="id_is_long">Buying</label></th>
+  <td>{{ form.is_long }} {{form.is_long.errors}}</td>
 </tr>
 <tr class="fieldWrapper">
   <th><label for="id_quantity_list">Quantities</label></th>
@@ -187,20 +187,25 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
   <td>{{ form.stop }} {{form.stop.errors}}</td>
 </tr>
 <tr class="fieldWrapper">
+  <th><label for="id_date">Date</label></th>
+  <td>{{ form.date }} {{form.date.errors}}</td>
+</tr>
+<tr class="fieldWrapper">
+  <th><label for="id_fees">Fees</label></th>
+  <td>{{ form.fees }} {{form.fees.errors}}</td>
+</tr>
+<tr class="fieldWrapper">
+  <th><label for="id_taxes">Taxes</label></th>
+  <td>{{ form.taxes }} {{form.taxes.errors}}</td>
+</tr>
+{% comment %}
+<tr class="fieldWrapper">
   <th><label for="id_currency">Currency</label></th>
   <td>{{ form.currency }} {{form.currency.errors}}</td>
 </tr>
 <tr class="fieldWrapper">
   <th><label for="id_currency_rate">Currency rate</label></th>
   <td>{{ form.currency_rate }} {{form.currency_rate.errors}}</td>
-</tr>
-<tr class="fieldWrapper">
-  <th><label for="id_enter_date">Enter date</label></th>
-  <td>{{ form.enter_date }} {{form.enter_date.errors}}</td>
-</tr>
-<tr class="fieldWrapper">
-  <th><label for="id_enter_commission">Enter commission</label></th>
-  <td>{{ form.enter_commission }} {{form.enter_commission.errors}}</td>
 </tr>
 <tr><th>Position exit</th></tr>
 <tr class="fieldWrapper">
@@ -215,11 +220,11 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
   <th><label for="id_exit_price">Exit price</label></th>
   <td>{{ form.exit_price }} {{form.exit_price.errors}}</td>
 </tr>
+{% endcomment %}
 <tr><th></th>
 <td><input type="submit" value="save"></td>
 </table>
 </form>
-{% endcomment %}
 
 <form action="/position/{{form.instance.key}}" method="POST">
 <table border="0">
