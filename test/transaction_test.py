@@ -30,3 +30,15 @@ class TestCSField(unittest.TestCase):
     self.assertEquals([], field.clean(''))
     self.assertEquals([], field.clean(None))
     self.assertRaises(forms.ValidationError, field.clean, '1,2,abc')
+
+
+class TestCSInput(unittest.TestCase):
+
+  def testClean_int(self):
+    field = transaction.CSInput()
+    self.assertEquals('<input type="text" name="myfield" value="1,2,3" />',
+        field.render('myfield', [1,2,3]))
+    self.assertEquals('<input type="text" name="myfield" value="1.0,2.0,3.0" />',
+        field.render('myfield', [1.0,2.0,3.0]))
+    self.assertEquals('<input type="text" name="myfield" />',
+        field.render('myfield', []))

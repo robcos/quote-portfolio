@@ -57,9 +57,10 @@ from django import forms
 
 class CSField(forms.Field):
   
-  def __init__(self, type=int):
-    forms.Field.__init__(self)
-    self.type = type
+  def __init__(self, *args, **kwargs):
+    self.type = kwargs['type']
+    del kwargs['type']
+    forms.Field.__init__(self, *args, **kwargs)
 
   def clean(self, value):
     if value:
@@ -69,9 +70,19 @@ class CSField(forms.Field):
         raise forms.ValidationError('Could not parse %s' % value)
     return []
 
+class CSInput(forms.widgets.TextInput):
+
+    def render(self, name, value, attrs=None):
+        if value:
+          value = ','.join(map(str, value))
+        else:
+          value = ''
+        return super(forms.widgets.TextInput, self).render(name, value, attrs)
+
+
 class Form(ModelForm):
-  quantity_list = CSField(type=int)
-  price_list = CSField(type=float)
+  quantity_list = CSField(type=int, widget=CSInput)
+  price_list = CSField(type=float, widget=CSInput)
 
   class Meta:
     model = ATransaction
