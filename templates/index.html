@@ -130,7 +130,11 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 
 {% for position in portfolio.GetAllPositions %}
 <tr class="position {% cycle 'row1' 'row2' as rowcolor %}">
+{% if not position.GetTransactions %}
 <td><a href="#" onclick="return deleteRow('/position/{{position.key}}', this)">D</a></td>
+{% else %}
+<td></td>
+{% endif %}
 <td><a href="/position/{{position.key}}">{{position.symbol}}</a></td>
 <td>{{position.realtime_quote.date}}</td>
 {# <td>{{position.enter_date}}</td> #}
