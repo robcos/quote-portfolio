@@ -207,7 +207,9 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 <form action="/transaction/{{form.instance.key}}" method="POST">
 <table border="0">
 <caption>Add a new transaction</caption>
-  <td>{{form.non_field_errors}}</td>
+<tr class="fieldWrapper">
+  <td colspan="2">{{form.non_field_errors}}</td>
+</tr>
 <tr class="fieldWrapper">
   <th><label for="id_position">Position</label></th>
   <td>{{ form.position }} {{form.position.errors}}</td>

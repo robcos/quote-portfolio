@@ -65,7 +65,8 @@ class CSField(forms.Field):
   def clean(self, value):
     if value:
       try:
-        return map(lambda x: self.type(x), value.split(','))
+        list = filter(lambda x: len(x), value.split(','))
+        return map(lambda x: self.type(x), list)
       except ValueError:
         raise forms.ValidationError('Could not parse %s' % value)
     return []
@@ -74,7 +75,8 @@ class CSInput(forms.widgets.TextInput):
 
     def render(self, name, value, attrs=None):
         if value:
-          value = ','.join(map(str, value))
+          list = filter(lambda x: len(x) and x is not ',', value)
+          value = ','.join(list)
         else:
           value = ''
         return super(forms.widgets.TextInput, self).render(name, value, attrs)
@@ -86,6 +88,16 @@ class Form(ModelForm):
 
   class Meta:
     model = ATransaction
+
+  def clean(self):
+    cleaned_data = self.cleaned_data
+    quantity_list = cleaned_data.get('quantity_list')
+    price_list = cleaned_data.get('price_list')
+    if price_list and quantity_list:
+      if len(price_list) != len(quantity_list):
+        raise forms.ValidationError('Quantity list must match price list')
+    return cleaned_data
+
 
 def update(request, key):
   """ To store transactions """
