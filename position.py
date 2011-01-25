@@ -34,6 +34,7 @@ from django import shortcuts
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.http import HttpResponseNotFound
+from django.http import HttpResponseForbidden
 from django.forms import ModelForm
 from django.forms import ValidationError
 
@@ -68,8 +69,13 @@ def update(request, key):
       model = form.save()
       return HttpResponseRedirect('/')
   if request.method == 'DELETE':
-    db.get(db.Key(key)).delete()
-    return HttpResponseRedirect('/')
+    position = db.get(db.Key(key))
+    position.LoadTransactions()
+    if not len(position.GetTransactions()):
+      position.delete()
+      return HttpResponseRedirect('/')
+    else:
+      return HttpResponseForbidden('Cannot delete a position that has transactions')
   else:
     form = PositionForm(instance=db.get(db.Key(key)))
   

@@ -6,11 +6,14 @@
 <script>
   function deleteRow(key, row) {
     $.ajax({
-      url: '/position/'+key,
+      url: key,
       type: 'DELETE',
       success: function(result) {
           $(row).closest('tr').fadeOut();
-      }
+      },
+      error: function(result) {
+          $('#status').html(result.responseText);
+      },
     });
   }
 
@@ -84,6 +87,7 @@
 </style>
 </head>
 <body>
+<div id="status"></div>
 <a href="?show_closed=true">Show closed positions</a>
 <a href="?show_closed=false">Show only open positions</a>
 <a href="/download/quotes">Get quotes</a>
@@ -126,7 +130,7 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 
 {% for position in portfolio.GetAllPositions %}
 <tr class="position {% cycle 'row1' 'row2' as rowcolor %}">
-<td><a href="#" onclick="return deleteRow('{{position.key}}', this)">D</a></td>
+<td><a href="#" onclick="return deleteRow('/position/{{position.key}}', this)">D</a></td>
 <td><a href="/position/{{position.key}}">{{position.symbol}}</a></td>
 <td>{{position.realtime_quote.date}}</td>
 {# <td>{{position.enter_date}}</td> #}
@@ -150,7 +154,7 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 
 {% for transaction in position.GetTransactions %}
 <tr class="transaction {{ rowcolor }}">
-<td><a href="#" onclick="return deleteRow('{{transaction.key}}', this)">D</a></td>
+<td><a href="#" onclick="return deleteRow('/transaction/{{transaction.key}}', this)">D</a></td>
 <td>{% if transaction.is_buying %}Bought{% else %}Sold{% endif %}</td>
 <td><a href="/transaction/{{transaction.key}}">{{transaction.date}}</a></td>
 <td></td>
