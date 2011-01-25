@@ -75,6 +75,7 @@ class CSInput(forms.widgets.TextInput):
 
     def render(self, name, value, attrs=None):
         if value:
+          value = map(lambda x: str(x), value)
           list = filter(lambda x: len(x) and x is not ',', value)
           value = ','.join(list)
         else:
@@ -104,7 +105,6 @@ def update(request, key):
   portfolios = common.get_portfolios(request)
   if request.method == 'POST':
     form = Form(request.POST, instance=db.get(db.Key(key)))
-    model = form.save(commit=False)
     if form.is_valid():
       form.save()
       return HttpResponseRedirect('/')
