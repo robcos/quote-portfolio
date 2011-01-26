@@ -21,15 +21,22 @@
   $(document).ready(function() { 
       $('.transaction').hide();
       visibleTransactions = false;
+      $(window).bind('popstate', function(event) {
+        if (window.location.hash == "#showTransactions") {
+          $('.transaction').fadeIn();
+        }
+      });
     });
   
   function toggleTransactions() {
-    if (visibleTransactions) {
+    if (window.location.hash == "#showTransactions") {
       $('.transaction').fadeOut();
+      history.pushState({}, "", "#");
     } else {
       $('.transaction').fadeIn();
+      history.pushState({}, "", "#showTransactions");
     }
-    visibleTransactions = !visibleTransactions;
+    return false;
   }
 
 </script>
@@ -93,7 +100,7 @@
 <a href="/download/quotes">Get quotes</a>
 <a href="/download/historical_quotes">Get historical quotes</a>
 <a href="/download/currencies">Get currencies</a>
-<a href="#" onclick="toggleTransactions()">Toggle transactions</a>
+<a href="#" onclick="return toggleTransactions()">Toggle transactions</a>
 {% for portfolio in portfolios %}
 <table border="1" class="portfolio">
 <caption>Portfolio: {{portfolio.name}} - R={{portfolio.risk_unit}}
