@@ -15,6 +15,7 @@ from google.appengine.api.urlfetch_errors import DownloadError
 from google.appengine.ext import db
 
 from robcos.models import RealtimeQuote
+from robcos.models import Indicator
 
 class BaseModel(models.BaseModel):
 
@@ -84,7 +85,11 @@ class APosition(BaseModel):
     transaction.put()
  
   def LoadTransactions(self):
-    self.transactions_ = db.Query(ATransaction).filter('position = ', self).fetch(limit=500)
+    self.transactions_ = []
+    for t in db.Query(ATransaction).filter('position = ', self).fetch(limit=500):
+      self.transactions_.append(t)
+      t.indicator_at_enter = Indicator.load(self.symbol, t.date)
+      t.indicator = Indicator.load(self.symbol, date.today())
   
   def GetOutstandingShares(self):
     """The number of shares currently owned."""
@@ -219,6 +224,9 @@ class ATransaction(BaseModel):
   stop = db.FloatProperty(required=True, default=0.0)
   """The value at which the stocks of this transaction should be sold"""
 
+  indicator_at_enter = None
+  indicator = None
+
   def Add(self, quantity, price):
     self.quantity_list.append(quantity)
     self.price_list.append(price)
@@ -248,4 +256,11 @@ class ATransaction(BaseModel):
     
     return self.fees + self.taxes + self.GetAveragePrice() * self.GetQuantity()
 
-
+  def GetAtr20(self):
+    return self.indicator.atr_20
+  
+  def GetAtr20AtEnter(self):
+    return self.indicator_at_enter.atr_20
+  
+  def GetLL10(self):
+    return self.indicator.ll_10

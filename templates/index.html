@@ -153,7 +153,6 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 <th>ATR 20</th>
 <th>Enter ATR 20</th>
 <th>LL 10</th>
-<th>Unit2</th>
 </tr>
 
 {% for position in portfolio.GetAllPositions %}
@@ -181,7 +180,6 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 <td>{{ position.GetAtr20|stringformat:'10.2f' }}</td>
 <td>{{ position.GetAtr20AtEnter|stringformat:'10.2f' }}</td>
 <td{% if position.below_ll_10  %} class="negative"{% endif %}>{{position.ll_10|stringformat:'10.2f' }}</td>
-<td>{{ position.second_unit|stringformat:'10.2f' }}</td>
 </tr>
 
 {% for transaction in position.GetTransactions %}
@@ -202,9 +200,9 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 <td>{{transaction.stop|stringformat:'0.2f' }}</td>
 <td></td>
 <td></td>
-<td></td>
-<td>a{{ position.GetAtr20|stringformat:'10.2f' }}</td>
-<td>b{{ position.GetAtr20AtEnter|stringformat:'10.2f' }}</td>
+<td>{{ transaction.GetAtr20|stringformat:'0.2f' }}</td>
+<td>{{ transaction.GetAtr20AtEnter|stringformat:'0.2f' }}</td>
+<td>{{ transaction.GetLL10|stringformat:'0.2f' }}</td>
 </tr>
 {% endfor %}
 

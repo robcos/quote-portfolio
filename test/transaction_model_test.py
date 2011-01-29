@@ -100,13 +100,18 @@ class TestPosition(unittest.TestCase):
     self.p.AddAndStoreTransaction(self.lt)
     self.assertEquals(1, db.Query(ATransaction).count())
 
-  def test_LoadTransaction(self):
+  @patch('robcos.models.Indicator.load')
+  def test_LoadTransaction(self, load):
     self.assertFalse(self.p.transactions_)
     self.p.AddAndStoreTransaction(self.lt)
+    load.return_value = 'an indicator'
 
     # Reload
     self.p.LoadTransactions()
-    self.assertEquals(self.lt, self.p.GetTransactions()[0])
+    loaded_transaction = self.p.GetTransactions()[0]
+    self.assertEquals(self.lt, loaded_transaction)
+    self.assertTrue(loaded_transaction.indicator_at_enter)
+    self.assertTrue(loaded_transaction.indicator)
 
   def test_GetOutstandingShares(self):
     self.lt.Add(100, 1.0)
