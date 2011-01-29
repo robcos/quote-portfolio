@@ -53,6 +53,13 @@
     return false;
   }
 
+  function today() {
+    var now = new Date();
+    var today = now.getFullYear() + "-" + (1 + now.getMonth()) + "-" + now.getDate();
+    $('#id_date').attr('value', today);
+    return false;
+  }
+
 </script>
 </script>
 <style>
@@ -267,7 +274,7 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 </tr>
 <tr class="fieldWrapper">
   <th><label for="id_date">Date</label></th>
-  <td>{{ transaction_form.date }} {{transaction_form.date.errors}}</td>
+  <td>{{ transaction_form.date }} {{transaction_form.date.errors}}<a onclick="return today()">Today</a></td>
 </tr>
 <tr class="fieldWrapper">
   <th><label for="id_fees">Fees</label></th>
