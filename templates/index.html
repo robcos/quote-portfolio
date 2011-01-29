@@ -5,6 +5,9 @@
 
 <script>
   function deleteRow(key, row) {
+    if (!confirm("Are you sure you want to delete this row?")) {
+      return;
+    }
     $.ajax({
       url: key,
       type: 'DELETE',
