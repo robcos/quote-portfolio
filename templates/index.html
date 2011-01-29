@@ -32,7 +32,10 @@
       $('.transaction').hide();
     }
     $('form').attr('action', function() {
-      this.action = this.action.replace('#.*', '') + hash;
+      this.action = this.action.replace(/#.*/, '') + hash;
+    });
+    $('a').attr('href', function() {
+      this.href = this.href.replace(/#.*/, '') + hash;
     });
   }
   
@@ -227,89 +230,99 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 </tr>
 {% endfor %}
 </table>
-<form action="/transaction/{{form.instance.key}}" method="POST">
+<div id="menu">
+<a href="/position">Add position</a>
+<a href="/transaction">Add transaction</a>
+</div>
+
+{% if transaction_form %}
+<form action="/transaction/{{transaction_form.instance.key}}" method="POST">
 <table border="0">
 <caption>Add a new transaction</caption>
 <tr class="fieldWrapper">
-  <td colspan="2">{{form.non_field_errors}}</td>
+  <td colspan="2">{{transaction_form.non_field_errors}}</td>
 </tr>
 <tr class="fieldWrapper">
   <th><label for="id_position">Position</label></th>
-  <td>{{ form.position }} {{form.position.errors}}</td>
+  <td>{{ transaction_form.position }} {{transaction_form.position.errors}}</td>
 </tr>
 <tr class="fieldWrapper">
   <th><label for="id_is_buying">Buying</label></th>
-  <td>{{ form.is_buying }} {{form.is_buying.errors}}</td>
+  <td>{{ transaction_form.is_buying }} {{transaction_form.is_buying.errors}}</td>
 </tr>
 <tr class="fieldWrapper">
   <th><label for="id_quantity_list">Quantities</label></th>
-  <td>{{ form.quantity_list }} {{form.quantity_list.errors}}</td>
+  <td>{{ transaction_form.quantity_list }} {{transaction_form.quantity_list.errors}}</td>
 </tr>
 <tr class="fieldWrapper">
   <th><label for="id_price_list">Enter prices</label></th>
-  <td>{{ form.price_list }} {{form.price_list.errors}}</td>
+  <td>{{ transaction_form.price_list }} {{transaction_form.price_list.errors}}</td>
 </tr>
 <tr class="fieldWrapper">
   <th><label for="id_stop">Stop</label></th>
-  <td>{{ form.stop }} {{form.stop.errors}}</td>
+  <td>{{ transaction_form.stop }} {{transaction_form.stop.errors}}</td>
 </tr>
 <tr class="fieldWrapper">
   <th><label for="id_date">Date</label></th>
-  <td>{{ form.date }} {{form.date.errors}}</td>
+  <td>{{ transaction_form.date }} {{transaction_form.date.errors}}</td>
 </tr>
 <tr class="fieldWrapper">
   <th><label for="id_fees">Fees</label></th>
-  <td>{{ form.fees }} {{form.fees.errors}}</td>
+  <td>{{ transaction_form.fees }} {{transaction_form.fees.errors}}</td>
 </tr>
 <tr class="fieldWrapper">
   <th><label for="id_taxes">Taxes</label></th>
-  <td>{{ form.taxes }} {{form.taxes.errors}}</td>
+  <td>{{ transaction_form.taxes }} {{transaction_form.taxes.errors}}</td>
 </tr>
 {% comment %}
 <tr class="fieldWrapper">
   <th><label for="id_currency">Currency</label></th>
-  <td>{{ form.currency }} {{form.currency.errors}}</td>
+  <td>{{ transaction_form.currency }} {{transaction_form.currency.errors}}</td>
 </tr>
 <tr class="fieldWrapper">
   <th><label for="id_currency_rate">Currency rate</label></th>
-  <td>{{ form.currency_rate }} {{form.currency_rate.errors}}</td>
+  <td>{{ transaction_form.currency_rate }} {{transaction_form.currency_rate.errors}}</td>
 </tr>
 <tr><th>Position exit</th></tr>
 <tr class="fieldWrapper">
   <th><label for="id_exit_date">Exit date</label></th>
-  <td>{{ form.exit_date }} {{form.exit_date.errors}}</td>
+  <td>{{ transaction_form.exit_date }} {{transaction_form.exit_date.errors}}</td>
 </tr>
 <tr class="fieldWrapper">
   <th><label for="id_exit_commission">Exit commission</label></th>
-  <td>{{ form.exit_commission }} {{form.exit_commission.errors}}</td>
+  <td>{{ transaction_form.exit_commission }} {{transaction_form.exit_commission.errors}}</td>
 </tr>
 <tr class="fieldWrapper">
   <th><label for="id_exit_price">Exit price</label></th>
-  <td>{{ form.exit_price }} {{form.exit_price.errors}}</td>
+  <td>{{ transaction_form.exit_price }} {{transaction_transaction_form.exit_price.errors}}</td>
 </tr>
 {% endcomment %}
 <tr><th></th>
 <td><input type="submit" value="save"></td>
 </table>
 </form>
+{% endif %}
 
-<form action="/position/{{form.instance.key}}" method="POST">
+{% if position_form %}
+<form action="/position/{{position_form.instance.key}}" method="POST">
 <table border="0">
 <caption>Add a new position</caption>
 <tr class="fieldWrapper">
   <th><label for="id_portfolio">Portfolio</label></th>
-  <td>{{ form.portfolio }} {{form.portfolio.errors}}</td>
+  <td>{{ position_form.portfolio }} {{position_form.portfolio.errors}}</td>
 </tr>
 <tr class="fieldWrapper">
   <th><label for="id_symbol">Symbol</label></th>
-  <td>{{ form.symbol }} {{form.symbol.errors}} {{form.non_field_errors}}</td>
+  <td>{{ position_form.symbol }} {{position_form.symbol.errors}} {{position_form.non_field_errors}}</td>
 </tr>
 <tr class="fieldWrapper">
   <th><label for="id_closed">Closed</label></th>
-  <td>{{ form.closed }} {{form.closed.errors}}</td>
+  <td>{{ position_form.closed }} {{position_form.closed.errors}}</td>
 </tr>
 <td><input type="submit" value="save"></td>
 </table>
 </form>
+{% endif %}
+<form action="/position/{{position_form.instance.key}}" method="POST">
 </body>
 </html>

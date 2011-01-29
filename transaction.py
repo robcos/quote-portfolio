@@ -104,15 +104,15 @@ def update(request, key):
   """ To store transactions """
   portfolios = common.get_portfolios(request)
   if request.method == 'POST':
-    form = Form(request.POST, instance=db.get(db.Key(key)))
-    if form.is_valid():
-      form.save()
+    transaction_form = Form(request.POST, instance=db.get(db.Key(key)))
+    if transaction_form.is_valid():
+      transaction_form.save()
       return HttpResponseRedirect('/')
   if request.method == 'DELETE':
     db.get(db.Key(key)).delete()
     return HttpResponseRedirect('/')
   else:
-    form = Form(instance=db.get(db.Key(key)))
+    transaction_form = Form(instance=db.get(db.Key(key)))
   
   return shortcuts.render_to_response('index.html', locals())
 
@@ -120,11 +120,11 @@ def create(request):
   """ To store transactions """
   portfolios = common.get_portfolios(request)
   if request.method == 'POST':
-    form = Form(request.POST)
-    if form.is_valid():
-      model = form.save()
+    transaction_form = Form(request.POST)
+    if transaction_form.is_valid():
+      model = transaction_form.save()
       return HttpResponseRedirect('/')
   else:
-    form = Form()
+    transaction_form = Form()
 
   return shortcuts.render_to_response('index.html', locals())

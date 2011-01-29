@@ -64,9 +64,9 @@ def update(request, key):
   """ To store positions """
   portfolios = common.get_portfolios(request)
   if request.method == 'POST':
-    form = PositionForm(request.POST, instance=db.get(db.Key(key)))
-    if form.is_valid():
-      model = form.save()
+    position_form = PositionForm(request.POST, instance=db.get(db.Key(key)))
+    if position_form.is_valid():
+      model = position_form.save()
       return HttpResponseRedirect('/')
   if request.method == 'DELETE':
     position = db.get(db.Key(key))
@@ -77,7 +77,7 @@ def update(request, key):
     else:
       return HttpResponseForbidden('Cannot delete a position that has transactions')
   else:
-    form = PositionForm(instance=db.get(db.Key(key)))
+    position_form = PositionForm(instance=db.get(db.Key(key)))
   
   return shortcuts.render_to_response('index.html', locals())
 
@@ -85,11 +85,11 @@ def create(request):
   """ To store positions """
   portfolios = common.get_portfolios(request)
   if request.method == 'POST':
-    form = PositionForm(request.POST)
-    if form.is_valid():
-      model = form.save()
+    position_form = PositionForm(request.POST)
+    if position_form.is_valid():
+      model = position_form.save()
       return HttpResponseRedirect('/')
   else:
-    form = PositionForm()
+    position_form = PositionForm()
 
   return shortcuts.render_to_response('index.html', locals())
