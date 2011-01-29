@@ -222,10 +222,17 @@ class TestPosition(unittest.TestCase):
     self.assertEquals(10, self.p.GetGainPercentage())
 
   def test_GetRtr(self):
-    self.p.GetGain = Mock(return_value=10.0)
-    self.p.portfolio.GetRiskUnit = Mock(return_value=10.0)
+    self.p.GetGain = Mock(return_value=20.0)
+    self.p.GetRisk = Mock(return_value=10.0)
     
-    self.assertEquals(1, self.p.GetRtr())
+    self.assertEquals(2, self.p.GetRtr())
+
+  def test_GetRtr_NoGain(self):
+    self.p.GetGain = Mock(return_value=0.0)
+    self.p.GetRisk = Mock(return_value=10.0)
+    
+    self.assertEquals(0, self.p.GetRtr())
+
 
 
 class TestPortfolio(unittest.TestCase):

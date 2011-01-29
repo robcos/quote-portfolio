@@ -176,7 +176,7 @@ class APosition(BaseModel):
   def GetRtr(self):
     """Returns the ration between the risk unit and the gain.""" 
     
-    return self.portfolio.GetRiskUnit() / self.GetGain() if self.GetGain() else None
+    return self.GetGain() / self.GetRisk()
 
 
 class ATransaction(BaseModel):
