@@ -64,7 +64,7 @@ class TestPosition(unittest.TestCase):
   def setUp(self):
     portfolio = APortfolio(
       name='Avanza',
-      default_fees = 99.0,
+      default_fees = 9.0,
     )
     portfolio.put()
     self.p = APosition(
@@ -132,7 +132,7 @@ class TestPosition(unittest.TestCase):
     self.lt.GetCost = Mock(return_value = 1.0)
     self.st.GetCost = Mock(return_value = 2.0)
     # Only buying transactions count.
-    self.assertEquals(1 + 99, self.p.GetTotalBuyingCost())
+    self.assertEquals(1 + 9, self.p.GetTotalBuyingCost())
 
   def test_GetShareAverageCost(self):
     self.assertEquals(None, self.p.GetShareAverageCost())
@@ -205,15 +205,15 @@ class TestPosition(unittest.TestCase):
       symbol='AAPL',
       price=2.0)
 
-    # Buying 200
+    # Buying 200@1
     self.p.AddAndStoreTransaction(self.lt)
     self.lt.Add(200, 1.0)
-    self.assertEquals(200.0 - 2.0 - 1.0, round(self.p.GetGain()))
+    self.assertEquals(200.0 - 2.0 - 1.0 - 9.0, round(self.p.GetGain()))
 
     # Selling 100
     self.p.AddAndStoreTransaction(self.st)
     self.st.Add(100, 1.0)
-    self.assertEquals(100.0 - 1.0 - 0.5, round(self.p.GetGain(), 2))
+    self.assertEquals(100.0 - 1.0 - 0.5 - 9.0, round(self.p.GetGain(), 2))
 
   def test_GetGainPercentage(self):
     self.p.GetGain = Mock(return_value=10.0)

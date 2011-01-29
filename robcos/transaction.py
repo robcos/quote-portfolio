@@ -164,7 +164,7 @@ class APosition(BaseModel):
     """
   
     return self.GetOutstandingShares() * (
-       self.realtime_quote.price - self.GetShareAverageCost())
+       self.realtime_quote.price - self.GetShareAverageCost()) - self.portfolio.default_fees
 
 
   def GetGainPercentage(self):
@@ -178,7 +178,7 @@ class APosition(BaseModel):
   def GetRtr(self):
     """Returns the ration between the risk unit and the gain.""" 
     
-    return self.portfolio.GetRiskUnit() / self.GetGain()
+    return self.portfolio.GetRiskUnit() / self.GetGain() if self.GetGain() else None
 
 
 class ATransaction(BaseModel):
