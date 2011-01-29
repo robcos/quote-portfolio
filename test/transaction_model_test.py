@@ -59,6 +59,13 @@ class TestTransaction(unittest.TestCase):
     self.t.Add(2, 50)
     self.assertEquals(75, self.t.GetAverageCost())
 
+  def test_GetAveragePrice(self):
+    self.assertRaises(Exception, self.t.GetAveragePrice)
+    self.t.Add(2, 100)
+    self.assertEquals(100, self.t.GetAveragePrice())
+    self.t.Add(2, 50)
+    self.assertEquals(75, self.t.GetAveragePrice())
+
 class TestPosition(unittest.TestCase):
 
   def setUp(self):
@@ -148,6 +155,21 @@ class TestPosition(unittest.TestCase):
     self.p.AddAndStoreTransaction(self.st)
     self.st.Add(50, 1.0).Add(50, 1.0)
     self.assertEquals(1.015, self.p.GetShareAverageCost())
+
+  def test_GetShareAveragePrice(self):
+    self.assertEquals(None, self.p.GetShareAveragePrice())
+
+    # Buying 200 in two tranches
+    self.p.AddAndStoreTransaction(self.lt)
+    self.lt.Add(100, 1.0)
+    self.assertEquals(1.0, self.p.GetShareAveragePrice())
+    self.lt.Add(100, 1.0)
+    self.assertEquals(1.0, self.p.GetShareAveragePrice())
+
+    # Selling 100, average price should not change.
+    self.p.AddAndStoreTransaction(self.st)
+    self.st.Add(50, 1.0).Add(50, 1.0)
+    self.assertEquals(1.0, self.p.GetShareAveragePrice())
 
   def test_GetStop(self):
     self.assertEquals(0, self.p.GetStop())

@@ -128,6 +128,23 @@ class APosition(BaseModel):
     return (reduce(lambda x, y: x + y.GetAverageCost(), [0] + transactions) /
         len(transactions))
 
+  def GetShareAveragePrice(self):
+    """The average cost of a single share.
+
+    This is the equivalent cost you would have sustained if you had bought
+    all the shares at the same price with zero fees or taxes.
+
+    Returns: None if not transactions have been added yet.
+    """
+
+    transactions = self.GetBuyingTransactions()
+    if not transactions:
+      return None
+
+    return (reduce(lambda x, y: x + y.GetAveragePrice(), [0] + transactions) /
+        len(transactions))
+
+
   def GetStop(self):
     """The maximum stop of all open positions."""
     
@@ -211,6 +228,12 @@ class ATransaction(BaseModel):
     """Returns the total number of shares handled by this transaction."""
     return sum(self.quantity_list)
 
+  def GetAveragePrice(self):
+    if not self.quantity_list:
+      raise Exception('Must add some shares first')
+    return sum(map(lambda x,y: x*y, self.quantity_list, self.price_list)
+        ) / self.GetQuantity()
+
   def GetAverageCost(self):
     """Returns the average cost of the shares handled by this transaction."""
 
@@ -223,9 +246,6 @@ class ATransaction(BaseModel):
   def GetCost(self):
     """The cost of this transaction, including fees and taxes."""
     
-    if not self.quantity_list:
-      raise Exception('Must add some shares first')
-    share_cost = sum(map(lambda x,y: x*y, self.quantity_list, self.price_list))
-    return self.fees + self.taxes + share_cost
+    return self.fees + self.taxes + self.GetAveragePrice() * self.GetQuantity()
 
 

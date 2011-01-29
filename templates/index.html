@@ -173,13 +173,13 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 <td{% if position.too_risky %} class="negative"{% endif %}>{{ position.GetRisk|stringformat:'10.2f' }}</td>
 <td{% if position.below_stop %} class="negative"{% endif %}>{{position.GetRtr|stringformat:'.2f' }}</td>
 <td>{{position.GetOutstandingShares }}</td>
-<td>{{position.GetShareAverageCost|stringformat:'10.2f' }}</td>
+<td>{{position.GetShareAveragePrice|stringformat:'10.2f' }}</td>
 <td>{{position.realtime_quote.price|stringformat:'10.2f' }}</td>
 <td{% if position.below_stop %} class="negative"{% endif %}>{{position.GetStop|stringformat:'10.2f' }}</td>
 <td title="enter price - 3 times the enter atr 20">{{position.suggested_stop|stringformat:'10.2f' }}</td>
 <td title="">{{position.suggested_shares|stringformat:'.0f' }}</td>
 <td>{{ position.GetAtr20|stringformat:'10.2f' }}</td>
-<td>{{ position.atr_20_at_enter|stringformat:'10.2f' }}</td>
+<td>{{ position.GetAtr20AtEnter|stringformat:'10.2f' }}</td>
 <td{% if position.below_ll_10  %} class="negative"{% endif %}>{{position.ll_10|stringformat:'10.2f' }}</td>
 <td>{{ position.second_unit|stringformat:'10.2f' }}</td>
 </tr>
@@ -196,9 +196,15 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 <td></td>
 <td></td>
 <td>{% if not transaction.is_buying %}-{% endif %}{{ transaction.GetQuantity}}</td>
+<td title="Average cost: {{ transaction.GetAverageCost|stringformat:'0.2f' }}">
+  {{ transaction.GetAveragePrice|stringformat:'0.2f' }}</td>
+<td></td>
+<td>{{transaction.stop|stringformat:'0.2f' }}</td>
 <td></td>
 <td></td>
-<td>{{transaction.stop }}</td>
+<td></td>
+<td>a{{ position.GetAtr20|stringformat:'10.2f' }}</td>
+<td>b{{ position.GetAtr20AtEnter|stringformat:'10.2f' }}</td>
 </tr>
 {% endfor %}
 
