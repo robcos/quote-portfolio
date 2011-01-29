@@ -132,7 +132,7 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 {# <th>Enter Date</th> #}
 {# <th>Value</th> #}
 <th>Value</th>
-<th>Cost</th>
+<th title="Includes an estimate exit fee">Cost</th>
 <th>Gain</th>
 <th>Gain %</th>
 <th>Risk</th>
@@ -171,7 +171,7 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 <td{% if position.below_stop %} class="negative"{% endif %}>{{position.GetStop|stringformat:'10.2f' }}</td>
 <td title="enter price - 3 times the enter atr 20">{{position.suggested_stop|stringformat:'10.2f' }}</td>
 <td title="">{{position.suggested_shares|stringformat:'.0f' }}</td>
-<td>{{ position.atr_20|stringformat:'10.2f' }}</td>
+<td>{{ position.GetAtr20|stringformat:'10.2f' }}</td>
 <td>{{ position.atr_20_at_enter|stringformat:'10.2f' }}</td>
 <td{% if position.below_ll_10  %} class="negative"{% endif %}>{{position.ll_10|stringformat:'10.2f' }}</td>
 <td>{{ position.second_unit|stringformat:'10.2f' }}</td>

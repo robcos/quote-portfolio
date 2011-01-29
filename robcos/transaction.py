@@ -29,6 +29,7 @@ class BaseModel(models.BaseModel):
 
 class APortfolio(BaseModel):
   name = db.StringProperty(required=True)
+  default_fees = db.FloatProperty(required=False, default=0.0)
   nominal_value = db.FloatProperty(required=True, default=0.0)
   """The nominal value of portfolio used to calculate position sizes."""
 
@@ -99,10 +100,12 @@ class APosition(BaseModel):
     """Sum of all costs substained to reach this position.
       
     This includes the share cost, fees and taxes of all buying transactions.
+    An estimate sell if also included.
           
     """
-    return reduce(lambda x, y: x + y.GetCost() if y.is_buying else x,
-        [0] + self.transactions_)
+    cost = reduce(lambda x, y: x + y.GetCost() if y.is_buying else x,
+        [0] + self.transactions_) 
+    return cost + self.portfolio.default_fees if cost else 0.0
 
   def GetShareAverageCost(self):
     """The average cost of a single share.

@@ -62,7 +62,10 @@ class TestTransaction(unittest.TestCase):
 class TestPosition(unittest.TestCase):
 
   def setUp(self):
-    portfolio = APortfolio(name='Avanza')
+    portfolio = APortfolio(
+      name='Avanza',
+      default_fees = 99.0,
+    )
     portfolio.put()
     self.p = APosition(
         symbol='AAPL',
@@ -129,7 +132,7 @@ class TestPosition(unittest.TestCase):
     self.lt.GetCost = Mock(return_value = 1.0)
     self.st.GetCost = Mock(return_value = 2.0)
     # Only buying transactions count.
-    self.assertEquals(1, self.p.GetTotalBuyingCost())
+    self.assertEquals(1 + 99, self.p.GetTotalBuyingCost())
 
   def test_GetShareAverageCost(self):
     self.assertEquals(None, self.p.GetShareAverageCost())
