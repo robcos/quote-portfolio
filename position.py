@@ -90,6 +90,6 @@ def create(request):
       model = form.save()
       return HttpResponseRedirect('/')
   else:
-    form = Form()
+    form = PositionForm()
 
   return shortcuts.render_to_response('index.html', locals())

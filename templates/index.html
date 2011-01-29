@@ -17,24 +17,32 @@
     });
   }
 
-  var visibleTransactions = false;
   $(document).ready(function() { 
-      $('.transaction').hide();
-      visibleTransactions = false;
-      $(window).bind('popstate', function(event) {
-        if (window.location.hash == "#showTransactions") {
-          $('.transaction').fadeIn();
-        }
-      });
+    hideTransactionIfNeeded();
+    $(window).bind('hashchange', function(event) {
+      hideTransactionIfNeeded();
     });
+  });
+
+  function hideTransactionIfNeeded() {
+    var hash = window.location.hash;
+     if (hash == "#showTransactions") {
+      $('.transaction').fadeIn();
+    } else {
+      $('.transaction').hide();
+    }
+    $('form').attr('action', function() {
+      this.action = this.action.replace('#.*', '') + hash;
+    });
+  }
   
   function toggleTransactions() {
     if (window.location.hash == "#showTransactions") {
       $('.transaction').fadeOut();
-      history.pushState({}, "", "#");
+      location.hash='';
     } else {
       $('.transaction').fadeIn();
-      history.pushState({}, "", "#showTransactions");
+      location.hash='showTransactions';
     }
     return false;
   }
