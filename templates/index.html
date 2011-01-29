@@ -151,7 +151,7 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 <th>Sugg stop</th>
 <th>Sugg pos</th>
 <th>ATR 20</th>
-<th>Enter ATR 20</th>
+<th>Ent.ATR</th>
 <th>LL 10</th>
 </tr>
 
@@ -198,8 +198,8 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
   {{ transaction.GetAveragePrice|stringformat:'0.2f' }}</td>
 <td></td>
 <td>{{transaction.stop|stringformat:'0.2f' }}</td>
-<td></td>
-<td></td>
+<td>{{ transaction.GetSuggestedStop|stringformat:'0.2f' }}</td>
+<td>{{ transaction.GetSuggestedPosition|stringformat:'0.2f' }}</td>
 <td>{{ transaction.GetAtr20|stringformat:'0.2f' }}</td>
 <td>{{ transaction.GetAtr20AtEnter|stringformat:'0.2f' }}</td>
 <td>{{ transaction.GetLL10|stringformat:'0.2f' }}</td>

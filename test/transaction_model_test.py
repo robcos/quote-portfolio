@@ -66,6 +66,11 @@ class TestTransaction(unittest.TestCase):
     self.t.Add(2, 50)
     self.assertEquals(75, self.t.GetAveragePrice())
 
+  def test_GetSuggestedStop(self):
+    self.t.GetAtr20AtEnter = Mock(return_value = 1)
+    self.t.GetAveragePrice = Mock(return_value = 100)
+    self.assertEquals(97, self.t.GetSuggestedStop())
+
 class TestPosition(unittest.TestCase):
 
   def setUp(self):

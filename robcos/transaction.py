@@ -264,3 +264,9 @@ class ATransaction(BaseModel):
   
   def GetLL10(self):
     return self.indicator.ll_10
+  
+  def GetSuggestedPosition(self):
+    return 0
+  
+  def GetSuggestedStop(self):
+    return self.GetAveragePrice() - 3 * self.GetAtr20AtEnter()
