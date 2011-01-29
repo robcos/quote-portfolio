@@ -169,15 +169,15 @@ class TestPosition(unittest.TestCase):
     self.p.AddAndStoreTransaction(self.lt)
     self.lt.Add(100, 1.0)
     self.lt.stop = 0.80
-    self.assertEquals(100 * 0.20 + 1.0 + 2.0, self.p.GetRisk())
+    self.assertEquals(100 * 0.20 + 1.0 + 2.0 + 9.0, self.p.GetRisk())
     self.lt.Add(100, 1.0)
     self.assertEquals(1.015, self.p.GetShareAverageCost())
-    self.assertEquals(200 * (1.015-0.80) , self.p.GetRisk())
+    self.assertEquals(200 * (1.015-0.80) + 9.0, self.p.GetRisk())
     
     self.p.AddAndStoreTransaction(self.st)
     self.st.Add(100, 1.0)
     self.assertEquals(1.015, self.p.GetShareAverageCost())
-    self.assertEquals(100 * (1.015-0.80) , self.p.GetRisk())
+    self.assertEquals(100 * (1.015-0.80) + 9.0, self.p.GetRisk())
 
   def test_GetValue(self):
     self.assertRaises(Exception, self.p.GetValue)

@@ -134,11 +134,9 @@ class APosition(BaseModel):
 
     Takes into account enter fees and taxes.
     """
-    self.GetOutstandingShares() * (
-        self.GetShareAverageCost() - self.GetStop())
 
     return self.GetOutstandingShares() * (
-        self.GetShareAverageCost() - self.GetStop())
+        self.GetShareAverageCost() - self.GetStop()) + self.portfolio.default_fees
 
   def GetNetValue(self):
     """How much is the position worth if I sold it at the current price.
