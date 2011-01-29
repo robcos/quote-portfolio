@@ -88,8 +88,7 @@ class APosition(BaseModel):
     self.transactions_ = []
     for t in db.Query(ATransaction).filter('position = ', self).fetch(limit=500):
       self.transactions_.append(t)
-      t.indicator_at_enter = Indicator.load(self.symbol, t.date)
-      t.indicator = Indicator.load(self.symbol, date.today())
+      t.LoadIndicators()
   
   def GetOutstandingShares(self):
     """The number of shares currently owned."""
@@ -231,6 +230,10 @@ class ATransaction(BaseModel):
     self.quantity_list.append(quantity)
     self.price_list.append(price)
     return self
+
+  def LoadIndicators(self):
+    self.indicator_at_enter = Indicator.load(self.position.symbol, self.date)
+    self.indicator = Indicator.load(self.position.symbol, date.today())
 
   def GetQuantity(self):
     """Returns the total number of shares handled by this transaction."""

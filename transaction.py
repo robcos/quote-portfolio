@@ -36,6 +36,7 @@ from django.http import HttpResponseRedirect
 from django.http import HttpResponseNotFound
 from django.forms import ModelForm
 from django.forms import ValidationError
+from django.utils import simplejson as simplejson
 
 # robcos
 from robcos.models import Currency
@@ -51,6 +52,7 @@ import os
 import re
 from datetime import date
 from datetime import datetime
+
 
 import common
 from django import forms
@@ -98,6 +100,18 @@ class Form(ModelForm):
       if len(price_list) != len(quantity_list):
         raise forms.ValidationError('Quantity list must match price list')
     return cleaned_data
+
+def json(request, key):
+  instances = []
+  transaction = db.get(db.Key(key))
+  transaction.LoadIndicators() 
+  data = simplejson.dumps({
+    'suggested_stop':round(transaction.GetSuggestedStop(), 2),
+    'suggested_position':round(transaction.GetSuggestedPosition(), 2),
+    'symbol':transaction.position.symbol,
+
+    })
+  return HttpResponse(data, mimetype='application/json')
 
 
 def update(request, key):

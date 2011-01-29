@@ -60,6 +60,27 @@
     return false;
   }
 
+  function setStop(key) {
+    $.ajax({
+      url: '/transaction/' + key + '/json',
+      type: 'GET',
+      success: function(result) {
+          $('#id_stop').attr('value', result.suggested_stop);
+      }
+    });
+    return false;
+  }
+
+  function setPosition(key) {
+    $.ajax({
+      url: '/transaction/' + key + '/json',
+      type: 'GET',
+      success: function(result) {
+          $('#id_quantity_list').attr('value', result.suggested_position);
+      }
+    });
+    return false;
+  }
 </script>
 </script>
 <style>
@@ -266,7 +287,7 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 </tr>
 <tr class="fieldWrapper">
   <th><label for="id_quantity_list">Quantities</label></th>
-  <td>{{ transaction_form.quantity_list }} {{transaction_form.quantity_list.errors}}</td>
+  <td>{{ transaction_form.quantity_list }} {{transaction_form.quantity_list.errors}}<a onclick="return setPosition('{{transaction_form.instance.key}}')">Copy</a></td>
 </tr>
 <tr class="fieldWrapper">
   <th><label for="id_price_list">Enter prices</label></th>
@@ -274,7 +295,7 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 </tr>
 <tr class="fieldWrapper">
   <th><label for="id_stop">Stop</label></th>
-  <td>{{ transaction_form.stop }} {{transaction_form.stop.errors}}</td>
+  <td>{{ transaction_form.stop }} {{transaction_form.stop.errors}}<a onclick="return setStop('{{transaction_form.instance.key}}')">Copy</a></td>
 </tr>
 <tr class="fieldWrapper">
   <th><label for="id_date">Date</label></th>

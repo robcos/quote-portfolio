@@ -26,6 +26,7 @@ urlpatterns = patterns(
     (r'^alerts$', 'portfolio.alerts'),
     (r'^position/(?P<key>[a-zA-Z0-9-_]+)$', 'position.update'),
     (r'^position/$', 'position.create'),
+    (r'^transaction/(?P<key>[a-zA-Z0-9-_]+)/json$', 'transaction.json'),
     (r'^transaction/(?P<key>[a-zA-Z0-9-_]+)$', 'transaction.update'),
     (r'^transaction/$', 'transaction.create'),
     (r'^cash$', 'portfolio.cash'),
