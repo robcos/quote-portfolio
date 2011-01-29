@@ -205,7 +205,7 @@ Cash<input name="cash" value="{{portfolio.cash}}" size="6"/>{{portfolio.currency
 {% endfor %}
 <tr>
 <th colspan="3">Total</th>
-<td>{{ portfolio.local_value|stringformat:'10.2f' }}</td>
+<td>{{ portfolio.GetValue|stringformat:'10.2f' }}</td>
 <td>{{ portfolio.cost|stringformat:'10.2f' }}</td>
 <td{% if portfolio.loosing %} class="negative"{% endif %}>{{ portfolio.gain|stringformat:'10.2f' }}</td>
 <td></td>

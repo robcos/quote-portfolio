@@ -32,21 +32,24 @@ class APortfolio(BaseModel):
   default_fees = db.FloatProperty(required=False, default=0.0)
   nominal_value = db.FloatProperty(required=True, default=0.0)
   """The nominal value of portfolio used to calculate position sizes."""
+  all_positions_ = []
 
   def __str__(self):
     return self.name
 
   def GetOpenPositions(self):
     pass
-
+  
   def GetAllPositions(self):
+    return self.all_positions_ 
+
+  def LoadAllPositions(self):
     query = db.Query(APosition).filter("portfolio =", self)
-    positions = []
+    self.all_positions_ = []
     for position in query:
       position.realtime_quote = RealtimeQuote.load(position.symbol)
       position.LoadTransactions()
-      positions.append(position)
-    return positions
+      self.all_positions_.append(position)
 
   def GetRiskUnit(self):
     """Returns the risk unit for this portfolio.
@@ -56,6 +59,8 @@ class APortfolio(BaseModel):
 
     return self.nominal_value / 100
     
+  def GetValue(self):
+    return reduce(lambda x, y: x + y.GetValue(), [0] + self.GetAllPositions())
 
 class APosition(BaseModel):
   symbol = db.StringProperty(required=True)

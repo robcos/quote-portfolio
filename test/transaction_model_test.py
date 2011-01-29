@@ -238,7 +238,7 @@ class TestPosition(unittest.TestCase):
 class TestPortfolio(unittest.TestCase):
 
   @patch('robcos.models.RealtimeQuote.load')
-  def test_GetAllPositions(self, load):
+  def test_LoadAllPositions(self, load):
     portfolio = APortfolio(name='Avanza')
     portfolio.put()
     p1 = APosition(
@@ -258,6 +258,7 @@ class TestPortfolio(unittest.TestCase):
       return 'quote for %s' % args[0]
     load.side_effect = side_effect
 
+    portfolio.LoadAllPositions()
     positions = portfolio.GetAllPositions()
     self.assertEquals(p1, positions[0])
     self.assertEquals(p2, positions[1])
@@ -268,6 +269,27 @@ class TestPortfolio(unittest.TestCase):
     p1.LoadTransactions.assertCalled()
     p2.LoadTransactions.assertCalled()
 
+  def test_GetValue(self):
+    portfolio = APortfolio(name='Avanza')
+    portfolio.put()
+
+    p1 = APosition(
+        portfolio=portfolio, 
+        symbol='AAPL')
+
+    p2 = APosition(
+        portfolio=portfolio, 
+        symbol='GOOG')
+    positions = []
+    positions.append(p1)
+    positions.append(p2)
+
+    p1.GetValue = Mock(return_value = 10.0)
+    p2.GetValue = Mock(return_value = 20.0)
+    
+    portfolio.GetAllPositions = Mock(return_value = positions)
+    self.assertEquals(30.0, portfolio.GetValue())
+ 
   def test_GetRiskUnit(self):
     portfolio = APortfolio(
       name='Avanza',

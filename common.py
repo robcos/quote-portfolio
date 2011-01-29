@@ -97,10 +97,12 @@ class PositionForm(ModelForm):
     model = APosition
 
 def get_portfolios(request):
-  portfolios = APortfolio.all()
+  portfolios = []
   #show_closed_positions = request.GET.get('show_closed', False) == 'true'
-  #for p in portfolios:
-  #  p.set_show_closed(show_closed_positions)
+  for p in APortfolio.all():
+    #p.set_show_closed(show_closed_positions)
+    p.LoadAllPositions()
+    portfolios.append(p)
   return portfolios
 
 def index(request):
