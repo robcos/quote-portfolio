@@ -18,7 +18,9 @@ class TestTransaction(unittest.TestCase):
   TAXES = 10.0
 
   def setUp(self):
-    portfolio = APortfolio(name='Avanza')
+    portfolio = APortfolio(name='Avanza',
+    default_fees=90.0
+    )
     portfolio.put()
     position = APosition(
         symbol='AAPL',
@@ -71,6 +73,19 @@ class TestTransaction(unittest.TestCase):
     self.t.GetAveragePrice = Mock(return_value = 100)
     self.assertEquals(97, self.t.GetSuggestedStop())
 
+  def test_GetSuggestedPosition(self):
+    self.t.position.portfolio.GetRiskUnit = Mock(return_value=1000)
+    self.t.GetSuggestedStop = Mock(return_value=90)
+    self.t.GetAveragePrice = Mock(return_value=100)
+    self.t.GetCommission = Mock(return_value=0)
+    self.assertEquals(100, self.t.GetSuggestedPosition())
+    
+    self.t.GetCommission = Mock(return_value=500)
+    self.assertEquals(50, self.t.GetSuggestedPosition())
+
+  def test_GetCommission(self):
+    self.assertEquals(2 * self.FEES + self.TAXES, self.t.GetCommission())
+    
 class TestPosition(unittest.TestCase):
 
   def setUp(self):

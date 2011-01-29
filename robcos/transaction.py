@@ -264,9 +264,20 @@ class ATransaction(BaseModel):
   
   def GetLL10(self):
     return self.indicator.ll_10
+
+  def GetCommission(self):
+    return self.fees + self.taxes + self.position.portfolio.default_fees
   
   def GetSuggestedPosition(self):
-    return 0
+    allowed_risk = self.position.portfolio.GetRiskUnit() - self.GetCommission()
+    risk_per_share = self.GetAveragePrice() - self.GetSuggestedStop()
+    shares = 0
+    if risk_per_share:
+      shares = math.floor(allowed_risk / risk_per_share)
+    if shares > 0:
+      return shares
+    else:
+      return None
   
   def GetSuggestedStop(self):
     return self.GetAveragePrice() - 3 * self.GetAtr20AtEnter()
