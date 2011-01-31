@@ -173,5 +173,5 @@ def get_historical_prices(symbol, start_date, end_date):
           'c=%s&' % str(int(start_date[0:4])) + \
           'ignore=.csv'
     days = download_(url)
-    data = [day[:].split(',') for day in days]
+    data = [day[:].split(',')[:-2] for day in days]
     return data

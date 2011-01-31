@@ -1,31 +1,64 @@
 import unittest
 import ystockquote
+import gstockquote
 from mock import Mock
 
 class TestYstockquote(unittest.TestCase):
 
-  def test_get_historical_prices(self):
-    ystockquote.download_ = Mock(
-      return_value=[
-      'Date,Open,High,Low,Close,Volume,Adj Close',
-      '2010-01-08,210.30,212.00,209.06,211.98,15986100,211.98',
-      '2010-01-07,211.75,212.00,209.05,210.58,17040400,210.58',
-      '2010-01-06,214.38,215.23,210.75,210.97,19720000,210.97',
-      '2010-01-05,214.60,215.59,213.25,214.38,21496600,214.38',
-      '2010-01-04,213.43,214.50,212.38,214.01,17633200,214.01'])
+  @staticmethod
+  def get_yahoo_data():
+    return [
+    'Date,Open,High,Low,Close,Volume,Adj Close',
+    '2011-01-10,338.83,343.23,337.17,342.45,16000400,342.45',
+    '2011-01-07,333.99,336.35,331.90,336.12,11096800,336.12',
+    '2011-01-06,334.72,335.25,332.90,333.73,10709500,333.73',
+    '2011-01-05,329.55,334.34,329.50,334.00,9058700,334.00',
+    '2011-01-04,332.44,332.50,328.15,331.29,11038600,331.29',
+    '2011-01-03,325.64,330.26,324.84,329.57,15883600,329.57'
+    ]
+
+  @staticmethod
+  def get_google_data():
+    return [
+    'Date,Open,High,Low,Close,Volume',
+    '10-Jan-11,338.83,343.23,337.17,342.45,16019926',
+    '7-Jan-11,333.99,336.35,331.90,336.12,11140316',
+    '6-Jan-11,334.72,335.25,332.90,333.73,10729518',
+    '5-Jan-11,329.55,334.34,329.50,334.00,9125599',
+    '4-Jan-11,332.44,332.50,328.15,331.29,11048143',
+    '3-Jan-11,325.64,330.26,324.84,329.57,15897201',
+    ]
+
+  def test_get_historical_prices_yahoo(self):
+    ystockquote.download_ = Mock(return_value=self.get_yahoo_data())
 
     data = ystockquote.get_historical_prices(
         'AAPL', 
         '20100101',
         '20100110')
-    self.assertEquals(6, len(data))
+    self.assertData(data)
+
+  def test_get_historical_prices_google(self):
+    gstockquote.download_ = Mock(return_value=self.get_google_data())
+
+    data = gstockquote.get_historical_prices(
+        'AAPL', 
+        '20100101',
+        '20100110')
+    self.assertData(data)
+
+
+  def assertData(self, data):
+    self.assertEquals(7, len(data))
     self.assertEquals(
-        ['Date','Open','High','Low','Close','Volume','Adj Close'],
+        ['Date','Open','High','Low','Close'],
         data[0])
-    self.assertEquals(
-        ['2010-01-08','210.30','212.00','209.06','211.98','15986100','211.98'],
-        data[1])
-
-
+    self.assertEquals(['2011-01-10','338.83','343.23','337.17','342.45'], data[1])
+    self.assertEquals(['2011-01-07','333.99','336.35','331.90','336.12'], data[2])
+    self.assertEquals(['2011-01-06','334.72','335.25','332.90','333.73'], data[3])
+    self.assertEquals(['2011-01-05','329.55','334.34','329.50','334.00'], data[4])
+    self.assertEquals(['2011-01-04','332.44','332.50','328.15','331.29'], data[5])
+    self.assertEquals(['2011-01-03','325.64','330.26','324.84','329.57'], data[6])
+ 
 if __name__ == '__main__':
     unittest.main()
