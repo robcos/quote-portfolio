@@ -1,6 +1,5 @@
 import unittest
-import ystockquote
-import gstockquote
+import stockquote
 from mock import Mock
 
 class TestYstockquote(unittest.TestCase):
@@ -30,19 +29,19 @@ class TestYstockquote(unittest.TestCase):
     ]
 
   def test_get_historical_prices_yahoo(self):
-    ystockquote.download_ = Mock(return_value=self.get_yahoo_data())
+    stockquote.download_ = Mock(return_value=self.get_yahoo_data())
 
-    data = ystockquote.get_historical_prices(
+    data = stockquote.get_historical_prices(
         'AAPL', 
         '20100101',
         '20100110')
     self.assertData(data)
 
   def test_get_historical_prices_google(self):
-    gstockquote.download_ = Mock(return_value=self.get_google_data())
+    stockquote.download_ = Mock(return_value=self.get_google_data())
 
-    data = gstockquote.get_historical_prices(
-        'AAPL', 
+    data = stockquote.get_historical_prices(
+        'LON:AAPL', 
         '20100101',
         '20100110')
     self.assertData(data)
