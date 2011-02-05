@@ -48,6 +48,7 @@ class RealtimeQuote(models.BaseModel):
   symbol = db.StringProperty(required=True)
   date = db.DateProperty(required=True)
   price = db.FloatProperty(required=True)
+  change = db.StringProperty(required=True)
   
   @staticmethod
   def load(symbol):
@@ -70,7 +71,8 @@ class RealtimeQuote(models.BaseModel):
     data = RealtimeQuote(
       symbol = q['symbol'],
       date = q['date'],
-      price = float(q['price'])
+      price = float(q['price']),
+      change = q['change']
     )
     return data
 

@@ -38,7 +38,7 @@ def get_all(symbol):
     
     Returns a dictionary.
     """
-    rows = __request(symbol, 'l1c1va2xj1b4j4dyekjm3m4rr5p5p6s7ohgd1s').split('\r\n')
+    rows = __request(symbol, 'l1c1va2xj1b4j4dyekjm3m4rr5p5p6s7ohgd1sp2').split('\r\n')
     quotes = []
     for row in rows:
       quotes.append(parse(row.split(',')))
@@ -71,6 +71,7 @@ def parse(values):
     data['low'] = values[22]
     data['date'] = datetime.strptime(values[23], '"%m/%d/%Y"').date()
     data['symbol'] = values[24].strip('"')
+    data['change'] = values[25].strip('"')
     return data
     
     
