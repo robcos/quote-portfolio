@@ -148,7 +148,7 @@ def cash(request):
 
 def quotes(request):  
   symbols = []
-  for position in Position.all():
+  for position in APosition.all():
     symbols.append(position.symbol)
 
   RealtimeQuote.delete_all()
@@ -158,7 +158,7 @@ def quotes(request):
 
 def historical_quotes(request):  
   symbols = []
-  for position in Position.all():
+  for position in APosition.all():
     symbols.append(position.symbol)
     start_date = request.GET.get('start_date')
     stop_date = request.GET.get('stop_date')

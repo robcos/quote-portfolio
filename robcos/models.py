@@ -61,7 +61,7 @@ class RealtimeQuote(models.BaseModel):
   @staticmethod
   def download_all(symbols):
     symbols = '+'.join(symbols)
-    yahoos = RealtimeQuote.yahoo(symbols)
+    yahoos = RealtimeQuote.yahoo(symbols) or []
     for yahoo in yahoos:
       RealtimeQuote.from_yahoo(yahoo).put()
 
