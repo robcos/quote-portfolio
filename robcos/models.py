@@ -3,6 +3,7 @@ from google.appengine.ext import db
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
+import stockquote
 import ystockquote
 from google.appengine.api import memcache
 import types
@@ -52,6 +53,9 @@ class RealtimeQuote(models.BaseModel):
   
   @staticmethod
   def load(symbol):
+    if symbol.startswith('LON:'):
+      symbol = symbol[4:] + '.L'
+
     query = db.Query(RealtimeQuote)
     query.filter('symbol = ', symbol)
     quote = query.get()
@@ -60,8 +64,14 @@ class RealtimeQuote(models.BaseModel):
     return quote
 
   @staticmethod
-  def download_all(symbols):
-    symbols = '+'.join(symbols)
+  def download_all(symbol_array):
+    symbols = ''
+    for symbol in symbol_array:
+      if symbol.startswith('LON:'):
+        symbols += '+' + symbol[4:] + '.L'
+      else:
+        symbols += '+' + symbol
+
     yahoos = RealtimeQuote.yahoo(symbols) or []
     for yahoo in yahoos:
       RealtimeQuote.from_yahoo(yahoo).put()
@@ -137,7 +147,7 @@ class Quote(models.BaseModel):
         return
 
     start_date = start_date.strftime("%Y%m%d")
-    prices = ystockquote.get_historical_prices(symbol, start_date, stop_date)
+    prices = stockquote.get_historical_prices(symbol, start_date, stop_date)
     headers = prices[0]
     try:
       close = Quote.get_idx(headers, 'Close')

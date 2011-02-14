@@ -4,7 +4,6 @@ import math
 import traceback
 import types
 import urllib2
-import ystockquote
 
 from appengine_django import models
 from datetime import date
