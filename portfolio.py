@@ -62,6 +62,7 @@ def fixture(request):
   ATransaction.DeleteAll()
   RealtimeQuote(symbol='BOL.ST', 
         price=139.50,
+        change='0',
         date=date.today()).save()
 
 
@@ -72,6 +73,7 @@ def fixture(request):
         open=1234.5,
         date=date.today()).save()
 
+  APortfolio(name='XO', currency='GBP', nominal_value=550000.0).save()
   avanza = APortfolio(name='Avanza', currency='SEK', nominal_value=550000.0).save()
 
   position = APosition(
