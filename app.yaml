@@ -1,4 +1,4 @@
-application: quote-portfolio
+application: quote2-portfolio
 version: 1
 runtime: python
 api_version: 1
