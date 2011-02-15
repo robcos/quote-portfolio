@@ -34,6 +34,12 @@ class TestTransaction(unittest.TestCase):
         position=position,
         taxes=self.TAXES)
 
+  def test_GetRisk(self):
+    self.t.GetCost = Mock(return_value=22)
+    self.t.GetQuantity = Mock(return_value=2)
+    self.t.stop = 10.0
+    self.assertAlmostEquals(2, self.t.GetRisk(), 2.1)
+
   def test_Add(self):
     self.t.Add(1, 100)
     self.assertEquals(1, self.t.quantity_list[0])
@@ -87,11 +93,14 @@ class TestTransaction(unittest.TestCase):
     self.assertEquals(2 * self.FEES + self.TAXES, self.t.GetCommission())
     
 class TestPosition(unittest.TestCase):
+  FEES = 1.0
+  TAXES = 0.0
+  DEFAULT_FEES = 9.0
 
   def setUp(self):
     portfolio = APortfolio(
       name='Avanza',
-      default_fees = 9.0,
+      default_fees = self.DEFAULT_FEES,
     )
     portfolio.put()
     self.p = APosition(
@@ -102,15 +111,15 @@ class TestPosition(unittest.TestCase):
     self.lt = ATransaction(
         symbol='AAPL',
         is_buying=True,
-        fees=1.0,
+        fees=self.FEES,
         date=date.today(),
         position=self.p,
-        taxes=2.0)
+        taxes=0.0)
 
     self.st = ATransaction(
         symbol='AAPL',
         is_buying=False,
-        fees=1.0,
+        fees=self.FEES,
         date=date.today(),
         position=self.p,
         taxes=0.0)
@@ -172,14 +181,14 @@ class TestPosition(unittest.TestCase):
     # Buying 200 in two tranches
     self.p.AddAndStoreTransaction(self.lt)
     self.lt.Add(100, 1.0)
-    self.assertEquals(1.03, self.p.GetShareAverageCost())
+    self.assertEquals(1.01, self.p.GetShareAverageCost())
     self.lt.Add(100, 1.0)
-    self.assertEquals(1.015, self.p.GetShareAverageCost())
+    self.assertAlmostEquals(1.005, self.p.GetShareAverageCost())
 
     # Selling 100, average cost should not change.
     self.p.AddAndStoreTransaction(self.st)
     self.st.Add(50, 1.0).Add(50, 1.0)
-    self.assertEquals(1.015, self.p.GetShareAverageCost())
+    self.assertEquals(1.005, self.p.GetShareAverageCost())
 
   def test_GetShareAveragePrice(self):
     self.assertEquals(None, self.p.GetShareAveragePrice())
@@ -216,15 +225,14 @@ class TestPosition(unittest.TestCase):
     self.p.AddAndStoreTransaction(self.lt)
     self.lt.Add(100, 1.0)
     self.lt.stop = 0.80
-    self.assertEquals(100 * 0.20 + 1.0 + 2.0 + 9.0, self.p.GetRisk())
+    self.assertAlmostEquals(100 * (1 - 0.80) + self.FEES + self.TAXES + self.DEFAULT_FEES, self.p.GetRisk())
     self.lt.Add(100, 1.0)
-    self.assertEquals(1.015, self.p.GetShareAverageCost())
-    self.assertEquals(200 * (1.015-0.80) + 9.0, self.p.GetRisk())
+    self.assertAlmostEquals(200 * (1 - 0.80) + self.FEES + self.TAXES + self.DEFAULT_FEES, self.p.GetRisk())
     
     self.p.AddAndStoreTransaction(self.st)
     self.st.Add(100, 1.0)
-    self.assertEquals(1.015, self.p.GetShareAverageCost())
-    self.assertEquals(100 * (1.015-0.80) + 9.0, self.p.GetRisk())
+    self.st.stop = 0.80
+    self.assertAlmostEquals(100 * (1 - 0.80) + self.DEFAULT_FEES, self.p.GetRisk())
 
   def test_GetValue(self):
     self.assertRaises(Exception, self.p.GetValue)
@@ -232,6 +240,7 @@ class TestPosition(unittest.TestCase):
     self.p.realtime_quote = RealtimeQuote(
       date=date.today(),
       symbol='AAPL',
+      change='+1%',
       price=2.0)
 
     # Buying 200
@@ -250,17 +259,21 @@ class TestPosition(unittest.TestCase):
     self.p.realtime_quote = RealtimeQuote(
       date=date.today(),
       symbol='AAPL',
+      change='+1%',
       price=2.0)
 
     # Buying 200@1
     self.p.AddAndStoreTransaction(self.lt)
     self.lt.Add(200, 1.0)
-    self.assertEquals(200.0 - 2.0 - 1.0 - 9.0, round(self.p.GetGain()))
+    self.assertAlmostEquals(200.0 - self.FEES - self.TAXES -
+        self.DEFAULT_FEES, self.p.GetGain())
 
-    # Selling 100
+    # Selling 100@1
     self.p.AddAndStoreTransaction(self.st)
     self.st.Add(100, 1.0)
-    self.assertEquals(100.0 - 1.0 - 0.5 - 9.0, round(self.p.GetGain(), 2))
+    # It is as half of the fees and taxes have already been recovered
+    self.assertAlmostEquals(100.0 - self.FEES/2 - self.TAXES/2 -
+      self.DEFAULT_FEES, self.p.GetGain())
 
   def test_GetGainPercentage(self):
     self.p.GetGain = Mock(return_value=10.0)

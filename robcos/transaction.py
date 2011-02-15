@@ -160,8 +160,13 @@ class APosition(BaseModel):
     Takes into account enter fees and taxes.
     """
 
-    return self.GetOutstandingShares() * (
-        self.GetShareAverageCost() - self.GetStop()) + self.portfolio.default_fees
+    transactions = self.GetTransactions()
+    if not transactions:
+      raise Exception('Must add some transactions first')
+
+    return (reduce(lambda x, y: x + (
+        y.GetRisk() if y.is_buying else -y.GetRisk()), [0] + transactions) + 
+        self.portfolio.default_fees)
 
   def GetNetValue(self):
     """How much is the position worth if I sold it at the current price.
@@ -283,3 +288,6 @@ class ATransaction(BaseModel):
   
   def GetSuggestedStop(self):
     return self.GetAveragePrice() - 3 * self.GetAtr20AtEnter()
+
+  def GetRisk(self):
+    return self.GetCost() - self.GetQuantity() * self.stop
